@@ -91,182 +91,181 @@ var express = gpii.express({
     }
 });
 
-express.start(function(){
-    jqUnit.module("Testing express module stack...");
+jqUnit.module("Testing express module stack...");
 
-    jqUnit.asyncTest("Testing the 'static' router module (index content)...", function() {
-        var options = {
-            url: express.options.config.express.baseUrl
-        }
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
+jqUnit.asyncTest("Testing the 'static' router module (index content)...", function() {
+    var options = {
+        url: express.options.config.express.baseUrl
+    }
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
 
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
-            var indexRegexp = /body of the index/;
-            jqUnit.assertNotNull("The body should match the index content...", body.match(indexRegexp));
-        });
+        var indexRegexp = /body of the index/;
+        jqUnit.assertNotNull("The body should match the index content...", body.match(indexRegexp));
     });
-
-    jqUnit.asyncTest("Testing the 'static' router module (custom content)...", function() {
-        var options = {
-            url: express.options.config.express.baseUrl + "custom.html"
-        };
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            var customContentRegexp = /custom page/;
-            jqUnit.assertNotNull("The body should match the custom content...", body.match(customContentRegexp));
-        });
-    });
-
-    jqUnit.asyncTest("Testing the 'hello' router module...", function() {
-        var options = {
-            url: express.options.config.express.baseUrl + "hello"
-        };
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            jqUnit.assertEquals("The body should match the configured content...", express.hello.options.message, body);
-        });
-    });
-
-    jqUnit.asyncTest("Testing a nested 'hello/world' router module...", function() {
-        var options = {
-            url: express.options.config.express.baseUrl + "hello/world"
-        };
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            jqUnit.assertEquals("The nested body should match the configured content...", express.hello.world.options.message, body);
-        });
-    });
-
-    jqUnit.asyncTest("Testing a wildcard path (root)...", function() {
-        var options = {
-            url: express.options.config.express.baseUrl + "wildcard/"
-        };
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
-        });
-    });
-
-    jqUnit.asyncTest("Testing a wildcard path (deep)...", function() {
-        var options = {
-            url: express.options.config.express.baseUrl + "wildcard/more/path/information"
-        };
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
-        });
-    });
-
-    jqUnit.asyncTest("Testing the 'count' middleware to ensure it collects data...", function() {
-        var originalValue = express.middleware.model.count;
-        var options = {
-            url: express.options.config.express.baseUrl
-        };
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            var newValue = express.middleware.model.count;
-            jqUnit.assertTrue("The counter should go up each time we hit a page...", newValue > originalValue);
-            jqUnit.assertEquals("The counter should only have been incremented by one...", 1, (newValue - originalValue));
-        });
-    });
-
-    jqUnit.asyncTest("Test the 'cookie' middleware...", function(){
-        var url    = express.options.config.express.baseUrl + "reqview";
-        var j      = request.jar();
-        var cookie = request.cookie('foo=bar');
-        j.setCookie(cookie, url);
-
-        var options = {
-            url: url,
-            jar: j
-        };
-
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            var data = JSON.parse(body);
-            jqUnit.assertNotNull("There should be cookie data...", body.cookies);
-            if (body.cookies) {
-                jqUnit.assertNotNull("There should be a 'foo' cookie set...", body.cookies.foo);
-            }
-        });
-    });
-
-    jqUnit.asyncTest("Test the 'session' middleware...", function(){
-        var url    = express.options.config.express.baseUrl + "reqview";
-
-        var options = {
-            url: url
-        };
-
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            var data = JSON.parse(body);
-            jqUnit.assertNotNull("There should be session data...", body.session);
-            if (body.session) {
-                jqUnit.assertNotNull("There should be a 'lastAccess' session variable set...", body.session.lastAccess);
-            }
-        });
-    });
-
-    jqUnit.asyncTest("Test the 'body parser' middleware (json)...", function(){
-        var options = {
-            url:  express.options.config.express.baseUrl + "reqview",
-            json: { "foo": "bar" }
-        };
-
-        request.post(options, function(error, response, body) {
-            jqUnit.start();
-
-            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-            jqUnit.assertNotNull("There should be body data...", body.body);
-            if (body.body) {
-                jqUnit.assertNotNull("There should be a 'foo' body params variable set...", body.body.foo);
-            }
-        });
-    });
-
-    jqUnit.asyncTest("Test stopping the server...", function(){
-        express.stop(function(){
-            var options = {
-                url: express.options.config.express.baseUrl
-            };
-
-            request.get(options, function(error, response, body) {
-                jqUnit.start();
-
-                // The server should not have responded.
-                jqUnit.assertNotNull("There should be an error returned.", error);
-                jqUnit.assertEquals("The connection should have been refused.", "ECONNREFUSED", error.code);
-            });
-        });
-    });
-
 });
+
+jqUnit.asyncTest("Testing the 'static' router module (custom content)...", function() {
+    var options = {
+        url: express.options.config.express.baseUrl + "custom.html"
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        var customContentRegexp = /custom page/;
+        jqUnit.assertNotNull("The body should match the custom content...", body.match(customContentRegexp));
+    });
+});
+
+jqUnit.asyncTest("Testing the 'hello' router module...", function() {
+    var options = {
+        url: express.options.config.express.baseUrl + "hello"
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        jqUnit.assertEquals("The body should match the configured content...", express.hello.options.message, body);
+    });
+});
+
+jqUnit.asyncTest("Testing a nested 'hello/world' router module...", function() {
+    var options = {
+        url: express.options.config.express.baseUrl + "hello/world"
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        jqUnit.assertEquals("The nested body should match the configured content...", express.hello.world.options.message, body);
+    });
+});
+
+jqUnit.asyncTest("Testing a wildcard path (root)...", function() {
+    var options = {
+        url: express.options.config.express.baseUrl + "wildcard/"
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
+    });
+});
+
+jqUnit.asyncTest("Testing a wildcard path (deep)...", function() {
+    var options = {
+        url: express.options.config.express.baseUrl + "wildcard/more/path/information"
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
+    });
+});
+
+jqUnit.asyncTest("Testing the 'count' middleware to ensure it collects data...", function() {
+    var originalValue = express.middleware.model.count;
+    var options = {
+        url: express.options.config.express.baseUrl
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        var newValue = express.middleware.model.count;
+        jqUnit.assertTrue("The counter should go up each time we hit a page...", newValue > originalValue);
+        jqUnit.assertEquals("The counter should only have been incremented by one...", 1, (newValue - originalValue));
+    });
+});
+
+jqUnit.asyncTest("Test the 'cookie' middleware...", function(){
+    var url    = express.options.config.express.baseUrl + "reqview";
+    var j      = request.jar();
+    var cookie = request.cookie('foo=bar');
+    j.setCookie(cookie, url);
+
+    var options = {
+        url: url,
+        jar: j
+    };
+
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        var data = JSON.parse(body);
+        jqUnit.assertNotNull("There should be cookie data...", body.cookies);
+        if (body.cookies) {
+            jqUnit.assertNotNull("There should be a 'foo' cookie set...", body.cookies.foo);
+        }
+    });
+});
+
+jqUnit.asyncTest("Test the 'session' middleware...", function(){
+    var url    = express.options.config.express.baseUrl + "reqview";
+
+    var options = {
+        url: url
+    };
+
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        var data = JSON.parse(body);
+        jqUnit.assertNotNull("There should be session data...", body.session);
+        if (body.session) {
+            jqUnit.assertNotNull("There should be a 'lastAccess' session variable set...", body.session.lastAccess);
+        }
+    });
+});
+
+jqUnit.asyncTest("Test the 'body parser' middleware (json)...", function(){
+    var options = {
+        url:  express.options.config.express.baseUrl + "reqview",
+        json: { "foo": "bar" }
+    };
+
+    request.post(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        jqUnit.assertNotNull("There should be body data...", body.body);
+        if (body.body) {
+            jqUnit.assertNotNull("There should be a 'foo' body params variable set...", body.body.foo);
+        }
+    });
+});
+
+jqUnit.asyncTest("Test stopping the server...", function(){
+    express.events.stopped.addListener(function(){
+        var options = {
+            url: express.options.config.express.baseUrl
+        };
+
+        request.get(options, function(error, response, body) {
+            jqUnit.start();
+
+            // The server should not have responded.
+            jqUnit.assertNotNull("There should be an error returned.", error);
+            jqUnit.assertEquals("The connection should have been refused.", "ECONNREFUSED", error.code);
+        });
+    });
+    express.destroy();
+});
+
 

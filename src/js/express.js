@@ -9,7 +9,7 @@ fluid.registerNamespace("gpii.express");
 var exphbs      = require("express-handlebars");
 var handlebars  = require("handlebars");
 
-gpii.express.initExpress = function(that) {
+gpii.express.init = function(that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Cannot initialize express because you have not supplied a 'config' option.");
         return;
@@ -17,9 +17,9 @@ gpii.express.initExpress = function(that) {
 
     // We need these to be model variables so that other grades can listen and take action when they are changed.
     var express  = require("express");
-    that.applier.change("express", express());
-    that.applier.change("router", express.Router());
-    that.model.express.use(that.options.path, that.model.router);
+    that.express = express();
+    that.router = express.Router();
+    that.express.use(that.options.path, that.router);
 
     var helpersToLoad = [];
     if (that.options.components) {
@@ -28,7 +28,7 @@ gpii.express.initExpress = function(that) {
             var component = that[key];
             if (fluid.hasGrade(component.options, "gpii.express.router")) {
                 component.events.addRoutes.fire();
-                that.model.router.use(that.options.path, component.model.router);
+                that.router.use(that.options.path, component.model.router);
             }
             else if (fluid.hasGrade(component.options, "gpii.express.middleware")) {
                 if (component.model.middleware) {
@@ -37,7 +37,7 @@ gpii.express.initExpress = function(that) {
                         var functionName = middlewareToLoad[i];
                         if (component[functionName]) {
                             try {
-                                that.model.router.use(component[functionName]);
+                                that.router.use(component[functionName]);
                             }
                             catch (e) {
                                 console.error("Error loading middleware function '" + functionName + "' in module '" + key + "':" + e);
@@ -79,61 +79,44 @@ gpii.express.initExpress = function(that) {
         }
 
 
-        that.model.express.set("views", viewRoot);
+        that.express.set("views", viewRoot);
 
         var hbs = exphbs.create(handlebarsConfig);
-        that.model.express.engine("handlebars", hbs.engine);
-        that.model.express.set("view engine", "handlebars");
+        that.express.engine("handlebars", hbs.engine);
+        that.express.set("view engine", "handlebars");
     }
     else {
         console.error("Cannot initialize template handling without a 'config.express.views' option");
     }
-};
 
-gpii.express.startPrivate = function(that, callback) {
-    if (!that.options.config || !that.options.config.express) {
-        console.error("Cannot start express because you have not supplied a 'config' option.");
-        return;
-    }
-
-    that.model.express.set("port", that.options.config.express.port);
-    that.server = that.model.express.listen(that.options.config.express.port, function(){
-        console.log("Express server listening on port " + that.model.express.get("port"));
+    that.express.set("port", that.options.config.express.port);
+    that.server = that.express.listen(that.options.config.express.port, function(){
+        console.log("Express server listening on port " + that.express.get("port"));
 
         console.log("Express started...");
-        that.events.expressStarted.fire();
-
-        if (callback) {
-            callback();
-        }
+        that.events.started.fire();
     });
 };
 
-gpii.express.stopPrivate = function(that, callback) {
-    that.server.close(callback);
+gpii.express.stopServer = function(that) {
+    that.server.close(function(){
+        console.log("Express stopped...");
+        that.events.stopped.fire();
+    });
 };
 
 fluid.defaults("gpii.express", {
     gradeNames: ["fluid.standardRelayComponent", "autoInit"],
     path: "/",
-    model: {
-        router:  null,
-        express: null
-    },
+    router:  null,
+    express: null,
     events: {
-        expressStarted:  null
+        started:  null,
+        stopped:  null
     },
     invokers: {
         "init": {
-            funcName: "gpii.express.initExpress"
-        },
-        start: {
-            funcName: "gpii.express.startPrivate",
-            args: ["{that}", "{arguments}.0"]
-        },
-        stop: {
-            funcName: "gpii.express.stopPrivate",
-            args: ["{that}", "{arguments}.0"]
+            funcName: "gpii.express.init"
         }
     },
     listeners: {
@@ -141,6 +124,12 @@ fluid.defaults("gpii.express", {
             {
                 "funcName": "{express}.init",
                 "args": "{that}"
+            }
+        ],
+        onDestroy: [
+            {
+                funcName: "gpii.express.stopServer",
+                args: ["{that}"]
             }
         ]
     }
