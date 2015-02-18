@@ -2,11 +2,11 @@
 //
 // The express module will automatically attempt to wire in anything with this gradeName into its routing table.
 
-var fluid     = fluid || require('infusion');
-var namespace = "gpii.express.router";
-var router    = fluid.registerNamespace(namespace);
+var fluid = fluid || require('infusion');
+var gpii  = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii.express.router");
 
-router.createRouter = function(that) {
+gpii.express.router.createRouter = function(that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Can't instantiate router without a working config object.")
         return null;
@@ -18,7 +18,7 @@ router.createRouter = function(that) {
     that.events.routerLoaded.fire();
 };
 
-router.loadMiddleware = function(that) {
+gpii.express.router.loadMiddleware = function(that) {
     if (!that.model.router) {
         console.log("Can't wire in child modules unless I have a router module.");
         return;
@@ -64,7 +64,7 @@ router.loadMiddleware = function(that) {
     }
 };
 
-fluid.defaults(namespace, {
+fluid.defaults("gpii.express.router", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
     path: null,
     config: "{gpii.express}.options.config",
@@ -77,12 +77,12 @@ fluid.defaults(namespace, {
     },
     listeners: {
         "onCreate": {
-            funcName: namespace + ".createRouter",
+            funcName: "gpii.express.router.createRouter",
             args: ["{that}"]
         },
         routerLoaded: [
             {
-                "funcName": namespace + ".loadMiddleware",
+                "funcName": "gpii.express.router.loadMiddleware",
                 "args": "{that}"
             }
         ]

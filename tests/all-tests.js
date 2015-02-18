@@ -1,9 +1,9 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var namespace    = "gpii.express.tests";
 var fluid        = fluid || require('infusion');
 var gpii         = fluid.registerNamespace("gpii");
-var expressTests = fluid.registerNamespace(namespace);
+fluid.registerNamespace("gpii.express.tests");
+
 var path         = require("path");
 var jqUnit       = fluid.require("jqUnit");
 var request      = require("request");
@@ -19,7 +19,7 @@ require("./js/test-middleware");
 require("./js/test-router");
 require("./js/test-router-reqview");
 
-expressTests.isSaneResponse = function(jqUnit, error, response, body) {
+gpii.express.tests.isSaneResponse = function(jqUnit, error, response, body) {
     jqUnit.assertNull("There should be no errors.", error);
 
     jqUnit.assertEquals("The response should have a reasonable status code", 200, response.statusCode);
@@ -101,7 +101,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             var indexRegexp = /body of the index/;
             jqUnit.assertNotNull("The body should match the index content...", body.match(indexRegexp));
@@ -115,7 +115,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             var customContentRegexp = /custom page/;
             jqUnit.assertNotNull("The body should match the custom content...", body.match(customContentRegexp));
@@ -129,7 +129,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             jqUnit.assertEquals("The body should match the configured content...", express.hello.options.message, body);
         });
@@ -142,7 +142,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             jqUnit.assertEquals("The nested body should match the configured content...", express.hello.world.options.message, body);
         });
@@ -155,7 +155,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
         });
@@ -168,7 +168,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
         });
@@ -182,7 +182,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             var newValue = express.middleware.model.count;
             jqUnit.assertTrue("The counter should go up each time we hit a page...", newValue > originalValue);
@@ -204,7 +204,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             var data = JSON.parse(body);
             jqUnit.assertNotNull("There should be cookie data...", body.cookies);
@@ -224,7 +224,7 @@ express.start(function(){
         request.get(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             var data = JSON.parse(body);
             jqUnit.assertNotNull("There should be session data...", body.session);
@@ -243,7 +243,7 @@ express.start(function(){
         request.post(options, function(error, response, body) {
             jqUnit.start();
 
-            expressTests.isSaneResponse(jqUnit, error, response, body);
+            gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
             jqUnit.assertNotNull("There should be body data...", body.body);
             if (body.body) {

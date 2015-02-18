@@ -1,16 +1,15 @@
 // Sample middleware loader
 "use strict";
-var namespace      = "gpii.express.tests.middleware.counter";
-var fluid          = fluid || require('infusion');
-var gpii           = fluid.registerNamespace("gpii");
-var testMiddleware = fluid.registerNamespace(namespace);
+var fluid = fluid || require('infusion');
+var gpii  = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii.express.tests.middleware.counter");
 
-testMiddleware.counterPrivate = function(that, req, res, next) {
+gpii.express.tests.middleware.counter.counterPrivate = function(that, req, res, next) {
     that.applier.change("count", that.model.count + 1);
     next();
 };
 
-fluid.defaults(namespace, {
+fluid.defaults("gpii.express.tests.middleware.counter", {
     gradeNames: ["gpii.express.middleware", "autoInit"],
     model: {
         count: 0,
@@ -18,7 +17,7 @@ fluid.defaults(namespace, {
     },
     invokers: {
         "counter": {
-            "funcName": namespace + ".counterPrivate",
+            "funcName": "gpii.express.tests.middleware.counter.counterPrivate",
             "args": [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }

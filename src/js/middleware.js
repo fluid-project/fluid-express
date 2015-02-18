@@ -3,10 +3,9 @@
 // The express module will automatically attempt to wire in anything with this gradeName into itself
 
 var fluid     = fluid || require('infusion');
-var namespace = "gpii.express.middleware";
-var router    = fluid.registerNamespace(namespace);
+fluid.registerNamespace("gpii.express.middleware");
 
-fluid.defaults(namespace, {
+fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.eventedComponent", "fluid.modelRelayComponent", "autoInit"],
     config: "{gpii.express}.options.config"
 });

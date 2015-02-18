@@ -1,11 +1,10 @@
 // Sample "Hello World" router module
 "use strict";
-var namespace  = "gpii.express.tests.router.hello";
-var fluid      = fluid || require('infusion');
-var gpii       = fluid.registerNamespace("gpii");
-var testRouter = fluid.registerNamespace(namespace);
+var fluid = fluid || require('infusion');
+var gpii  = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii.express.tests.router.hello");
 
-testRouter.addRoutesPrivate = function(that) {
+gpii.express.tests.router.hello.addRoutesPrivate = function(that) {
     if (!that.options.path) {
         console.log("You must configure a model.path for a gpii.express.router grade...");
         return null;
@@ -16,7 +15,7 @@ testRouter.addRoutesPrivate = function(that) {
     });
 };
 
-fluid.defaults(namespace, {
+fluid.defaults("gpii.express.tests.router.hello", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.router", "autoInit"],
     path:    "/hello",
     message: "Hello, World",
@@ -28,7 +27,7 @@ fluid.defaults(namespace, {
     },
     listeners: {
         "addRoutes": {
-            funcName: namespace + ".addRoutesPrivate",
+            funcName: "gpii.express.tests.router.hello.addRoutesPrivate",
             args: ["{that}"]
         }
     }

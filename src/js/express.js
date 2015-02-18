@@ -2,14 +2,14 @@
 //
 // Add additional routers and middleware as child components of this module
 "use strict";
-var fluid       = fluid || require("infusion");
-var namespace   = "gpii.express";
-var express     = fluid.registerNamespace(namespace);
-var path        = require("path");
+var fluid = fluid || require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii.express");
+
 var exphbs      = require("express-handlebars");
 var handlebars  = require("handlebars");
 
-express.initExpress = function(that) {
+gpii.express.initExpress = function(that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Cannot initialize express because you have not supplied a 'config' option.");
         return;
@@ -90,7 +90,7 @@ express.initExpress = function(that) {
     }
 };
 
-express.startPrivate = function(that, callback) {
+gpii.express.startPrivate = function(that, callback) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Cannot start express because you have not supplied a 'config' option.");
         return;
@@ -109,11 +109,11 @@ express.startPrivate = function(that, callback) {
     });
 };
 
-express.stopPrivate = function(that, callback) {
+gpii.express.stopPrivate = function(that, callback) {
     that.server.close(callback);
 };
 
-fluid.defaults(namespace, {
+fluid.defaults("gpii.express", {
     gradeNames: ["fluid.standardRelayComponent", "autoInit"],
     path: "/",
     model: {
@@ -125,14 +125,14 @@ fluid.defaults(namespace, {
     },
     invokers: {
         "init": {
-            funcName: namespace + ".initExpress"
+            funcName: "gpii.express.initExpress"
         },
         start: {
-            funcName: namespace + ".startPrivate",
+            funcName: "gpii.express.startPrivate",
             args: ["{that}", "{arguments}.0"]
         },
         stop: {
-            funcName: namespace + ".stopPrivate",
+            funcName: "gpii.express.stopPrivate",
             args: ["{that}", "{arguments}.0"]
         }
     },

@@ -1,13 +1,12 @@
 // Module to serve static content using the express static middleware
 "use strict";
-var namespace    = "gpii.express.router.static";
 var fluid        = fluid || require('infusion');
 var gpii         = fluid.registerNamespace("gpii");
-var staticRouter = fluid.registerNamespace(namespace);
-var express      = require("express");
-var path         = require("path");
+fluid.registerNamespace("gpii.express.router.static");
 
-staticRouter.addRoutesPrivate = function(that) {
+var express      = require("express");
+
+gpii.express.router.static.addRoutesPrivate = function(that) {
     if (!that.options.path) {
         console.log("You must configure a path for a gpii.express.router grade...");
         return null;
@@ -21,7 +20,7 @@ staticRouter.addRoutesPrivate = function(that) {
     that.model.router.use(that.options.path, express.static(that.options.content)); // jshint ignore:line
 };
 
-fluid.defaults(namespace, {
+fluid.defaults("gpii.express.router.static", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.router", "autoInit"],
     content: null,
     model: {
@@ -32,7 +31,7 @@ fluid.defaults(namespace, {
     },
     listeners: {
         "addRoutes": {
-            funcName: namespace + ".addRoutesPrivate",
+            funcName: "gpii.express.router.static.addRoutesPrivate",
             args: ["{that}"]
         }
     }
