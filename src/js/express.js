@@ -16,9 +16,9 @@ gpii.express.init = function(that) {
     }
 
     var express  = require("express");
-    that.options.express = express();
-    that.options.router = express.Router();
-    that.options.express.use(that.options.path, that.options.router);
+    that.express = express();
+    that.router = express.Router();
+    that.express.use(that.options.path, that.router);
 
     var helpersToLoad = [];
     if (that.options.components) {
@@ -27,7 +27,7 @@ gpii.express.init = function(that) {
             var component = that[key];
             if (fluid.hasGrade(component.options, "gpii.express.router")) {
                 component.events.addRoutes.fire();
-                that.options.router.use(that.options.path, component.model.router);
+                that.router.use(that.options.path, component.model.router);
             }
             else if (fluid.hasGrade(component.options, "gpii.express.middleware")) {
                 if (component.model.middleware) {
@@ -36,7 +36,7 @@ gpii.express.init = function(that) {
                         var functionName = middlewareToLoad[i];
                         if (component[functionName]) {
                             try {
-                                that.options.router.use(component[functionName]);
+                                that.router.use(component[functionName]);
                             }
                             catch (e) {
                                 console.error("Error loading middleware function '" + functionName + "' in module '" + key + "':" + e);
@@ -65,12 +65,12 @@ gpii.express.init = function(that) {
         });
     }
 
-    that.options.express.set("port", that.options.config.express.port);
-    that.server = that.options.express.listen(that.options.config.express.port, function(){
-        console.log("Express server listening on port " + that.options.express.get("port"));
+    that.express.set("port", that.options.config.express.port);
+    that.server = that.express.listen(that.options.config.express.port, function(){
+        console.log("Express server listening on port " + that.express.get("port"));
 
         console.log("Express started...");
-        that.events.started.fire();
+        that.events.started.fire(that.express);
     });
 };
 
