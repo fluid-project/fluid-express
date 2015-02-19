@@ -15,11 +15,10 @@ gpii.express.init = function(that) {
         return;
     }
 
-    // We need these to be model variables so that other grades can listen and take action when they are changed.
     var express  = require("express");
-    that.express = express();
-    that.router = express.Router();
-    that.express.use(that.options.path, that.router);
+    that.options.express = express();
+    that.options.router = express.Router();
+    that.options.express.use(that.options.path, that.options.router);
 
     var helpersToLoad = [];
     if (that.options.components) {
@@ -28,7 +27,7 @@ gpii.express.init = function(that) {
             var component = that[key];
             if (fluid.hasGrade(component.options, "gpii.express.router")) {
                 component.events.addRoutes.fire();
-                that.router.use(that.options.path, component.model.router);
+                that.options.router.use(that.options.path, component.model.router);
             }
             else if (fluid.hasGrade(component.options, "gpii.express.middleware")) {
                 if (component.model.middleware) {
@@ -37,7 +36,7 @@ gpii.express.init = function(that) {
                         var functionName = middlewareToLoad[i];
                         if (component[functionName]) {
                             try {
-                                that.router.use(component[functionName]);
+                                that.options.router.use(component[functionName]);
                             }
                             catch (e) {
                                 console.error("Error loading middleware function '" + functionName + "' in module '" + key + "':" + e);
@@ -66,32 +65,9 @@ gpii.express.init = function(that) {
         });
     }
 
-    if (that.options.config.express.views) {
-        var viewRoot = that.options.config.express.views;
-        var handlebarsConfig = {
-            defaultLayout: "main",
-            layoutsDir:    viewRoot + "/layouts/",
-            partialsDir:   viewRoot + "/partials/"
-        };
-
-        if (helpersToLoad) {
-            handlebarsConfig.helpers = helpersToLoad;
-        }
-
-
-        that.express.set("views", viewRoot);
-
-        var hbs = exphbs.create(handlebarsConfig);
-        that.express.engine("handlebars", hbs.engine);
-        that.express.set("view engine", "handlebars");
-    }
-    else {
-        console.error("Cannot initialize template handling without a 'config.express.views' option");
-    }
-
-    that.express.set("port", that.options.config.express.port);
-    that.server = that.express.listen(that.options.config.express.port, function(){
-        console.log("Express server listening on port " + that.express.get("port"));
+    that.options.express.set("port", that.options.config.express.port);
+    that.server = that.options.express.listen(that.options.config.express.port, function(){
+        console.log("Express server listening on port " + that.options.express.get("port"));
 
         console.log("Express started...");
         that.events.started.fire();
