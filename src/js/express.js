@@ -6,9 +6,6 @@ var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express");
 
-var exphbs      = require("express-handlebars");
-var handlebars  = require("handlebars");
-
 gpii.express.init = function(that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Cannot initialize express because you have not supplied a 'config' option.");
