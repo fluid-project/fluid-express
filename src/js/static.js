@@ -6,7 +6,7 @@ fluid.registerNamespace("gpii.express.router.static");
 
 var express      = require("express");
 
-gpii.express.router.static.addRoutesPrivate = function(that) {
+gpii.express.router.static.getStaticRouterFunction = function(that) {
     if (!that.options.path) {
         console.log("You must configure a path for a gpii.express.router grade...");
         return null;
@@ -17,21 +17,16 @@ gpii.express.router.static.addRoutesPrivate = function(that) {
         return;
     }
 
-    that.model.router.use(that.options.path, express.static(that.options.content)); // jshint ignore:line
+    return express.static(that.options.content);
 };
 
 fluid.defaults("gpii.express.router.static", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.router", "autoInit"],
     content: null,
-    model: {
-        router:  null
-    },
-    events: {
-        addRoutes: null
-    },
-    listeners: {
-        "addRoutes": {
-            funcName: "gpii.express.router.static.addRoutesPrivate",
+    router:  null,
+    invokers: {
+        "getRouterFunction": {
+            funcName: "gpii.express.router.static.getStaticRouterFunction",
             args: ["{that}"]
         }
     }

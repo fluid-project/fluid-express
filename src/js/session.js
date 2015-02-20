@@ -4,28 +4,21 @@ var fluid     = fluid || require('infusion');
 var gpii      = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.session");
 
-gpii.express.middleware.session.session = function(that, req, res, next) {
-    if (!that.privateSession) {
-        var session   = require('express-session');
-        var options = {
-            secret:            that.options.config.express.session.secret,
-            resave:            that.options.config.express.session.resave ? true : false,
-            saveUninitialized: that.options.config.express.session.saveUninitialized ? true: false
-        };
-        that.privateSession = session(options);
-    }
-
-    that.privateSession(req, res, next);
+gpii.express.middleware.session.getSessionFunction = function(that) {
+    var session   = require('express-session');
+    var options = {
+        secret:            that.options.config.express.session.secret,
+        resave:            that.options.config.express.session.resave ? true : false,
+        saveUninitialized: that.options.config.express.session.saveUninitialized ? true: false
+    };
+    return session(options);
 };
 
 fluid.defaults("gpii.express.middleware.session", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.middleware", "autoInit"],
-    model: {
-        middleware: ["session"]
-    },
     invokers: {
-        "session": {
-            funcName: "gpii.express.middleware.session.session",
+        "getMiddlewareFunction": {
+            funcName: "gpii.express.middleware.session.getSessionFunction",
             "args": [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }

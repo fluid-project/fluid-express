@@ -1,90 +1,106 @@
 // Base grade for express router modules...
 //
 // The express module will automatically attempt to wire in anything with this gradeName into its routing table.
+//
+// This implementation is not meant to be used directly.  You must extend this grade and implement addRoutes() properly
+//
+// See the tests for an example.
 
 var fluid = fluid || require('infusion');
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.router");
 
+// Instantiate our router, which contains the path handling function we ourselves provide as well as those of any child router components we have.
 gpii.express.router.createRouter = function(that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Can't instantiate router without a working config object.")
         return null;
     }
 
-    var express       = require("express");
-    that.applier.change("router", express.Router());
+    var express         = require("express");
+    that.options.router = express.Router();
 
-    that.events.routerLoaded.fire();
+    for (var a = 0; a < that.options.middlewareToLoad.length; a++){
+        that.options.router.use(that.options.middlewareToLoad[a]);
+    }
+
+    // TODO:  Remove this once we have a working approach to avoid crawling through our components
+    if (that.options.components) {
+        var keys = Object.keys(that.options.components);
+        for (var z = 0; z < keys.length; z++) {
+            var component = that[keys[z]];
+            if (fluid.hasGrade(component.options, "gpii.express.router")) {
+                that.options.router.use(that.options.path, component.options.router);
+            }
+        }
+    }
+
+    //for (var b = 0; b < that.options.routersToLoad.length; b++) {
+    //    // router modules set their own paths internally, so we can mount them on the root safely
+    //    that.options.router.use(that.options.path, that.options.routersToLoad[b]);
+    //}
+
+    // Load ourselves last to avoid clobbering our children
+    that.options.router.use(that.options.path, that.getRouterFunction());
+
+    that.events.routerLoaded.fire(that);
 };
 
-gpii.express.router.loadMiddleware = function(that) {
-    if (!that.model.router) {
-        console.log("Can't wire in child modules unless I have a router module.");
-        return;
-    }
+// We will likely not have our routing infrastructure in place when our subcomponents are created, so we store them until we're ready.
+gpii.express.router.registerRouter = function(childRouterComponent, routerComponent) {
+    routerComponent.options.routersToLoad.push(childRouterComponent.options.router);
+};
 
-    if (!that.options.path) {
-        console.log("Can't wire in child modules without knowing my own path.");
-        return;
-    }
 
-    if (that.options.components) {
-        // Any child components with the grade {gpii.express.router} will be wired in and then added to our routing
-        Object.keys(that.options.components).forEach(function(key) {
-            var component = that[key];
+// We will likely not have our routing infrastructure in place when our subcomponents are created, so we store them until we're ready.
+gpii.express.router.registerMiddleware = function(childMiddlewareComponent, parentRouterComponent) {
+    parentRouterComponent.options.middlewareToLoad.push(childMiddlewareComponent.getMiddlewareFunction());
+};
 
-            if (fluid.hasGrade(component.options, "gpii.express.router")) {
-                component.events.addRoutes.fire();
-                that.model.router.use(that.options.path, component.model.router);
-            }
-            else if (fluid.hasGrade(component.options, "gpii.express.middleware")) {
-                if (component.model.middleware) {
-                    var middlewareToLoad = Array.isArray(component.model.middleware) ? component.model.middleware : [component.model.middleware];
-                    for (var i = 0; i < middlewareToLoad.length; i++) {
-                        var functionName = middlewareToLoad[i];
-                        if (component[functionName]) {
-                            try {
-                                that.model.router.use(component[functionName]);
-                            }
-                            catch (e) {
-                                console.error("Error loading middleware function '" + functionName + "' in module '" + key + "':" + e);
-                            }
-                        }
-                        else {
-                            console.error("Middleware '" + functionName + "' does not exist in module '" + key + "'...");
-                        }
-                    }
-                }
-                else {
-                    console.log("Middleware module has no middleware to load, can't continue...");
-                }
-            }
-        });
-    }
+// If a working getRouterFunction() is not found, someone has not properly implemented their grade.
+gpii.express.router.complainAboutMissingFunction = function(that) {
+    throw(new Error("Your grade must have an getRouterFunction() invoker."));
 };
 
 fluid.defaults("gpii.express.router", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
     path: null,
+    middlewareToLoad: [],
+    routersToLoad:    [],
     config: "{gpii.express}.options.config",
-    model: {
-        router: null
-    },
+    distributeOptions:[
+        // TODO:  Talk this through with Antranig and come up with a better solution
+        //
+        //{
+        //    source: {
+        //        "funcName": "gpii.express.router.registerRouter",
+        //        "args": ["{arguments}.0", "{that}"]
+        //    },
+        //    target: "{gpii.express.router}.options.routersToLoad"
+        //},
+        {
+            record: {
+                "funcName": "gpii.express.router.registerMiddleware",
+                "args": ["{arguments}.0", "{gpii.express.router}"]
+            },
+            target: "{that > gpii.express.middleware}.options.listeners.onCreate"
+        }
+    ],
+    router: null,
     events: {
         addRoutes:       null,
         routerLoaded:    null
+    },
+    invokers: {
+        "getRouterFunction": {
+            "funcName": "gpii.express.router.complainAboutMissingFunction",
+            args: ["{that}"]
+        }
     },
     listeners: {
         "onCreate": {
             funcName: "gpii.express.router.createRouter",
             args: ["{that}"]
-        },
-        routerLoaded: [
-            {
-                "funcName": "gpii.express.router.loadMiddleware",
-                "args": "{that}"
-            }
-        ]
+        }
     }
 });
