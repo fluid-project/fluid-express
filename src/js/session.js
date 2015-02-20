@@ -19,7 +19,7 @@ fluid.defaults("gpii.express.middleware.session", {
     invokers: {
         "getMiddlewareFunction": {
             funcName: "gpii.express.middleware.session.getSessionFunction",
-            "args": [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+            "args": [ "{that}"]
         }
     }
 });

@@ -20,9 +20,9 @@ gpii.express.router.createRouter = function(that) {
     var express         = require("express");
     that.options.router = express.Router();
 
-    for (var a = 0; a < that.options.middlewareToLoad.length; a++){
-        that.options.router.use(that.options.middlewareToLoad[a]);
-    }
+    //for (var a = 0; a < that.options.middlewareToLoad.length; a++){
+    //    that.options.router.use(that.options.middlewareToLoad[a]);
+    //}
 
     // TODO:  Remove this once we have a working approach to avoid crawling through our components
     if (that.options.components) {
@@ -31,6 +31,9 @@ gpii.express.router.createRouter = function(that) {
             var component = that[keys[z]];
             if (fluid.hasGrade(component.options, "gpii.express.router")) {
                 that.options.router.use(that.options.path, component.options.router);
+            }
+            else if (fluid.hasGrade(component.options, "gpii.express.router")) {
+                that.options.router.use(component.getMiddlewareFunction());
             }
         }
     }

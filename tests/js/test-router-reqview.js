@@ -6,7 +6,6 @@ fluid.registerNamespace("gpii.express.tests.router.reqview");
 
 gpii.express.tests.router.reqview.getRouterFunction = function(that) {
     return function(req,res) {
-        req.session.lastAccess = new Date();
         res.status(200).send(JSON.stringify({"cookies": req.cookies, "params": req.params, "query": req.query, "session": req.session, "body": req.body }));
     };
 };

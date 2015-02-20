@@ -49,22 +49,38 @@ var express = gpii.express({
         "middleware": {
             "type": "gpii.express.tests.middleware.counter"
         },
-        "bodyparser": {
-            "type": "gpii.express.middleware.bodyparser"
-        },
-        "cookieparser": {
-            "type": "gpii.express.middleware.cookieparser"
-        },
-        "session": {
-            "type": "gpii.express.middleware.session"
-        },
         "hello": {
             "type": "gpii.express.tests.router.hello",
             "options": {
                 "components": {
+                    "reqview": {
+                        "type": "gpii.express.tests.router.reqview",
+                        "options": {
+                            "path": "/rv",
+                            "components": {
+                                "reqviewChild": {
+                                    "type": "gpii.express.tests.router.hello",
+                                    "options": {
+                                        "path":    "/jailed",
+                                        "message": "This is provided by a module nested four levels deep.",
+                                        "components": {
+                                            "cookieparser": {
+                                                "type": "gpii.express.middleware.cookieparser"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "world": {
                         "type": "gpii.express.tests.router.hello",
                         "options": {
+                            "components": {
+                                "session": {
+                                    "type": "gpii.express.middleware.session"
+                                }
+                            },
                             "path":    "/world",
                             "message": "Hello, yourself"
                         }
@@ -87,7 +103,23 @@ var express = gpii.express({
             }
         },
         "reqview": {
-            "type": "gpii.express.tests.router.reqview"
+            "type": "gpii.express.tests.router.reqview",
+            "options": {
+                "components": {
+                    "json": {
+                        "type": "gpii.express.middleware.bodyparser.json"
+                    },
+                    "urlencoded": {
+                        "type": "gpii.express.middleware.bodyparser.urlencoded"
+                    },
+                    "cookieparser": {
+                        "type": "gpii.express.middleware.cookieparser"
+                    },
+                    "session": {
+                        "type": "gpii.express.middleware.session"
+                    }
+                }
+            }
         }
     }
 });
@@ -135,7 +167,7 @@ jqUnit.asyncTest("Testing the 'hello' router module...", function() {
     });
 });
 
-jqUnit.asyncTest("Testing a nested 'hello/world' router module...", function() {
+jqUnit.asyncTest("Testing module nesting with the 'hello/world' router module...", function() {
     var options = {
         url: express.options.config.express.baseUrl + "hello/world"
     };
@@ -145,6 +177,22 @@ jqUnit.asyncTest("Testing a nested 'hello/world' router module...", function() {
         gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
         jqUnit.assertEquals("The nested body should match the configured content...", express.hello.world.options.message, body);
+    });
+});
+
+jqUnit.asyncTest("Testing middleware isolation with '/hello/rv'.", function() {
+    var options = {
+        url: express.options.config.express.baseUrl + "hello/rv"
+    };
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        var data = JSON.parse(body);
+
+        jqUnit.assertUndefined("The returned data should not contain session content from the sibling's middleware...", data.session);
+        jqUnit.assertUndefined("The returned data should not contain cookie content from a child's middleware...", data.cookies);
     });
 });
 
