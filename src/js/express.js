@@ -27,13 +27,16 @@ gpii.express.registerComponentLineage = function(childComponent, expressComponen
 
     var childNickname  = segments[segments.length - 1];
 
-    // If we only have one segment, we are a child of express itself.
-    if (segments.length === 1) {
+    var expressSegments = gpii.express.pathForComponent(expressComponent);
+
+    // If we only have one segment more than express, we are a child of express itself.
+    // We need this to be able to handle cases in which express itself is a child component.
+    if (segments.length === expressSegments.length + 1) {
         expressComponent.options.members.directChildrenOfInterest.push(childNickname);
     }
     // Otherwise, register the nickname of this component and its immediate parent path, each level will take care of the next highest.
-    else if (segments.length > 1) {
-        var parentPath = segments.slice(0, segments.length - 1).join(".");
+    else if (segments.length > expressSegments.length + 1) {
+        var parentPath = segments.slice(expressSegments.length, segments.length - 1).join(".");
         if (expressComponent.options.members.childrenByParent[parentPath]) {
             expressComponent.options.members.childrenByParent[parentPath].push(childNickname);
         }
@@ -43,7 +46,7 @@ gpii.express.registerComponentLineage = function(childComponent, expressComponen
     }
 };
 
-// Wire a child to its immediate descendents.
+// Wire a child to its immediate descendants.
 gpii.express.connectDirectDescendants = function(that, childComponent, childPath) {
     var descendants =  that.options.members.childrenByParent[childPath];
 
