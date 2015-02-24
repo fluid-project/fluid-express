@@ -19,6 +19,7 @@ gpii.express.router.createRouter = function(that) {
 
     var express         = require("express");
     that.options.router = express.Router();
+    //that.options.router[that.options.method](that.options.path, that.getRouterFunction());
     that.events.routerLoaded.fire(that);
 };
 

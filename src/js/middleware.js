@@ -12,7 +12,6 @@ gpii.express.middleware.complainAboutMissingFunction = function(that){
 
 fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.eventedComponent", "fluid.modelRelayComponent", "autoInit"],
-    method:     "use",
     config:     "{gpii.express}.options.config",
     invokers: {
         "getMiddlewareFunction": {

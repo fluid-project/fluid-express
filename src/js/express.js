@@ -57,13 +57,15 @@ gpii.express.connectDirectDescendants = function(that, childComponent, childPath
             var grandchildNickname  = descendants[a];
             var grandchildComponent = childComponent[grandchildNickname];
             if (fluid.hasGrade(grandchildComponent.options, "gpii.express.router")) {
-                childComponent.options.router[grandchildComponent.options.method](grandchildComponent.options.path, grandchildComponent.options.router);
+                // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
+                childComponent.options.router.use(childComponent.options.path, grandchildComponent.options.router);
 
                 // Recurse from here on down.
                 that.connectDirectDescendants(grandchildComponent, childPath + "." + grandchildNickname);
             }
             else if (fluid.hasGrade(grandchildComponent.options, "gpii.express.middleware")) {
-                childComponent.options.router[grandchildComponent.options.method](grandchildComponent.getMiddlewareFunction());
+                // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
+                childComponent.options.router.use(childComponent.options.path, grandchildComponent.getMiddlewareFunction());
             }
 
         }
@@ -72,8 +74,10 @@ gpii.express.connectDirectDescendants = function(that, childComponent, childPath
     // After our child components are in place, wire the router to itself.
     //
     // This must be done here because we want to give children the chance to own part of the path before we take the rest over.
+    //
+    // The path and method have to be used here so that parameters will be parsed correctly.
     if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-        childComponent.options.router[childComponent.options.method]("/", childComponent.getRouterFunction());
+        childComponent.options.router[childComponent.options.method](childComponent.options.path, childComponent.getRouterFunction());
     }
 };
 
@@ -86,16 +90,17 @@ gpii.express.init = function(that) {
     var express  = require("express");
     that.express = express();
 
-    // TODO: We may need to reverse the wiring order to avoid clobbering sub-modules
     // Wire together all routers and components, beginning with ourselves
     for (var a = 0; a < that.options.members.directChildrenOfInterest.length; a++) {
         var directChildNickname = that.options.members.directChildrenOfInterest[a];
         var childComponent      = that[directChildNickname];
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-            that.express[childComponent.options.method](childComponent.options.path, childComponent.options.router);
+            // The router has to wire its own paths to preserve methods and path variables.
+            // We just "use" it at the root level, and let it do the rest.
+            that.express.use("/", childComponent.options.router);
         }
         else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-            that.express[childComponent.options.method](childComponent.getMiddlewareFunction());
+            that.express.use(childComponent.getMiddlewareFunction());
         }
 
         // Recurse from here on down.

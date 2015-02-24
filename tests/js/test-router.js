@@ -12,8 +12,9 @@ gpii.express.tests.router.hello.getHelloFunction = function(that) {
 
 fluid.defaults("gpii.express.tests.router.hello", {
     gradeNames: ["gpii.express.router", "autoInit"],
-    path:    "/hello",
-    message: "Hello, World",
+    method:     "get",
+    path:       "/hello",
+    message:    "Hello, World",
     invokers: {
         "getRouterFunction": {
             funcName: "gpii.express.tests.router.hello.getHelloFunction",

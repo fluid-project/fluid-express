@@ -19,6 +19,7 @@ require("../src/js/session");
 require("./js/test-middleware");
 require("./js/test-router");
 require("./js/test-router-reqview");
+require("./js/test-router-params");
 
 gpii.express.tests.isSaneResponse = function(jqUnit, error, response, body) {
     jqUnit.assertNull("There should be no errors.", error);
@@ -102,6 +103,9 @@ var express = gpii.express({
                 content: contentDir
             }
         },
+        "params": {
+            "type": "gpii.express.tests.router.params"
+        },
         "reqview": {
             "type": "gpii.express.tests.router.reqview",
             "options": {
@@ -129,7 +133,7 @@ jqUnit.module("Testing express module stack...");
 jqUnit.asyncTest("Testing the 'static' router module (index content)...", function() {
     var options = {
         url: express.options.config.express.baseUrl
-    }
+    };
     request.get(options, function(error, response, body) {
         jqUnit.start();
 
@@ -300,6 +304,20 @@ jqUnit.asyncTest("Test the 'body parser' middleware (json)...", function(){
     });
 });
 
+jqUnit.asyncTest("Test a router that has a :param in its path", function(){
+    var options = {
+        url:  express.options.config.express.baseUrl + "params/foo"
+    };
+
+    request.get(options, function(error, response, body) {
+        jqUnit.start();
+
+        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
+
+        jqUnit.assertTrue("The body should contain the param we sent...", body.indexOf("foo") !== -1);
+    });
+});
+
 jqUnit.asyncTest("Test stopping the server...", function(){
     express.events.stopped.addListener(function(){
         var options = {
@@ -316,5 +334,7 @@ jqUnit.asyncTest("Test stopping the server...", function(){
     });
     express.destroy();
 });
+
+// TODO:  Repeat all these tests for the "nested" configuration without duplicating them.
 
 

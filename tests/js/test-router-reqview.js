@@ -12,7 +12,7 @@ gpii.express.tests.router.reqview.getRouterFunction = function(that) {
 
 fluid.defaults("gpii.express.tests.router.reqview", {
     gradeNames: ["gpii.express.router", "autoInit"],
-    path:    "/reqview",
+    path:       "/reqview",
     invokers: {
         "getRouterFunction": {
             funcName: "gpii.express.tests.router.reqview.getRouterFunction",
