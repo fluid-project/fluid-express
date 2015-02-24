@@ -29,13 +29,11 @@ gpii.express.router.complainAboutMissingFunction = function(that) {
 
 fluid.defaults("gpii.express.router", {
     gradeNames: ["fluid.eventedComponent", "fluid.standardRelayComponent", "autoInit"],
-    path: null,
-    middlewareToLoad: [],
-    routersToLoad:    [],
+    method:     "use",
+    path:       null,
     config: "{gpii.express}.options.config",
     router: null,
     events: {
-        addRoutes:       null,
         routerLoaded:    null
     },
     invokers: {

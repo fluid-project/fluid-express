@@ -57,13 +57,13 @@ gpii.express.connectDirectDescendants = function(that, childComponent, childPath
             var grandchildNickname  = descendants[a];
             var grandchildComponent = childComponent[grandchildNickname];
             if (fluid.hasGrade(grandchildComponent.options, "gpii.express.router")) {
-                childComponent.options.router.use(grandchildComponent.options.path, grandchildComponent.options.router);
+                childComponent.options.router[grandchildComponent.options.method](grandchildComponent.options.path, grandchildComponent.options.router);
 
                 // Recurse from here on down.
                 that.connectDirectDescendants(grandchildComponent, childPath + "." + grandchildNickname);
             }
             else if (fluid.hasGrade(grandchildComponent.options, "gpii.express.middleware")) {
-                childComponent.options.router.use(grandchildComponent.getMiddlewareFunction());
+                childComponent.options.router[grandchildComponent.options.method](grandchildComponent.getMiddlewareFunction());
             }
 
         }
@@ -73,7 +73,7 @@ gpii.express.connectDirectDescendants = function(that, childComponent, childPath
     //
     // This must be done here because we want to give children the chance to own part of the path before we take the rest over.
     if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-        childComponent.options.router.use("/", childComponent.getRouterFunction());
+        childComponent.options.router[childComponent.options.method]("/", childComponent.getRouterFunction());
     }
 };
 
@@ -92,10 +92,10 @@ gpii.express.init = function(that) {
         var directChildNickname = that.options.members.directChildrenOfInterest[a];
         var childComponent      = that[directChildNickname];
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-            that.express.use(childComponent.options.path, childComponent.options.router);
+            that.express[childComponent.options.method](childComponent.options.path, childComponent.options.router);
         }
         else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-            that.express.use(childComponent.getMiddlewareFunction());
+            that.express[childComponent.options.method](childComponent.getMiddlewareFunction());
         }
 
         // Recurse from here on down.
