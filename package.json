@@ -21,8 +21,13 @@
     "infusion":                "git://github.com/fluid-project/infusion.git#605b0bcfaedf6193c31456236d3aa4e42cf36a96",
     "kettle":                  "git://github.com/fluid-project/kettle.git#e79bb81196df68c97eaa9f96c485a4321b69af75"
   },
-  "devDependencies": {
-    "jqUnit":  "git://github.com/fluid-project/node-jqUnit.git#e9bf72445bd343a4f3aabe3ba96a1087d3498612",
-    "request": "2.51.0"
+    "devDependencies": {
+      "grunt": "~0.4.4",
+      "grunt-shell": "0.6.4",
+      "grunt-contrib-jshint": "~0.9.0",
+      "grunt-jsonlint": "1.0.4",
+      "grunt-gpii": "git://github.com/GPII/grunt-gpii.git#a4aca06cbaf7523eb1af56ed65ce6bd30b8ec325",
+      "jqUnit":  "git://github.com/fluid-project/node-jqUnit.git#e9bf72445bd343a4f3aabe3ba96a1087d3498612",
+      "request": "2.51.0"
   }
 }
