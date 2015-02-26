@@ -1,3 +1,4 @@
+"use strict";
 // Base grade for express router modules...
 //
 // The express module will automatically attempt to wire in anything with this gradeName into its routing table.
@@ -6,14 +7,14 @@
 //
 // See the tests for an example.
 
-var fluid = fluid || require('infusion');
+var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.router");
 
 // Instantiate our router object.  The root gpii.express object will wire everything together
 gpii.express.router.createRouter = function(that) {
     if (!that.options.config || !that.options.config.express) {
-        console.error("Can't instantiate router without a working config object.")
+        console.error("Can't instantiate router without a working config object.");
         return null;
     }
 
@@ -24,7 +25,7 @@ gpii.express.router.createRouter = function(that) {
 };
 
 // If a working getRouterFunction() is not found, someone has not properly implemented their grade.
-gpii.express.router.complainAboutMissingFunction = function(that) {
+gpii.express.router.complainAboutMissingFunction = function() {
     throw(new Error("Your grade must have an getRouterFunction() invoker."));
 };
 

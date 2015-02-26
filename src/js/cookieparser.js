@@ -1,12 +1,12 @@
 // Module to add body parsing to express.
 "use strict";
-var fluid = fluid || require('infusion');
+var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.cookieparser");
 
-var cp           = require('cookie-parser');
+var cp = require("cookie-parser");
 
-gpii.express.middleware.cookieparser.getCookieParserMiddlewareFunction = function(that) {
+gpii.express.middleware.cookieparser.getCookieParserMiddlewareFunction = function () {
     return cp();
 };
 

@@ -1,10 +1,10 @@
 // Sample "Hello World" router module
 "use strict";
-var fluid = fluid || require('infusion');
+var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.router.params");
 
-gpii.express.tests.router.params.getParamsFunction = function(that) {
+gpii.express.tests.router.params.getParamsFunction = function () {
     return function (req, res) {
         res.status(200).send("Param is set to '" + req.params.myvar + "'...");
     };

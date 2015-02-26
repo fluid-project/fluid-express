@@ -1,10 +1,10 @@
 // Sample "Hello World" router module
 "use strict";
-var fluid = fluid || require('infusion');
+var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.router.hello");
 
-gpii.express.tests.router.hello.getHelloFunction = function(that) {
+gpii.express.tests.router.hello.getHelloFunction = function (that) {
     return function (req, res) {
         res.status(200).send(that.options.message);
     };

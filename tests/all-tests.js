@@ -1,333 +1,625 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require('infusion');
+var fluid        = fluid || require("infusion");
 var gpii         = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.tests");
+fluid.registerNamespace("gpii.express.tests.expressTestCaseHolder");
+
+fluid.setLogging(true);
 
 var path         = require("path");
-var jqUnit       = fluid.require("jqUnit");
-var request      = require("request");
+var jqUnit       = require("jqUnit");
 
-// The component we are testing
+// Load all of the components to be tested
 require("../index.js");
 
-// Our test fixtures
-require("./js");
+// Load the test infrastructure
+require("./js/index.js");
 
-gpii.express.tests.isSaneResponse = function(jqUnit, error, response, body) {
-    jqUnit.assertNull("There should be no errors.", error);
+// We use just the request-handling bits of the kettle stack in our tests, but we include the whole thing to pick up the base grades
+require("../node_modules/kettle");
+require("../node_modules/kettle/lib/test/KettleTestUtils");
+
+var viewDir    = path.resolve(__dirname, "./views");
+var contentDir = path.resolve(__dirname, "./html");
+
+gpii.express.tests.expressTestCaseHolder.isSaneResponse = function (response, body) {
 
     jqUnit.assertEquals("The response should have a reasonable status code", 200, response.statusCode);
     if (response.statusCode !== 200) {
         console.log(JSON.stringify(body, null, 2));
     }
 
-    jqUnit.assertNotNull("There should be a body.", body);
+    jqUnit.assertValue("There should be a body.", body);
 };
 
-var viewDir    = path.resolve(__dirname, "./views");
-var contentDir = path.resolve(__dirname, "./html");
+gpii.express.tests.expressTestCaseHolder.assembleUrl = function(baseUrl, path) {
+    var fullPath;
+    // We have to be careful of double slashes (or no slashes)
+    if (baseUrl[baseUrl.length -1] === "/" && path[0] === "/") {
+        fullPath = baseUrl + path.substring(1);
 
-var express = gpii.express({
-    "config": {
-        "express": {
-            "port" :   7531,
-            "baseUrl": "http://localhost:7531/",
-            "views":   viewDir,
-            "session": {
-                "secret": "Printer, printer take a hint-ter."
+    }
+    else if (baseUrl[baseUrl.length -1] !== "/" && path[0] !== "/") {
+        fullPath = baseUrl + "/" + path;
+    }
+    else {
+        fullPath = baseUrl + path;
+    }
+    return fullPath;
+};
+
+gpii.express.tests.expressTestCaseHolder.verifyStaticRouterModule = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    var indexRegexp = /body of the index/;
+    jqUnit.assertNotNull("The body should match the index content...", body.match(indexRegexp));
+};
+
+gpii.express.tests.expressTestCaseHolder.verifyStaticRouterCustomContent = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    var customContentRegexp = /custom page/;
+    jqUnit.assertNotNull("The body should match the custom content...", body.match(customContentRegexp));
+};
+
+gpii.express.tests.expressTestCaseHolder.verifyHelloContent = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    jqUnit.assertEquals("The body should match the configured content...", "Hello, World", body);
+};
+
+gpii.express.tests.expressTestCaseHolder.verifyHelloWorldContent = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    jqUnit.assertEquals("The body should match the configured content...", "Hello, yourself", body);
+};
+
+gpii.express.tests.expressTestCaseHolder.verifyMiddlewareIsolation = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    var data = JSON.parse(body);
+
+    jqUnit.assertUndefined("The returned data should not contain session content from the sibling's middleware...", data.session);
+    jqUnit.assertUndefined("The returned data should not contain cookie content from a child's middleware...", data.cookies);
+};
+
+gpii.express.tests.expressTestCaseHolder.verifyWildcard = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    jqUnit.assertEquals("The nested body should match the configured content...", "Hello, wild world.", body);
+};
+
+// This test does not need to see the request per se, only the test environment after at least one request has gone through.
+gpii.express.tests.expressTestCaseHolder.testCounterMiddleware = function (that) {
+    jqUnit.assertTrue("The counter should be greater than one...", that.express.middleware.model.count > 1);
+};
+
+gpii.express.tests.expressTestCaseHolder.testCookieMiddleware = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    jqUnit.assertNotNull("There should be cookie data...", body.cookies);
+    if (body.cookies) {
+        jqUnit.assertNotNull("There should be a 'foo' cookie set...", body.cookies.foo);
+    }
+};
+
+
+gpii.express.tests.expressTestCaseHolder.testSessionMiddleware = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    jqUnit.assertNotNull("There should be session data...", body.session);
+    if (body.session) {
+        jqUnit.assertNotNull("There should be a 'lastAccess' session variable set...", body.session.lastAccess);
+    }
+};
+
+gpii.express.tests.expressTestCaseHolder.testBodyParserMiddleware = function (response, body) {
+
+    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
+
+    jqUnit.assertNotNull("There should be body data...", body.body);
+    if (body.body) {
+        jqUnit.assertNotNull("There should be a 'foo' body params variable set...", body.body.foo);
+    }
+};
+
+gpii.express.tests.expressTestCaseHolder.testExpressShutdown = function (error) {
+    jqUnit.assertNotNull("There should be an error returned.", error);
+    jqUnit.assertEquals("The connection should have been refused.", "ECONNREFUSED", error.code);
+};
+
+
+// Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
+fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
+    gradeNames: ["autoInit", "fluid.test.testCaseHolder"],
+    components: {
+        cookieJar: {
+            type: "kettle.test.cookieJar"
+        },
+        staticRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: "{testEnvironment}.options.baseUrl",
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        counterRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: "{testEnvironment}.options.baseUrl",
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        staticCustomRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "custom.html"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        helloRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/hello"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        helloWorldRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/hello/world"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        middlewareIsolationRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/hello/rv"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        wildcardRootRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/wildcard/"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        wildcardDeepRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/wildcard/many/levels/deep"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        cookieSetRequest: {
+            type: "kettle.test.request.httpCookie",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/cookie"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        cookieReadRequest: {
+            type: "kettle.test.request.httpCookie",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        sessionRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        bodyParserRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        shutdownRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: "{testEnvironment}.options.baseUrl",
+                port: "{testEnvironment}.options.port",
+                method: "GET"
             }
         }
     },
+    modules: [
+        {
+            tests: [
+                {
+                    name: "Testing the 'static' router module (index content)...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{staticRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyStaticRouterModule",
+                            event: "{staticRequest}.events.onComplete",
+                            args: ["{staticRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing the 'static' router module (custom content)...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{staticCustomRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyStaticRouterCustomContent",
+                            event: "{staticCustomRequest}.events.onComplete",
+                            args: ["{staticCustomRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing router nesting and middleware isolation...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{helloRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyHelloContent",
+                            event: "{helloRequest}.events.onComplete",
+                            args: ["{helloRequest}.nativeResponse", "{arguments}.0"]
+                        },
+                        {
+                            func: "{helloWorldRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyHelloWorldContent",
+                            event: "{helloWorldRequest}.events.onComplete",
+                            args: ["{helloWorldRequest}.nativeResponse", "{arguments}.0"]
+                        },
+                        {
+                            func: "{middlewareIsolationRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyMiddlewareIsolation",
+                            event: "{middlewareIsolationRequest}.events.onComplete",
+                            args: ["{middlewareIsolationRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing the 'wildcard' router module (index content)...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{wildcardRootRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyWildcard",
+                            event: "{wildcardRootRequest}.events.onComplete",
+                            args: ["{wildcardRootRequest}.nativeResponse", "{arguments}.0"]
+                        },
+                        {
+                            func: "{wildcardDeepRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyWildcard",
+                            event: "{wildcardDeepRequest}.events.onComplete",
+                            args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing the 'counter' middleware module...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{staticRequest}.send"
+                        },
+                        {
+                            listener: "{counterRequest}.send",
+                            event: "{staticRequest}.events.onComplete"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.testCounterMiddleware",
+                            event: "{counterRequest}.events.onComplete",
+                            args: ["{testEnvironment}"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing the 'session' middleware module...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{sessionRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.testSessionMiddleware",
+                            event: "{sessionRequest}.events.onComplete",
+                            args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing the 'body parser' middleware module...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{bodyParserRequest}.send",
+                            args: [{ foo: "bar" }]
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.testBodyParserMiddleware",
+                            event: "{bodyParserRequest}.events.onComplete",
+                            args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing the 'cookie' middleware module...",
+                    type: "test",
+                    sequence: [
+                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+                            func: "{testEnvironment}.events.constructServer.fire"
+                        },
+                        {
+                            listener: "fluid.identity",
+                            event: "{testEnvironment}.events.started"
+                        },
+                        {
+                            func: "{cookieSetRequest}.send"
+                        },
+                        {
+                            listener: "{cookieReadRequest}.send",
+                            event: "{cookieSetRequest}.events.onComplete"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.testCookieMiddleware",
+                            event: "{cookieReadRequest}.events.onComplete",
+                            args: ["{cookieReadRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+});
+
+fluid.defaults("gpii.express.tests.expressTestTree", {
+    gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+    port:   7531,
+    baseUrl: "http://localhost/",
+    events: {
+        constructServer: null,
+        started: null
+    },
     components: {
-        "middleware": {
-            "type": "gpii.express.tests.middleware.counter"
-        },
-        "hello": {
-            "type": "gpii.express.tests.router.hello",
-            "options": {
-                "components": {
-                    "reqview": {
-                        "type": "gpii.express.tests.router.reqview",
-                        "options": {
-                            "path": "/rv",
-                            "components": {
-                                "reqviewChild": {
-                                    "type": "gpii.express.tests.router.hello",
-                                    "options": {
-                                        "path":    "/jailed",
-                                        "message": "This is provided by a module nested four levels deep.",
-                                        "components": {
-                                            "cookieparser": {
-                                                "type": "gpii.express.middleware.cookieparser"
+        express: {       // instance of component under test
+            createOnEvent: "constructServer",
+            type: "gpii.express",
+            options: {
+                events: {
+                    started: "{testEnvironment}.events.started"
+                },
+                config: {
+                    express: {
+                        port: "{testEnvironment}.options.port",
+                        baseUrl: "{testEnvironment}.options.baseUrl",
+                        views:   viewDir,
+                        session: {
+                            secret: "Printer, printer take a hint-ter."
+                        }
+                    }
+                },
+                components: {
+                    middleware: {
+                        type: "gpii.express.tests.middleware.counter"
+                    },
+                    cookie: {
+                        type: "gpii.express.tests.router.cookie"
+                    },
+                    hello: {
+                        type: "gpii.express.tests.router.hello",
+                        options: {
+                            components: {
+                                reqview: {
+                                    type: "gpii.express.tests.router.reqview",
+                                    options: {
+                                        path: "/rv",
+                                        components: {
+                                            reqviewChild: {
+                                                type: "gpii.express.tests.router.hello",
+                                                options: {
+                                                    path:    "/jailed",
+                                                    message: "This is provided by a module nested four levels deep.",
+                                                    components: {
+                                                        cookieparser: {
+                                                            type: "gpii.express.middleware.cookieparser"
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
+                                    }
+                                },
+                                world: {
+                                    type: "gpii.express.tests.router.hello",
+                                    options: {
+                                        components: {
+                                            session: {
+                                                type: "gpii.express.middleware.session"
+                                            }
+                                        },
+                                        path:    "/world",
+                                        message: "Hello, yourself"
                                     }
                                 }
                             }
                         }
                     },
-                    "world": {
-                        "type": "gpii.express.tests.router.hello",
-                        "options": {
-                            "components": {
-                                "session": {
-                                    "type": "gpii.express.middleware.session"
+                    wildcard: {
+                        type: "gpii.express.tests.router.hello",
+                        options: {
+                            path:    "/wildcard/*",
+                            message: "Hello, wild world."
+                        }
+                    },
+                    staticRouter: {
+                        type: "gpii.express.router.static",
+                        options: {
+                            path:    "/",
+                            content: contentDir
+                        }
+                    },
+                    reqview: {
+                        type: "gpii.express.tests.router.reqview",
+                        options: {
+                            components: {
+                                json: {
+                                    type: "gpii.express.middleware.bodyparser.json"
+                                },
+                                urlencoded: {
+                                    type: "gpii.express.middleware.bodyparser.urlencoded"
+                                },
+                                cookieparser: {
+                                    type: "gpii.express.middleware.cookieparser"
+                                },
+                                session: {
+                                    type: "gpii.express.middleware.session"
                                 }
-                            },
-                            "path":    "/world",
-                            "message": "Hello, yourself"
+                            }
                         }
                     }
                 }
             }
         },
-        "wildcard": {
-            "type": "gpii.express.tests.router.hello",
-            "options": {
-                "path":    "/wildcard/*",
-                "message": "Hello, wild world."
-            }
-        },
-        "static": {
-            "type": "gpii.express.router.static",
-            "options": {
-                path:    "/",
-                content: contentDir
-            }
-        },
-        "params": {
-            "type": "gpii.express.tests.router.params"
-        },
-        "reqview": {
-            "type": "gpii.express.tests.router.reqview",
-            "options": {
-                "components": {
-                    "json": {
-                        "type": "gpii.express.middleware.bodyparser.json"
-                    },
-                    "urlencoded": {
-                        "type": "gpii.express.middleware.bodyparser.urlencoded"
-                    },
-                    "cookieparser": {
-                        "type": "gpii.express.middleware.cookieparser"
-                    },
-                    "session": {
-                        "type": "gpii.express.middleware.session"
-                    }
-                }
-            }
+        testCaseHolder: {
+            type: "gpii.express.tests.expressTestCaseHolder"
         }
     }
 });
 
-jqUnit.module("Testing express module stack...");
-
-jqUnit.asyncTest("Testing the 'static' router module (index content)...", function() {
-    var options = {
-        url: express.options.config.express.baseUrl
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        var indexRegexp = /body of the index/;
-        jqUnit.assertNotNull("The body should match the index content...", body.match(indexRegexp));
-    });
-});
-
-jqUnit.asyncTest("Testing the 'static' router module (custom content)...", function() {
-    var options = {
-        url: express.options.config.express.baseUrl + "custom.html"
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        var customContentRegexp = /custom page/;
-        jqUnit.assertNotNull("The body should match the custom content...", body.match(customContentRegexp));
-    });
-});
-
-jqUnit.asyncTest("Testing the 'hello' router module...", function() {
-    var options = {
-        url: express.options.config.express.baseUrl + "hello"
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        jqUnit.assertEquals("The body should match the configured content...", express.hello.options.message, body);
-    });
-});
-
-jqUnit.asyncTest("Testing module nesting with the 'hello/world' router module...", function() {
-    var options = {
-        url: express.options.config.express.baseUrl + "hello/world"
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        jqUnit.assertEquals("The nested body should match the configured content...", express.hello.world.options.message, body);
-    });
-});
-
-jqUnit.asyncTest("Testing middleware isolation with '/hello/rv'.", function() {
-    var options = {
-        url: express.options.config.express.baseUrl + "hello/rv"
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        var data = JSON.parse(body);
-
-        jqUnit.assertUndefined("The returned data should not contain session content from the sibling's middleware...", data.session);
-        jqUnit.assertUndefined("The returned data should not contain cookie content from a child's middleware...", data.cookies);
-    });
-});
-
-jqUnit.asyncTest("Testing a wildcard path (root)...", function() {
-    var options = {
-        url: express.options.config.express.baseUrl + "wildcard/"
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
-    });
-});
-
-jqUnit.asyncTest("Testing a wildcard path (deep)...", function() {
-    var options = {
-        url: express.options.config.express.baseUrl + "wildcard/more/path/information"
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        jqUnit.assertEquals("The nested body should match the configured content...", express.wildcard.options.message, body);
-    });
-});
-
-jqUnit.asyncTest("Testing the 'count' middleware to ensure it collects data...", function() {
-    var originalValue = express.middleware.model.count;
-    var options = {
-        url: express.options.config.express.baseUrl
-    };
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        var newValue = express.middleware.model.count;
-        jqUnit.assertTrue("The counter should go up each time we hit a page...", newValue > originalValue);
-        jqUnit.assertEquals("The counter should only have been incremented by one...", 1, (newValue - originalValue));
-    });
-});
-
-jqUnit.asyncTest("Test the 'cookie' middleware...", function(){
-    var url    = express.options.config.express.baseUrl + "reqview";
-    var j      = request.jar();
-    var cookie = request.cookie('foo=bar');
-    j.setCookie(cookie, url);
-
-    var options = {
-        url: url,
-        jar: j
-    };
-
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        var data = JSON.parse(body);
-        jqUnit.assertNotNull("There should be cookie data...", body.cookies);
-        if (body.cookies) {
-            jqUnit.assertNotNull("There should be a 'foo' cookie set...", body.cookies.foo);
-        }
-    });
-});
-
-jqUnit.asyncTest("Test the 'session' middleware...", function(){
-    var url    = express.options.config.express.baseUrl + "reqview";
-
-    var options = {
-        url: url
-    };
-
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        var data = JSON.parse(body);
-        jqUnit.assertNotNull("There should be session data...", body.session);
-        if (body.session) {
-            jqUnit.assertNotNull("There should be a 'lastAccess' session variable set...", body.session.lastAccess);
-        }
-    });
-});
-
-jqUnit.asyncTest("Test the 'body parser' middleware (json)...", function(){
-    var options = {
-        url:  express.options.config.express.baseUrl + "reqview",
-        json: { "foo": "bar" }
-    };
-
-    request.post(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        jqUnit.assertNotNull("There should be body data...", body.body);
-        if (body.body) {
-            jqUnit.assertNotNull("There should be a 'foo' body params variable set...", body.body.foo);
-        }
-    });
-});
-
-jqUnit.asyncTest("Test a router that has a :param in its path", function(){
-    var options = {
-        url:  express.options.config.express.baseUrl + "params/foo"
-    };
-
-    request.get(options, function(error, response, body) {
-        jqUnit.start();
-
-        gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
-
-        jqUnit.assertTrue("The body should contain the param we sent...", body.indexOf("foo") !== -1);
-    });
-});
-
-jqUnit.asyncTest("Test stopping the server...", function(){
-    express.events.stopped.addListener(function(){
-        var options = {
-            url: express.options.config.express.baseUrl
-        };
-
-        request.get(options, function(error, response, body) {
-            jqUnit.start();
-
-            // The server should not have responded.
-            jqUnit.assertNotNull("There should be an error returned.", error);
-            jqUnit.assertEquals("The connection should have been refused.", "ECONNREFUSED", error.code);
-        });
-    });
-    express.destroy();
-});
-
-// TODO:  Repeat all these tests for the "nested" configuration without duplicating them.
-
-
+gpii.express.tests.expressTestTree({});

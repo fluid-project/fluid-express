@@ -1,6 +1,6 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require('infusion');
+var fluid        = fluid || require("infusion");
 var gpii         = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests");
 
@@ -8,17 +8,9 @@ var path         = require("path");
 var jqUnit       = fluid.require("jqUnit");
 var request      = require("request");
 
-require("../src/js/express");
-require("../src/js/router");
-require("../src/js/static");
-require("../src/js/middleware");
-require("../src/js/json");
-require("../src/js/urlencoded");
-require("../src/js/cookieparser");
-require("../src/js/session");
-require("./js/test-middleware");
-require("./js/test-router");
-require("./js/test-router-reqview");
+require("../index.js");
+
+require("./js/index.js");
 
 gpii.express.tests.isSaneResponse = function(jqUnit, error, response, body) {
     jqUnit.assertNull("There should be no errors.", error);
@@ -140,7 +132,8 @@ jqUnit.module("Testing nested express module stack...");
 jqUnit.asyncTest("Testing the 'static' router module (index content)...", function() {
     var options = {
         url: nested.express.options.config.express.baseUrl
-    }
+    };
+
     request.get(options, function(error, response, body) {
         jqUnit.start();
 
@@ -252,7 +245,7 @@ jqUnit.asyncTest("Testing the 'count' middleware to ensure it collects data...",
 jqUnit.asyncTest("Test the 'cookie' middleware...", function(){
     var url    = nested.express.options.config.express.baseUrl + "reqview";
     var j      = request.jar();
-    var cookie = request.cookie('foo=bar');
+    var cookie = request.cookie("foo=bar");
     j.setCookie(cookie, url);
 
     var options = {
@@ -265,7 +258,6 @@ jqUnit.asyncTest("Test the 'cookie' middleware...", function(){
 
         gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
-        var data = JSON.parse(body);
         jqUnit.assertNotNull("There should be cookie data...", body.cookies);
         if (body.cookies) {
             jqUnit.assertNotNull("There should be a 'foo' cookie set...", body.cookies.foo);
@@ -285,7 +277,6 @@ jqUnit.asyncTest("Test the 'session' middleware...", function(){
 
         gpii.express.tests.isSaneResponse(jqUnit, error, response, body);
 
-        var data = JSON.parse(body);
         jqUnit.assertNotNull("There should be session data...", body.session);
         if (body.session) {
             jqUnit.assertNotNull("There should be a 'lastAccess' session variable set...", body.session.lastAccess);
@@ -314,10 +305,10 @@ jqUnit.asyncTest("Test the 'body parser' middleware (json)...", function(){
 jqUnit.asyncTest("Test stopping the server...", function(){
     nested.express.events.stopped.addListener(function(){
         var options = {
-            url: express.options.config.express.baseUrl
+            url: nested.express.options.config.express.baseUrl
         };
 
-        request.get(options, function(error, response, body) {
+        request.get(options, function (error) {
             jqUnit.start();
 
             // The server should not have responded.
