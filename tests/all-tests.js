@@ -8,18 +8,11 @@ var path         = require("path");
 var jqUnit       = fluid.require("jqUnit");
 var request      = require("request");
 
-require("../src/js/express");
-require("../src/js/router");
-require("../src/js/static");
-require("../src/js/middleware");
-require("../src/js/json");
-require("../src/js/urlencoded");
-require("../src/js/cookieparser");
-require("../src/js/session");
-require("./js/test-middleware");
-require("./js/test-router");
-require("./js/test-router-reqview");
-require("./js/test-router-params");
+// The component we are testing
+require("../index.js");
+
+// Our test fixtures
+require("./js");
 
 gpii.express.tests.isSaneResponse = function(jqUnit, error, response, body) {
     jqUnit.assertNull("There should be no errors.", error);
