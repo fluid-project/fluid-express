@@ -26,7 +26,7 @@
       "grunt-shell": "0.6.4",
       "grunt-contrib-jshint": "~0.9.0",
       "grunt-jsonlint": "1.0.4",
-      "grunt-gpii": "git://github.com/GPII/grunt-gpii.git#a4aca06cbaf7523eb1af56ed65ce6bd30b8ec325",
+      "grunt-gpii": "git://github.com/GPII/grunt-gpii.git#58ae055833f437a9e91baedb9f39a22c5fdd727f",
       "jqUnit":  "git://github.com/fluid-project/node-jqUnit.git#e9bf72445bd343a4f3aabe3ba96a1087d3498612",
       "request": "2.51.0"
   }
