@@ -275,14 +275,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                 port: "{testEnvironment}.options.port",
                 method: "GET"
             }
-        },
-        shutdownRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: "{testEnvironment}.options.baseUrl",
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
         }
     },
     modules: [
