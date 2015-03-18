@@ -116,7 +116,7 @@ gpii.express.init = function(that) {
         fluid.log("Express server listening on port " + that.express.get("port"));
 
         fluid.log("Express started...");
-        that.events.onStarted.fire(that.express);
+        that.events.onStarted.fire(that.express, that);
     });
 };
 
