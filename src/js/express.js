@@ -116,14 +116,14 @@ gpii.express.init = function(that) {
         fluid.log("Express server listening on port " + that.express.get("port"));
 
         fluid.log("Express started...");
-        that.events.started.fire(that.express);
+        that.events.onStarted.fire(that.express);
     });
 };
 
 gpii.express.stopServer = function(that) {
     that.server.close(function(){
         fluid.log("Express stopped...");
-        that.events.stopped.fire();
+        that.events.onStopped.fire();
     });
 };
 
@@ -158,8 +158,8 @@ fluid.defaults("gpii.express", {
         }
     },
     events: {
-        started:  null,
-        stopped:  null
+        onStarted:  null,
+        onStopped:  null
     },
     listeners: {
         onCreate: [

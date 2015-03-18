@@ -26,7 +26,7 @@ fluid.defaults("gpii.express.tests.expressTestTree", {
     baseUrl: "http://localhost/",
     events: {
         constructServer: null,
-        started: null
+        onStarted: null
     },
     components: {
         express: {       // instance of component under test
@@ -34,7 +34,7 @@ fluid.defaults("gpii.express.tests.expressTestTree", {
             type: "gpii.express",
             options: {
                 events: {
-                    started: "{testEnvironment}.events.started"
+                    onStarted: "{testEnvironment}.events.onStarted"
                 },
                 config: {
                     express: {

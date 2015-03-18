@@ -289,7 +289,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{staticRequest}.send"
@@ -310,7 +310,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{staticCustomRequest}.send"
@@ -331,7 +331,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{helloRequest}.send"
@@ -368,7 +368,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{wildcardRootRequest}.send"
@@ -397,7 +397,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{staticRequest}.send"
@@ -422,7 +422,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{sessionRequest}.send"
@@ -443,7 +443,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{bodyParserRequest}.send",
@@ -465,7 +465,7 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                         },
                         {
                             listener: "fluid.identity",
-                            event: "{testEnvironment}.events.started"
+                            event: "{testEnvironment}.events.onStarted"
                         },
                         {
                             func: "{cookieSetRequest}.send"
