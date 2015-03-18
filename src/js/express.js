@@ -111,8 +111,9 @@ gpii.express.init = function (that) {
         that.connectDirectDescendants(childComponent, directChildNickname);
     }
 
-    that.express.set("port", that.options.config.express.port);
-    that.server = that.express.listen(that.options.config.express.port, function () {
+    var port = that.options.config.express.port;
+    that.express.set("port", port);
+    that.server = that.express.listen(port, function () {
         fluid.log("Express server listening on port " + that.express.get("port"));
 
         fluid.log("Express started...");
