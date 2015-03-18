@@ -8,7 +8,7 @@ var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware");
 
 gpii.express.middleware.complainAboutMissingFunction = function(){
-    throw(new Error("You must implement your own getMiddleware invoker."));
+    fluid.fail(new Error("You must implement your own getMiddleware invoker."));
 };
 
 fluid.defaults("gpii.express.middleware", {

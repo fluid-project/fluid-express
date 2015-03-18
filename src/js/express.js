@@ -69,7 +69,7 @@ gpii.express.connectDirectDescendants = function(that, childComponent, childPath
                     childComponent.options.router.use(childComponent.options.path, grandchildComponent.getMiddleware());
                 }
                 else {
-                    throw(new Error({message: "A component must expose a router in order to work with child middleware components."}));
+                    fluid.fail(new Error({message: "A component must expose a router in order to work with child middleware components."}));
                 }
             }
         }
