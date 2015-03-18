@@ -47,26 +47,26 @@ gpii.express.registerComponentLineage = function (childComponent, expressCompone
 };
 
 // Wire a child to its immediate descendants.
-gpii.express.connectDirectDescendants = function (that, childComponent, childPath) {
-    var descendants =  that.childrenByParent[childPath];
+gpii.express.connectDirectDescendants = function (that, component, path) {
+    var descendants =  that.childrenByParent[path];
 
     // This component has descendants, wire them in first
     if (descendants !== undefined) {
         // Wire together one level of routers and middleware, then recurse
         for (var a = 0; a < descendants.length; a++) {
-            var grandchildNickname  = descendants[a];
-            var grandchildComponent = childComponent[grandchildNickname];
-            if (fluid.hasGrade(grandchildComponent.options, "gpii.express.router")) {
+            var childNickname  = descendants[a];
+            var childComponent = component[childNickname];
+            if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
                 // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                childComponent.options.router.use(childComponent.options.path, grandchildComponent.options.router);
+                component.options.router.use(component.options.path, childComponent.options.router);
 
                 // Recurse from here on down.
-                that.connectDirectDescendants(grandchildComponent, childPath + "." + grandchildNickname);
+                that.connectDirectDescendants(childComponent, path + "." + childNickname);
             }
-            else if (fluid.hasGrade(grandchildComponent.options, "gpii.express.middleware")) {
-                if (childComponent.options.router) {
+            else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
+                if (component.options.router) {
                     // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                    childComponent.options.router.use(childComponent.options.path, grandchildComponent.getMiddleware());
+                    component.options.router.use(component.options.path, childComponent.getMiddleware());
                 }
                 else {
                     fluid.fail(new Error({message: "A component must expose a router in order to work with child middleware components."}));
@@ -80,8 +80,8 @@ gpii.express.connectDirectDescendants = function (that, childComponent, childPat
     // This must be done here because we want to give children the chance to own part of the path before we take the rest over.
     //
     // The path and method have to be used here so that parameters will be parsed correctly.
-    if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-        childComponent.options.router[childComponent.options.method](childComponent.options.path, childComponent.getRouter());
+    if (fluid.hasGrade(component.options, "gpii.express.router")) {
+        component.options.router[component.options.method](component.options.path, component.getRouter());
     }
 };
 
