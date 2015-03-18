@@ -14,8 +14,7 @@ fluid.defaults("gpii.express.middleware.cookieparser", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.middleware", "autoInit"],
     invokers: {
         "getMiddleware": {
-            funcName: "gpii.express.middleware.cookieparser.getMiddleware",
-            "args": [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+            funcName: "gpii.express.middleware.cookieparser.getMiddleware"
         }
     }
 });
