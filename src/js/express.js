@@ -113,16 +113,16 @@ gpii.express.init = function(that) {
 
     that.express.set("port", that.options.config.express.port);
     that.server = that.express.listen(that.options.config.express.port, function(){
-        console.log("Express server listening on port " + that.express.get("port"));
+        fluid.log("Express server listening on port " + that.express.get("port"));
 
-        console.log("Express started...");
+        fluid.log("Express started...");
         that.events.started.fire(that.express);
     });
 };
 
 gpii.express.stopServer = function(that) {
     that.server.close(function(){
-        console.log("Express stopped...");
+        fluid.log("Express stopped...");
         that.events.stopped.fire();
     });
 };

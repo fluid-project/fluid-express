@@ -10,12 +10,12 @@ var express = require("express");
 /* jshint -W024 */
 gpii.express.router.static.getRouter = function(that) {
     if (!that.options.path) {
-        console.log("You must configure a path for a gpii.express.router grade...");
+        fluid.log("You must configure a path for a gpii.express.router grade...");
         return null;
     }
 
     if (!that.options.content) {
-        console.log("You must configure a content value to indicate what static content is to be served.");
+        fluid.log("You must configure a content value to indicate what static content is to be served.");
         return;
     }
 
