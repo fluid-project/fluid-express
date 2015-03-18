@@ -12,7 +12,7 @@ var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.router");
 
 // Instantiate our router object.  The root gpii.express object will wire everything together
-gpii.express.router.createRouter = function(that) {
+gpii.express.router.createRouter = function (that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Can't instantiate router without a working config object.");
         return null;
@@ -25,7 +25,7 @@ gpii.express.router.createRouter = function(that) {
 };
 
 // If a working getRouter() is not found, someone has not properly implemented their grade.
-gpii.express.router.complainAboutMissingFunction = function() {
+gpii.express.router.complainAboutMissingFunction = function () {
     fluid.fail(new Error("Your grade must have an getRouter() invoker."));
 };
 

@@ -4,7 +4,7 @@ var fluid     = fluid || require("infusion");
 var gpii      = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.session");
 
-gpii.express.middleware.session.getMiddleware = function(that) {
+gpii.express.middleware.session.getMiddleware = function (that) {
     var session   = require("express-session");
     var options = {
         secret:            that.options.config.express.session.secret,

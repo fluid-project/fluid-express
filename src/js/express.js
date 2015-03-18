@@ -13,15 +13,15 @@ fluid.registerNamespace("gpii.express");
 gpii.express.pathForComponent = function (that) {
     var instantiator  = fluid.getInstantiator(that);
     var path          = instantiator.idToPath(that.id);
-    var segments      = fluid.model.parseEL(path);
-    return segments;
+
+    return fluid.model.parseEL(path);
 };
 
 // Make a note of the lineage of this middleware or router component, all the way back presumably to this gpii.express
 // instance itself.
 //
 // This information will be used to wire together all nested routers and any middleware dependencies they have.
-gpii.express.registerComponentLineage = function(childComponent, expressComponent) {
+gpii.express.registerComponentLineage = function (childComponent, expressComponent) {
     // Get the list of parents for this component
     var segments = gpii.express.pathForComponent(childComponent);
 
@@ -47,7 +47,7 @@ gpii.express.registerComponentLineage = function(childComponent, expressComponen
 };
 
 // Wire a child to its immediate descendants.
-gpii.express.connectDirectDescendants = function(that, childComponent, childPath) {
+gpii.express.connectDirectDescendants = function (that, childComponent, childPath) {
     var descendants =  that.options.members.childrenByParent[childPath];
 
     // This component has descendants, wire them in first
@@ -85,7 +85,7 @@ gpii.express.connectDirectDescendants = function(that, childComponent, childPath
     }
 };
 
-gpii.express.init = function(that) {
+gpii.express.init = function (that) {
     if (!that.options.config || !that.options.config.express) {
         console.error("Cannot initialize express because you have not supplied a 'config' option.");
         return;
@@ -112,7 +112,7 @@ gpii.express.init = function(that) {
     }
 
     that.express.set("port", that.options.config.express.port);
-    that.server = that.express.listen(that.options.config.express.port, function(){
+    that.server = that.express.listen(that.options.config.express.port, function () {
         fluid.log("Express server listening on port " + that.express.get("port"));
 
         fluid.log("Express started...");
@@ -120,8 +120,8 @@ gpii.express.init = function(that) {
     });
 };
 
-gpii.express.stopServer = function(that) {
-    that.server.close(function(){
+gpii.express.stopServer = function (that) {
+    that.server.close(function () {
         fluid.log("Express stopped...");
         that.events.onStopped.fire();
     });
@@ -135,7 +135,7 @@ fluid.defaults("gpii.express", {
     },
     path: "/",
     express: null,
-    distributeOptions:[
+    distributeOptions: [
         {
             record: {
                 "funcName": "gpii.express.registerComponentLineage",

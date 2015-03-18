@@ -6,7 +6,7 @@ fluid.registerNamespace("gpii.express.middleware.bodyparser.urlencoded");
 
 var bp = require("body-parser");
 
-gpii.express.middleware.bodyparser.urlencoded.getMiddleware = function() {
+gpii.express.middleware.bodyparser.urlencoded.getMiddleware = function () {
     return bp.urlencoded({ extended: false });
 };
 

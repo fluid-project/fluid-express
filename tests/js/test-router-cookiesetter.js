@@ -6,7 +6,7 @@ fluid.registerNamespace("gpii.express.tests.router.cookie");
 
 gpii.express.tests.router.cookie.getRouter = function () {
     return function (req, res) {
-        res.status(200).cookie("foo","bar").send({ok: true, message: "You should now have a cookie set..."});
+        res.status(200).cookie("foo", "bar").send({ok: true, message: "You should now have a cookie set..."});
     };
 };
 

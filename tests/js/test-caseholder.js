@@ -18,14 +18,14 @@ gpii.express.tests.expressTestCaseHolder.isSaneResponse = function (response, bo
     jqUnit.assertValue("There should be a body.", body);
 };
 
-gpii.express.tests.expressTestCaseHolder.assembleUrl = function(baseUrl, path) {
+gpii.express.tests.expressTestCaseHolder.assembleUrl = function (baseUrl, path) {
     var fullPath;
     // We have to be careful of double slashes (or no slashes)
-    if (baseUrl[baseUrl.length -1] === "/" && path[0] === "/") {
+    if (baseUrl[baseUrl.length - 1] === "/" && path[0] === "/") {
         fullPath = baseUrl + path.substring(1);
 
     }
-    else if (baseUrl[baseUrl.length -1] !== "/" && path[0] !== "/") {
+    else if (baseUrl[baseUrl.length - 1] !== "/" && path[0] !== "/") {
         fullPath = baseUrl + "/" + path;
     }
     else {
