@@ -30,7 +30,7 @@ gpii.express.router.complainAboutMissingFunction = function() {
 };
 
 fluid.defaults("gpii.express.router", {
-    gradeNames: ["fluid.eventedComponent", "fluid.standardRelayComponent", "autoInit"],
+    gradeNames: ["fluid.eventedComponent", "autoInit"],
     method:     "use",
     path:       null,
     config: "{gpii.express}.options.config",
