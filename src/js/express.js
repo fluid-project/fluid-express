@@ -162,18 +162,16 @@ fluid.defaults("gpii.express", {
         onStopped:  null
     },
     listeners: {
-        onCreate: [
-            {
-                "funcName": "gpii.express.init",
-                "args": "{that}"
-            }
-        ],
-        onDestroy: [
-            {
-                funcName: "gpii.express.stopServer",
-                args: ["{that}"]
-            }
-        ]
+        onCreate:
+        {
+            "funcName": "gpii.express.init",
+            "args":     "{that}"
+        },
+        "onDestroy.stopServer":
+        {
+            funcName: "gpii.express.stopServer",
+            args:     ["{that}"]
+        }
     }
 });
 
