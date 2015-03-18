@@ -4,7 +4,7 @@ var fluid     = fluid || require("infusion");
 var gpii      = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.session");
 
-gpii.express.middleware.session.getSessionFunction = function(that) {
+gpii.express.middleware.session.getMiddleware = function(that) {
     var session   = require("express-session");
     var options = {
         secret:            that.options.config.express.session.secret,
@@ -17,8 +17,8 @@ gpii.express.middleware.session.getSessionFunction = function(that) {
 fluid.defaults("gpii.express.middleware.session", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.middleware", "autoInit"],
     invokers: {
-        "getMiddlewareFunction": {
-            funcName: "gpii.express.middleware.session.getSessionFunction",
+        "getMiddleware": {
+            funcName: "gpii.express.middleware.session.getMiddleware",
             "args": [ "{that}"]
         }
     }

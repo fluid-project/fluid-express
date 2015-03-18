@@ -6,7 +6,7 @@ fluid.registerNamespace("gpii.express.middleware.bodyparser.json");
 
 var bp         = require("body-parser");
 
-gpii.express.middleware.bodyparser.json.getMiddlewareFunction = function () {
+gpii.express.middleware.bodyparser.json.getMiddleware = function () {
     return bp.json();
 };
 
@@ -16,8 +16,8 @@ fluid.defaults("gpii.express.middleware.bodyparser.json", {
         middleware: ["urlencoded", "json"]
     },
     invokers: {
-        "getMiddlewareFunction": {
-            funcName: "gpii.express.middleware.bodyparser.json.getMiddlewareFunction",
+        "getMiddleware": {
+            funcName: "gpii.express.middleware.bodyparser.json.getMiddleware",
             args: ["{that}"]
         }
     }

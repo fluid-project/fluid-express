@@ -6,15 +6,15 @@ fluid.registerNamespace("gpii.express.middleware.cookieparser");
 
 var cp = require("cookie-parser");
 
-gpii.express.middleware.cookieparser.getCookieParserMiddlewareFunction = function () {
+gpii.express.middleware.cookieparser.getMiddleware = function () {
     return cp();
 };
 
 fluid.defaults("gpii.express.middleware.cookieparser", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.middleware", "autoInit"],
     invokers: {
-        "getMiddlewareFunction": {
-            funcName: "gpii.express.middleware.cookieparser.getCookieParserMiddlewareFunction",
+        "getMiddleware": {
+            funcName: "gpii.express.middleware.cookieparser.getMiddleware",
             "args": [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }

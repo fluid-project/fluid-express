@@ -20,13 +20,13 @@ gpii.express.router.createRouter = function(that) {
 
     var express         = require("express");
     that.options.router = express.Router();
-    //that.options.router[that.options.method](that.options.path, that.getRouterFunction());
+    //that.options.router[that.options.method](that.options.path, that.getRouter());
     that.events.routerLoaded.fire(that);
 };
 
-// If a working getRouterFunction() is not found, someone has not properly implemented their grade.
+// If a working getRouter() is not found, someone has not properly implemented their grade.
 gpii.express.router.complainAboutMissingFunction = function() {
-    throw(new Error("Your grade must have an getRouterFunction() invoker."));
+    throw(new Error("Your grade must have an getRouter() invoker."));
 };
 
 fluid.defaults("gpii.express.router", {
@@ -39,7 +39,7 @@ fluid.defaults("gpii.express.router", {
         routerLoaded:    null
     },
     invokers: {
-        "getRouterFunction": {
+        "getRouter": {
             "funcName": "gpii.express.router.complainAboutMissingFunction",
             args: ["{that}"]
         }

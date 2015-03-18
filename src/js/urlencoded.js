@@ -4,17 +4,17 @@ var fluid  = fluid || require("infusion");
 var gpii   = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.bodyparser.urlencoded");
 
-var bp         = require("body-parser");
+var bp = require("body-parser");
 
-gpii.express.middleware.bodyparser.urlencoded.getUrlencodedMiddlewareFunction = function() {
+gpii.express.middleware.bodyparser.urlencoded.getMiddleware = function() {
     return bp.urlencoded({ extended: false });
 };
 
 fluid.defaults("gpii.express.middleware.bodyparser.urlencoded", {
     gradeNames: ["fluid.standardRelayComponent", "gpii.express.middleware", "autoInit"],
     invokers: {
-        "getMiddlewareFunction": {
-            funcName: "gpii.express.middleware.bodyparser.urlencoded.getUrlencodedMiddlewareFunction",
+        "getMiddleware": {
+            funcName: "gpii.express.middleware.bodyparser.urlencoded.getMiddleware",
             "args": [ "{that}" ]
         }
     }

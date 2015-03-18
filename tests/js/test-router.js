@@ -4,7 +4,7 @@ var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.router.hello");
 
-gpii.express.tests.router.hello.getHelloFunction = function (that) {
+gpii.express.tests.router.hello.getRouter = function (that) {
     return function (req, res) {
         res.status(200).send(that.options.message);
     };
@@ -16,8 +16,8 @@ fluid.defaults("gpii.express.tests.router.hello", {
     path:       "/hello",
     message:    "Hello, World",
     invokers: {
-        "getRouterFunction": {
-            funcName: "gpii.express.tests.router.hello.getHelloFunction",
+        "getRouter": {
+            funcName: "gpii.express.tests.router.hello.getRouter",
             args: ["{that}"]
         }
     }
