@@ -32,23 +32,23 @@ gpii.express.registerComponentLineage = function (childComponent, expressCompone
     // If we only have one segment more than express, we are a child of express itself.
     // We need this to be able to handle cases in which express itself is a child component.
     if (segments.length === expressSegments.length + 1) {
-        expressComponent.options.members.directChildrenOfInterest.push(childNickname);
+        expressComponent.directChildrenOfInterest.push(childNickname);
     }
     // Otherwise, register the nickname of this component and its immediate parent path, each level will take care of the next highest.
     else if (segments.length > expressSegments.length + 1) {
         var parentPath = segments.slice(expressSegments.length, segments.length - 1).join(".");
-        if (expressComponent.options.members.childrenByParent[parentPath]) {
-            expressComponent.options.members.childrenByParent[parentPath].push(childNickname);
+        if (expressComponent.childrenByParent[parentPath]) {
+            expressComponent.childrenByParent[parentPath].push(childNickname);
         }
         else {
-            expressComponent.options.members.childrenByParent[parentPath] = [childNickname];
+            expressComponent.childrenByParent[parentPath] = [childNickname];
         }
     }
 };
 
 // Wire a child to its immediate descendants.
 gpii.express.connectDirectDescendants = function (that, childComponent, childPath) {
-    var descendants =  that.options.members.childrenByParent[childPath];
+    var descendants =  that.childrenByParent[childPath];
 
     // This component has descendants, wire them in first
     if (descendants !== undefined) {
@@ -95,8 +95,8 @@ gpii.express.init = function (that) {
     that.express = express();
 
     // Wire together all routers and components, beginning with ourselves
-    for (var a = 0; a < that.options.members.directChildrenOfInterest.length; a++) {
-        var directChildNickname = that.options.members.directChildrenOfInterest[a];
+    for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
+        var directChildNickname = that.directChildrenOfInterest[a];
         var childComponent      = that[directChildNickname];
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // The router has to wire its own paths to preserve methods and path variables.
