@@ -34,34 +34,11 @@ gpii.express.tests.expressTestCaseHolder.assembleUrl = function (baseUrl, path) 
     return fullPath;
 };
 
-gpii.express.tests.expressTestCaseHolder.verifyStaticRouterModule = function (response, body) {
+gpii.express.tests.expressTestCaseHolder.verifyContent = function (response, body, expectedString) {
 
     gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
 
-    var indexRegexp = /body of the index/;
-    jqUnit.assertNotNull("The body should match the index content...", body.match(indexRegexp));
-};
-
-gpii.express.tests.expressTestCaseHolder.verifyStaticRouterCustomContent = function (response, body) {
-
-    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
-
-    var customContentRegexp = /custom page/;
-    jqUnit.assertNotNull("The body should match the custom content...", body.match(customContentRegexp));
-};
-
-gpii.express.tests.expressTestCaseHolder.verifyHelloContent = function (response, body) {
-
-    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
-
-    jqUnit.assertEquals("The body should match the configured content...", "Hello, World", body);
-};
-
-gpii.express.tests.expressTestCaseHolder.verifyHelloWorldContent = function (response, body) {
-
-    gpii.express.tests.expressTestCaseHolder.isSaneResponse(response, body);
-
-    jqUnit.assertEquals("The body should match the configured content...", "Hello, yourself", body);
+    jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
 gpii.express.tests.expressTestCaseHolder.verifyMiddlewareIsolation = function (response, body) {
@@ -95,7 +72,6 @@ gpii.express.tests.expressTestCaseHolder.testCookieMiddleware = function (respon
         jqUnit.assertNotNull("There should be a 'foo' cookie set...", body.cookies.foo);
     }
 };
-
 
 gpii.express.tests.expressTestCaseHolder.testSessionMiddleware = function (response, body) {
 
@@ -295,9 +271,9 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                             func: "{staticRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.expressTestCaseHolder.verifyStaticRouterModule",
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
                             event: "{staticRequest}.events.onComplete",
-                            args: ["{staticRequest}.nativeResponse", "{arguments}.0"]
+                            args: ["{staticRequest}.nativeResponse", "{arguments}.0", "body of the index"]
                         }
                     ]
                 },
@@ -316,9 +292,9 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                             func: "{staticCustomRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.expressTestCaseHolder.verifyStaticRouterCustomContent",
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
                             event: "{staticCustomRequest}.events.onComplete",
-                            args: ["{staticCustomRequest}.nativeResponse", "{arguments}.0"]
+                            args: ["{staticCustomRequest}.nativeResponse", "{arguments}.0", "custom page"]
                         }
                     ]
                 },
@@ -337,17 +313,17 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                             func: "{helloRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.expressTestCaseHolder.verifyHelloContent",
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
                             event: "{helloRequest}.events.onComplete",
-                            args: ["{helloRequest}.nativeResponse", "{arguments}.0"]
+                            args: ["{helloRequest}.nativeResponse", "{arguments}.0", "Hello, World"]
                         },
                         {
                             func: "{helloWorldRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.expressTestCaseHolder.verifyHelloWorldContent",
+                            listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
                             event: "{helloWorldRequest}.events.onComplete",
-                            args: ["{helloWorldRequest}.nativeResponse", "{arguments}.0"]
+                            args: ["{helloWorldRequest}.nativeResponse", "{arguments}.0", "Hello, yourself"]
                         },
                         {
                             func: "{middlewareIsolationRequest}.send"
