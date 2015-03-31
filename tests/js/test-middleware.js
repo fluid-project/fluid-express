@@ -12,7 +12,7 @@ gpii.express.tests.middleware.counter.getMiddleware = function (that) {
 };
 
 fluid.defaults("gpii.express.tests.middleware.counter", {
-    gradeNames: ["gpii.express.middleware", "autoInit"],
+    gradeNames: ["gpii.express.middleware", "fluid.modelRelayComponent", "autoInit"],
     model: {
         count: 0
     },
