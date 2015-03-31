@@ -33,21 +33,21 @@ fluid.defaults("gpii.express.router", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
     method:     "use",
     path:       null,
-    config: "{gpii.express}.options.config",
-    router: null,
+    config:     "{gpii.express}.options.config",
+    router:     null,
     events: {
-        routerLoaded:    null
+        routerLoaded: null
     },
     invokers: {
-        "getRouter": {
-            "funcName": "gpii.express.router.complainAboutMissingFunction",
-            args: ["{that}"]
+        getRouter: {
+            funcName: "gpii.express.router.complainAboutMissingFunction",
+            args:     ["{that}"]
         }
     },
     listeners: {
-        "onCreate": {
+        onCreate: {
             funcName: "gpii.express.router.createRouter",
-            args: ["{that}"]
+            args:     ["{that}"]
         }
     }
 });
