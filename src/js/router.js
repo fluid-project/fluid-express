@@ -26,7 +26,7 @@ gpii.express.router.createRouter = function (that) {
 
 // If a working getRouter() is not found, someone has not properly implemented their grade.
 gpii.express.router.complainAboutMissingFunction = function () {
-    fluid.fail(new Error("Your grade must have an getRouter() invoker."));
+    fluid.fail("Your grade must have an getRouter() invoker.");
 };
 
 fluid.defaults("gpii.express.router", {
