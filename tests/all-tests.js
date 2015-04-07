@@ -23,7 +23,7 @@ var contentDir = path.resolve(__dirname, "./html");
 fluid.defaults("gpii.express.tests.expressTestTree", {
     gradeNames: ["fluid.test.testEnvironment", "autoInit"],
     port:   7531,
-    baseUrl: "http://localhost/",
+    baseUrl: "http://localhost:7531/",
     events: {
         constructServer: null,
         onStarted: null

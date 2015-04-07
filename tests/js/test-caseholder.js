@@ -90,200 +90,49 @@ gpii.express.tests.expressTestCaseHolder.testExpressShutdown = function (error) 
     jqUnit.assertEquals("The connection should have been refused.", "ECONNREFUSED", error.code);
 };
 
-// Expander to add the common first steps (starting the server and letting fluid.identify listen for its startup) to each test sequence
-//
-// Works with the whole array of tests so that only one expander call per set of tests is required.
-gpii.express.tests.expressTestCaseHolder.wireStandardSequenceStart = function (unevolvedTests) {
-    var evolvedTests = JSON.parse(JSON.stringify(unevolvedTests));
+gpii.express.tests.expressTestCaseHolder.addRequiredSequences = function (sequenceStart, rawTests) {
+    var completeTests = fluid.copy(rawTests);
 
-    for (var a = 0; a < evolvedTests.length; a++) {
-        var test = evolvedTests[a];
-        if (test.sequence) {
-            test.sequence.unshift({ listener: "fluid.identity", event: "{testEnvironment}.events.onStarted"});
-
-            // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-            test.sequence.unshift({ func: "{testEnvironment}.events.constructServer.fire" });
+    for (var a = 0; a < completeTests.length; a++) {
+        var testSuite = completeTests[a];
+        for (var b = 0; b < testSuite.tests.length; b++) {
+            var tests = testSuite.tests[b];
+            var modifiedSequence = sequenceStart.concat(tests.sequence);
+            tests.sequence = modifiedSequence;
         }
     }
 
-    return evolvedTests;
+    return completeTests;
 };
+
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
     gradeNames: ["autoInit", "fluid.test.testCaseHolder"],
-    //unevolvedTests: [
-    //    {
-    //        name: "Testing the 'static' router module (index content)...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{staticRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
-    //                event: "{staticRequest}.events.onComplete",
-    //                args: ["{staticRequest}.nativeResponse", "{arguments}.0", "body of the index"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing the 'static' router module (custom content)...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{staticCustomRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
-    //                event: "{staticCustomRequest}.events.onComplete",
-    //                args: ["{staticCustomRequest}.nativeResponse", "{arguments}.0", "custom page"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing router nesting and middleware isolation...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{helloRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
-    //                event: "{helloRequest}.events.onComplete",
-    //                args: ["{helloRequest}.nativeResponse", "{arguments}.0", "Hello, World"]
-    //            },
-    //            {
-    //                func: "{helloWorldRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyContent",
-    //                event: "{helloWorldRequest}.events.onComplete",
-    //                args: ["{helloWorldRequest}.nativeResponse", "{arguments}.0", "Hello, yourself"]
-    //            },
-    //            {
-    //                func: "{middlewareIsolationRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyMiddlewareIsolation",
-    //                event: "{middlewareIsolationRequest}.events.onComplete",
-    //                args: ["{middlewareIsolationRequest}.nativeResponse", "{arguments}.0"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing the 'wildcard' router module (index content)...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{wildcardRootRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyWildcard",
-    //                event: "{wildcardRootRequest}.events.onComplete",
-    //                args: ["{wildcardRootRequest}.nativeResponse", "{arguments}.0"]
-    //            },
-    //            {
-    //                func: "{wildcardDeepRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.verifyWildcard",
-    //                event: "{wildcardDeepRequest}.events.onComplete",
-    //                args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing the 'counter' middleware module...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{staticRequest}.send"
-    //            },
-    //            {
-    //                listener: "{counterRequest}.send",
-    //                event: "{staticRequest}.events.onComplete"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.testCounterMiddleware",
-    //                event: "{counterRequest}.events.onComplete",
-    //                args: ["{testEnvironment}"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing the 'session' middleware module...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{sessionRequest}.send"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.testSessionMiddleware",
-    //                event: "{sessionRequest}.events.onComplete",
-    //                args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing the 'body parser' middleware module...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{bodyParserRequest}.send",
-    //                args: [{ foo: "bar" }]
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.testBodyParserMiddleware",
-    //                event: "{bodyParserRequest}.events.onComplete",
-    //                args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
-    //            }
-    //        ]
-    //    },
-    //    {
-    //        name: "Testing the 'cookie' middleware module...",
-    //        type: "test",
-    //        sequence: [
-    //            {
-    //                func: "{cookieSetRequest}.send"
-    //            },
-    //            {
-    //                listener: "{cookieReadRequest}.send",
-    //                event: "{cookieSetRequest}.events.onComplete"
-    //            },
-    //            {
-    //                listener: "gpii.express.tests.expressTestCaseHolder.testCookieMiddleware",
-    //                event: "{cookieReadRequest}.events.onComplete",
-    //                args: ["{cookieReadRequest}.nativeResponse", "{arguments}.0"]
-    //            }
-    //        ]
-    //    }
-    //],
-    //modules: [
-    //    {
-    //        tests: {
-    //            expander: {
-    //                funcName: "gpii.express.tests.expressTestCaseHolder.wireStandardSequenceStart",
-    //                args: [ "{that}.options.unevolvedTests"]
-    //            }
-    //        }
-    //    }
-    //],
-    // TODO:  Figure out why we have to hard code this
-    modules: [
+    mergePolicy: {
+        rawModules:    "noexpand",
+        sequenceStart: "noexpand"
+    },
+    moduleSource: {
+        funcName: "gpii.express.tests.expressTestCaseHolder.addRequiredSequences",
+        args:     ["{that}.options.sequenceStart", "{that}.options.rawModules"]
+    },
+    sequenceStart: [
+        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+            func: "{testEnvironment}.events.constructServer.fire"
+        },
+        {
+            listener: "fluid.identity",
+            event: "{testEnvironment}.events.onStarted"
+        }
+    ],
+    rawModules: [
         {
             tests: [
                 {
                     name: "Testing the 'static' router module (index content)...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{staticRequest}.send"
                         },
@@ -298,13 +147,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing the 'static' router module (custom content)...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{staticCustomRequest}.send"
                         },
@@ -319,13 +161,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing router nesting and middleware isolation...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{helloRequest}.send"
                         },
@@ -356,13 +191,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing the 'wildcard' router module (index content)...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{wildcardRootRequest}.send"
                         },
@@ -385,13 +213,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing the 'counter' middleware module...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{staticRequest}.send"
                         },
@@ -410,13 +231,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing the 'session' middleware module...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{sessionRequest}.send"
                         },
@@ -431,13 +245,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing the 'body parser' middleware module...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{bodyParserRequest}.send",
                             args: [{ foo: "bar" }]
@@ -453,13 +260,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     name: "Testing the 'cookie' middleware module...",
                     type: "test",
                     sequence: [
-                        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-                            func: "{testEnvironment}.events.constructServer.fire"
-                        },
-                        {
-                            listener: "fluid.identity",
-                            event: "{testEnvironment}.events.onStarted"
-                        },
                         {
                             func: "{cookieSetRequest}.send"
                         },
@@ -475,7 +275,6 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     ]
                 }
             ]
-
         }
     ],
     components: {
