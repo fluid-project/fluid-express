@@ -13,7 +13,6 @@ gpii.express.middleware.complainAboutMissingFunction = function () {
 
 fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
-    config:     "{gpii.express}.options.config",
     invokers: {
         "getMiddleware": {
             "funcName": "gpii.express.middleware.complainAboutMissingFunction",
