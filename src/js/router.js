@@ -13,14 +13,8 @@ fluid.registerNamespace("gpii.express.router");
 
 // Instantiate our router object.  The root gpii.express object will wire everything together
 gpii.express.router.createRouter = function (that) {
-    if (!that.options.config || !that.options.config.express) {
-        console.error("Can't instantiate router without a working config object.");
-        return null;
-    }
-
     var express         = require("express");
     that.options.router = express.Router();
-    //that.options.router[that.options.method](that.options.path, that.getRouter());
     that.events.routerLoaded.fire(that);
 };
 
@@ -33,7 +27,6 @@ fluid.defaults("gpii.express.router", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
     method:     "use",
     path:       null,
-    config:     "{gpii.express}.options.config",
     router:     null,
     events: {
         routerLoaded: null

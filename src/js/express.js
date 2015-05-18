@@ -4,6 +4,8 @@
 "use strict";
 var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
+require("./configholder");
+
 fluid.registerNamespace("gpii.express");
 
 // Look up the path (parent, sibling, child) relationships for a node.
@@ -129,7 +131,7 @@ gpii.express.stopServer = function (that) {
 };
 
 fluid.defaults("gpii.express", {
-    gradeNames: ["fluid.standardRelayComponent", "autoInit"],
+    gradeNames: ["fluid.standardRelayComponent", "gpii.express.expressConfigHolder", "autoInit"],
     members: {
         directChildrenOfInterest: [],
         childrenByParent:         {}

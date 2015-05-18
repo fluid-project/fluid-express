@@ -3,6 +3,9 @@
 // `gpii.express`, a component for express itself
 require("./src/js/express");
 
+// A configuration holder to allow express-like things to work without express itself (for example, in unit tests).
+require("./src/js/configholder");
+
 // `gpii.express.middleware`, the base grade for all middleware components
 require("./src/js/middleware");
 
