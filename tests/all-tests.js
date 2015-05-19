@@ -124,6 +124,9 @@ fluid.defaults("gpii.express.tests.expressTestTree", {
                                 }
                             }
                         }
+                    },
+                    requestAwareRouter: {
+                        type: "gpii.express.tests.requestAware.router"
                     }
                 }
             }
@@ -134,4 +137,4 @@ fluid.defaults("gpii.express.tests.expressTestTree", {
     }
 });
 
-gpii.express.tests.expressTestTree({});
+gpii.express.tests.expressTestTree();

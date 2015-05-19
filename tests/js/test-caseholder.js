@@ -90,6 +90,14 @@ gpii.express.tests.expressTestCaseHolder.testExpressShutdown = function (error) 
     jqUnit.assertEquals("The connection should have been refused.", "ECONNREFUSED", error.code);
 };
 
+gpii.express.tests.expressTestCaseHolder.testSessionAwareDelayedResponse = function (response, body) {
+    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 200);
+};
+
+gpii.express.tests.expressTestCaseHolder.testSessionAwareTimeoutResponse = function (response, body) {
+    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 500);
+};
+
 gpii.express.tests.expressTestCaseHolder.addRequiredSequences = function (sequenceStart, rawTests) {
     var completeTests = fluid.copy(rawTests);
 
@@ -273,6 +281,28 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                             args: ["{cookieReadRequest}.nativeResponse", "{arguments}.0"]
                         }
                     ]
+                },
+                {
+                    name: "Testing the 'request aware' abstract component...",
+                    type: "test",
+                    sequence: [
+                        //{
+                        //    func: "{requestAwareDelayedRequest}.send"
+                        //},
+                        //{
+                        //    listener: "gpii.express.tests.expressTestCaseHolder.testSessionAwareDelayedResponse",
+                        //    event:    "{requestAwareDelayedRequest}.events.onComplete",
+                        //    args:     ["{requestAwareDelayedRequest}.nativeResponse", "{arguments}.0"]
+                        //},
+                        {
+                            func: "{requestAwareTimeoutRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.expressTestCaseHolder.testSessionAwareTimeoutResponse",
+                            event:    "{requestAwareTimeoutRequest}.events.onComplete",
+                            args:     ["{requestAwareTimeoutRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
                 }
             ]
         }
@@ -421,6 +451,32 @@ fluid.defaults("gpii.express.tests.expressTestCaseHolder", {
                     expander: {
                         funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
                         args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        requestAwareDelayedRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/requestAware?action=delayed"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        requestAwareTimeoutRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.expressTestCaseHolder.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/requestAware?action=timeout"]
                     }
                 },
                 port: "{testEnvironment}.options.port",
