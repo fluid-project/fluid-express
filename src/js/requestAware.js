@@ -48,7 +48,7 @@ gpii.express.requestAware.clearTimeout = function (that) {
 
 
 gpii.express.requestAware.sendTimeoutResponse = function (that) {
-    that.sendResponse(500, { ok: false, message: "Session aware component timed out before it could respond sensibly." });
+    that.sendResponse(500, { ok: false, message: "Request aware component timed out before it could respond sensibly." });
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
