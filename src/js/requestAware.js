@@ -36,8 +36,16 @@ gpii.express.requestAware.checkRequirements = function (that) {
 };
 
 gpii.express.requestAware.setTimeout = function (that) {
-    setTimeout(that.sendTimeoutResponse, that.options.timeout);
+    that.timeout = setTimeout(that.sendTimeoutResponse, that.options.timeout);
 };
+
+// When we are destroyed, we need to clear our timeout to avoid trying to perform an action on a destroyed component.
+gpii.express.requestAware.clearTimeout = function (that) {
+    if (that.timeout) {
+        clearTimeout(that.timeout);
+    }
+};
+
 
 gpii.express.requestAware.sendTimeoutResponse = function (that) {
     that.sendResponse(500, { ok: false, message: "Session aware component timed out before it could respond sensibly." });
@@ -62,7 +70,8 @@ fluid.defaults("gpii.express.requestAware", {
     },
     members: {
         "request":  "{that}.options.request",
-        "response": "{that}.options.response"
+        "response": "{that}.options.response",
+        "timeout":  null
     },
     events: {
         afterResponseSent: null
@@ -78,6 +87,10 @@ fluid.defaults("gpii.express.requestAware", {
         },
         "afterResponseSent.destroy": {
             func: "{that}.destroy"
+        },
+        "onDestroy.clearTimeout": {
+            funcName: "gpii.express.requestAware.clearTimeout",
+            args:     ["{that}"]
         }
     },
     invokers: {
