@@ -11,13 +11,22 @@ fluid.registerNamespace("gpii.express.tests.requestAware.caseHolder");
 fluid.setLogging(true);
 
 
-gpii.express.tests.requestAware.caseHolder.testSessionAwareDelayedResponse = function (response, body) {
+gpii.express.tests.requestAware.caseHolder.testRequestAwareDelayedResponse = function (responseObject, response, body) {
     gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 200);
+    responseObject.body = body;
 };
 
-gpii.express.tests.requestAware.caseHolder.testSessionAwareTimeoutResponse = function (response, body) {
+gpii.express.tests.requestAware.caseHolder.testRequestAwareTimeoutResponse = function (response, body) {
     gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 500);
 };
+
+// Look at two sequential requests and confirm that they are different.
+gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity = function (firstResponseString, secondResponseString) {
+    var firstResponseBody  = JSON.parse(firstResponseString);
+    var secondResponseBody = JSON.parse(secondResponseString);
+    jqUnit.assertDeepNeq("Two sequential requests should be different.", firstResponseBody, secondResponseBody);
+};
+
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
@@ -50,15 +59,23 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
                             func: "{requestAwareDelayedRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.requestAware.caseHolder.testSessionAwareDelayedResponse",
+                            listener: "gpii.express.tests.requestAware.caseHolder.testRequestAwareDelayedResponse",
                             event:    "{requestAwareDelayedRequest}.events.onComplete",
-                            args:     ["{requestAwareDelayedRequest}.nativeResponse", "{arguments}.0"]
+                            args:     ["{requestAwareDelayedRequest}", "{requestAwareDelayedRequest}.nativeResponse", "{arguments}.0"]
+                        },
+                        {
+                            func: "{requestAwareSecondDelayedRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity",
+                            event:    "{requestAwareSecondDelayedRequest}.events.onComplete",
+                            args:     ["{requestAwareDelayedRequest}.body", "{arguments}.0"]
                         },
                         {
                             func: "{requestAwareTimeoutRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.requestAware.caseHolder.testSessionAwareTimeoutResponse",
+                            listener: "gpii.express.tests.requestAware.caseHolder.testRequestAwareTimeoutResponse",
                             event:    "{requestAwareTimeoutRequest}.events.onComplete",
                             args:     ["{requestAwareTimeoutRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -71,153 +88,20 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
         cookieJar: {
             type: "kettle.test.cookieJar"
         },
-        staticRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: "{testEnvironment}.options.baseUrl",
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        counterRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: "{testEnvironment}.options.baseUrl",
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        staticCustomRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "custom.html"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        helloRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/hello"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        helloWorldRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/hello/world"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        middlewareIsolationRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/hello/rv"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        wildcardRootRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/wildcard/"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        wildcardDeepRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/wildcard/many/levels/deep"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        cookieSetRequest: {
-            type: "kettle.test.request.httpCookie",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/cookie"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        cookieReadRequest: {
-            type: "kettle.test.request.httpCookie",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        sessionRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
-        bodyParserRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
-            }
-        },
         requestAwareDelayedRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.helpers.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/requestAware?action=delayed"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        requestAwareSecondDelayedRequest: {
             type: "kettle.test.request.http",
             options: {
                 path: {
