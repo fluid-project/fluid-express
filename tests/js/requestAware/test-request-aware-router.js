@@ -17,11 +17,11 @@ gpii.express.tests.requestAware.request.sendInstrumentedResponse = function (tha
     instrumentedBody.action = that.request.query.action;
 
     // Send the instrumented response using the standard function
-    gpii.express.sessionAware.sendResponse(that, statusCode, instrumentedBody);
+    gpii.express.requestAware.sendResponse(that, statusCode, instrumentedBody);
 };
 
 fluid.defaults("gpii.express.tests.requestAware.request", {
-    gradeNames: ["gpii.express.sessionAware", "autoInit"],
+    gradeNames: ["gpii.express.requestAware", "autoInit"],
     members: {
         time: null
     },
@@ -76,18 +76,18 @@ fluid.defaults("gpii.express.tests.requestAware.router", {
             type:          "gpii.express.tests.requestAware.request",
             options: {
                 request:  "{arguments}.0",
-                response: "{arguments}.1"
-            },
-            listeners: {
-                "onCreate.pauseAndFire": {
-                    funcName: "setTimeout",
-                    args: ["{that}.sendDelayedResponse", 2500 ]
-                }
-            },
-            invokers: {
-                sendDelayedResponse: {
-                    func: "{that}.sendResponse",
-                    args: [ 200, { ok: true, message: "I'm OK now." } ]
+                response: "{arguments}.1",
+                listeners: {
+                    "onCreate.pauseAndFire": {
+                        funcName: "setTimeout",
+                        args: ["{that}.sendDelayedResponse", 2500 ]
+                    }
+                },
+                invokers: {
+                    sendDelayedResponse: {
+                        func: "{that}.sendResponse",
+                        args: [ 200, { ok: true, message: "I'm OK now." } ]
+                    }
                 }
             }
         },
@@ -96,7 +96,8 @@ fluid.defaults("gpii.express.tests.requestAware.router", {
             type:          "gpii.express.tests.requestAware.request",
             options: {
                 request:  "{arguments}.0",
-                response: "{arguments}.1"
+                response: "{arguments}.1",
+                timeout:  2500  // This has to be less than 5 seconds or our test harness itself will step in.
             }
         }
 

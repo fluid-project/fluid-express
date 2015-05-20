@@ -1,4 +1,4 @@
-// An abstract grade for "session aware" modules.  Modules that extend this grade are expected to be created dynamically,
+// An abstract grade for "request aware" modules.  Modules that extend this grade are expected to be created dynamically,
 // as outlined here:
 //
 // http://docs.fluidproject.org/infusion/development/SubcomponentDeclaration.html#dynamic-subcomponents-with-a-source-event
@@ -19,57 +19,61 @@
 "use strict";
 var fluid     = fluid || require("infusion");
 var gpii      = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.sessionAware");
+fluid.registerNamespace("gpii.express.requestAware");
 
-gpii.express.sessionAware.checkRequirements = function (that) {
+gpii.express.requestAware.checkRequirements = function (that) {
     if (!that.options) {
-        fluid.fail("Cannot instantiate a 'sessionAware' component without the required options...");
+        fluid.fail("Cannot instantiate a 'requestAware' component without the required options...");
     }
 
     if (!that.options.request) {
-        fluid.fail("Cannot instantiate a 'sessionAware' component without a request object...");
+        fluid.fail("Cannot instantiate a 'requestAware' component without a request object...");
     }
 
     if (!that.options.response) {
-        fluid.fail("Cannot instantiate a 'sessionAware' component without a response object...");
+        fluid.fail("Cannot instantiate a 'requestAware' component without a response object...");
     }
 };
 
-gpii.express.sessionAware.setTimeout = function (that) {
+gpii.express.requestAware.setTimeout = function (that) {
     setTimeout(that.sendTimeoutResponse, that.options.timeout);
 };
 
-gpii.express.sessionAware.sendTimeoutResponse = function (that) {
+gpii.express.requestAware.sendTimeoutResponse = function (that) {
     that.sendResponse(500, { ok: false, message: "Session aware component timed out before it could respond sensibly." });
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
-gpii.express.sessionAware.sendResponse = function (that, statusCode, body) {
-    if (!that.options.response) {
+gpii.express.requestAware.sendResponse = function (that, statusCode, body) {
+    if (!that.response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
 
-    if (that.options.response.headersAlreadySent()) {
-        fluid.fail("Cannot send response, headers have already been sent.");
-    }
-
-    that.options.response.status(statusCode).send(body);
+    that.response.status(statusCode).send(body);
     that.events.afterResponseSent.fire(that);
 };
 
-fluid.defaults("gpii.express.sessionAware", {
+fluid.defaults("gpii.express.requestAware", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
     timeout: 5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
+    mergePolicy: {
+        "request":  "nomerge",
+        "response": "nomerge"
+    },
+    members: {
+        "request":  "{that}.options.request",
+        "response": "{that}.options.response"
+    },
     events: {
         afterResponseSent: null
     },
     listeners: {
         "onCreate.checkRequirements": {
-            funcName: "gpii.express.sessionAware.checkRequirements",
+            funcName: "gpii.express.requestAware.checkRequirements",
             args:     ["{that}"]
         },
         "onCreate.setTimeout": {
-            funcName: "gpii.express.sessionAware.setTimeout",
+            funcName: "gpii.express.requestAware.setTimeout",
             args:     ["{that}"]
         },
         "afterResponseSent.destroy": {
@@ -78,11 +82,11 @@ fluid.defaults("gpii.express.sessionAware", {
     },
     invokers: {
         sendResponse: {
-            funcName: "gpii.express.sessionAware.sendResponse",
+            funcName: "gpii.express.requestAware.sendResponse",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         },
-        sendTimeout: {
-            funcName: "gpii.express.sessionAware.sendTimeout",
+        sendTimeoutResponse: {
+            funcName: "gpii.express.requestAware.sendTimeoutResponse",
             args:     ["{that}"]
         }
     }
