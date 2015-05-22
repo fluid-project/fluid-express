@@ -94,7 +94,7 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
                 path: {
                     expander: {
                         funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/requestAware?action=delayed"]
+                        args:     ["{testEnvironment}.options.baseUrl", "/delayed"]
                     }
                 },
                 port: "{testEnvironment}.options.port",
@@ -107,7 +107,7 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
                 path: {
                     expander: {
                         funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/requestAware?action=delayed"]
+                        args:     ["{testEnvironment}.options.baseUrl", "/delayed"]
                     }
                 },
                 port: "{testEnvironment}.options.port",
@@ -120,7 +120,7 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
                 path: {
                     expander: {
                         funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/requestAware?action=timeout"]
+                        args:     ["{testEnvironment}.options.baseUrl", "/timeout"]
                     }
                 },
                 port: "{testEnvironment}.options.port",
