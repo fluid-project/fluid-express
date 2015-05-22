@@ -12,7 +12,9 @@
 //
 // By default this object is created with a built-in timeout, and will respond with a timeout if nothing else occurs.
 // A typical use case in extending this module would be to perform server-side I/O and then respond with the results.
-// Your response must fire an `afterResponseSent` event to avoid the timeout firing.
+// Your response must fire an `afterResponseSent` event to avoid the timeout firing.  Typically you would wire a
+// request handler of some kind in to the modules `onCreate` event, at which point you can expect `that.request` and
+// `that.response` to already exist.
 //
 // For an example of how this can be used, check out the tests included with this package.
 
