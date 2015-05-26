@@ -52,7 +52,7 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
         {
             tests: [
                 {
-                    name: "Testing the 'request aware' abstract component...",
+                    name: "Testing a basic 'request aware' component...",
                     type: "test",
                     sequence: [
                         {
@@ -70,7 +70,13 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
                             listener: "gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity",
                             event:    "{requestAwareSecondDelayedRequest}.events.onComplete",
                             args:     ["{requestAwareDelayedRequest}.body", "{arguments}.0"]
-                        },
+                        }
+                    ]
+                },
+                {
+                    name: "Testing a basic 'request aware' component...",
+                    type: "test",
+                    sequence: [
                         {
                             func: "{requestAwareTimeoutRequest}.send"
                         },

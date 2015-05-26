@@ -29,11 +29,12 @@ fluid.defaults("gpii.express.requestAware.router", {
     dynamicComponents: {
         requestHandler: {
             createOnEvent: "onRequest",
-            type:          "{that}.options.requestAwareGrade",
+            type:          "gpii.express.requestAware",
             options: {
-                request:  "{arguments}.0",
-                response: "{arguments}.1",
-                timeout:  "{that}.options.timeout"
+                request:    "{arguments}.0",
+                response:   "{arguments}.1",
+                timeout:    "{router}.options.timeout",
+                gradeNames: "{router}.options.requestAwareGrades"
             }
         }
 

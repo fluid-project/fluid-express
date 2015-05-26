@@ -5,7 +5,6 @@ require("../../../index.js");
 
 // Our test fixtures and test cases
 require("./requestAware-caseholder");
-require("./test-request-aware-router");
 
 // We use just the request-handling bits of the kettle stack in our tests, but we include the whole thing to pick up the base grades
 require("../../../node_modules/kettle");

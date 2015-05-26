@@ -71,8 +71,7 @@ fluid.defaults("gpii.express.tests.requestAware.delayed", {
 // Grade to simulate a timeout (or the lack of a meaningful response).
 fluid.registerNamespace("gpii.express.tests.requestAware.timeout");
 fluid.defaults("gpii.express.tests.requestAware.timeout", {
-    gradeNames: ["gpii.express.tests.requestAware.instrumented", "autoInit"],
-    timeout:  2500  // This has to be less than 5 seconds or our test harness itself will step in.
+    gradeNames: ["gpii.express.tests.requestAware.instrumented", "autoInit"]
 });
 
 fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
@@ -106,14 +105,15 @@ fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
                         type:              "gpii.express.requestAware.router",
                         options: {
                             path:              "/delayed",
-                            requestAwareGrade: "gpii.express.tests.requestAware.delayed"
+                            requestAwareGrades: ["gpii.express.tests.requestAware.delayed"]
                         }
                     },
                     timeout: {
                         type:              "gpii.express.requestAware.router",
                         options: {
-                            path:              "/timeout",
-                            requestAwareGrade: "gpii.express.tests.requestAware.timeout"
+                            path:               "/timeout",
+                            requestAwareGrades: ["gpii.express.tests.requestAware.timeout"],
+                            timeout:            2500
                         }
                     }
                 }
