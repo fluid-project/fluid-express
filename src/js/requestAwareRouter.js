@@ -1,4 +1,5 @@
-// A router that will create an instance of `options.requestAwareGrade` for each request and hand off to that.
+// A router that will create a component for each request and hand off to that.  The component will have every one
+// of the grades specified in `options.requestAwareGrades`.
 //
 // To use this in anger, at a minimum you need to supply `options.path` and `options.requestAwareGrade`.
 //
