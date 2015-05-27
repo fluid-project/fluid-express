@@ -86,6 +86,12 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                             message: "Hello, wild world."
                         }
                     },
+                    params: {
+                        type: "gpii.express.tests.router.params",
+                        options: {
+                            path: "/params/:myVar"
+                        }
+                    },
                     staticRouter: {
                         type: "gpii.express.router.static",
                         options: {

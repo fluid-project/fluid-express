@@ -24,6 +24,11 @@ gpii.express.tests.router.caseHolder.verifyWildcard = function (response, body) 
     jqUnit.assertEquals("The nested body should match the configured content...", "Hello, wild world.", body);
 };
 
+gpii.express.tests.router.caseHolder.verifyParams = function (response, body) {
+    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+
+    jqUnit.assertTrue("The response should contain the variable data...", body.indexOf("fooBar") !== -1);
+};
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.router.caseHolder", {
@@ -119,6 +124,20 @@ fluid.defaults("gpii.express.tests.router.caseHolder", {
                             args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
                         }
                     ]
+                },
+                {
+                    name: "Testing the 'params' router module...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{paramsRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.router.caseHolder.verifyParams",
+                            event: "{paramsRequest}.events.onComplete",
+                            args: ["{paramsRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
                 }
             ]
         }
@@ -194,6 +213,19 @@ fluid.defaults("gpii.express.tests.router.caseHolder", {
                     expander: {
                         funcName: "gpii.express.tests.helpers.assembleUrl",
                         args:     ["{testEnvironment}.options.baseUrl", "/wildcard/many/levels/deep"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        paramsRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.helpers.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/params/fooBar"]
                     }
                 },
                 port: "{testEnvironment}.options.port",
