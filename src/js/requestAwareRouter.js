@@ -5,9 +5,17 @@
 //
 // If you would like to pass in additional options to the requestAware grade, add an option like the following:
 //
-// `dynamicComponents: { requestHandler: { custom: "value" } }`
+// `dynamicComponents: { requestHandler: { options: { custom: "value" } } }`
 //
-// Those options will be merged with the defaults as expected.
+// Options that already exist when the router is created will be merged with the defaults as expected.  This approach
+// will not work for dynamic values such as model or member variables.
+//
+// For dynamic values, you will need to use an IoC reference from within your `requestAware` grade's definition, as in:
+//
+// fluid.defaults("my.requestAware", {
+//   gradeNames: ["gpii.express.requestAware", "autoInit"],
+//   foo: "{gpii.express.requestAware.router}.foo
+// }
 
 "use strict";
 var fluid     = fluid || require("infusion");
