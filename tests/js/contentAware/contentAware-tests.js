@@ -11,50 +11,85 @@ require("./includes.js");
 
 var viewDir    = path.resolve(__dirname, "./views");
 
+fluid.registerNamespace("gpii.express.tests.contentAware.contentSpecificRouter.request");
+gpii.express.tests.contentAware.contentSpecificRouter.request.handleRequest = function (that) {
+    that.sendResponse(that.options.statusCode, that.options.body);
+};
 
-fluid.registerNamespace("gpii.express.tests.contentAware.request");
-
-fluid.defaults("gpii.express.tests.contentAware.request", {
-    gradeNames: ["gpii.express.contentAware.request"],
-    messages: {
-        "default": "default",
-        json:      "json",
-        text:      "text"
-    },
-    handlers: {
-        "default": {
-            contentType: "default",
-            handler:     "{that}.handleDefault"
-        },
-        json: {
-            contentType: "application/json",
-            handler:     "{that}.handleJson"
-        },
-        text: {
-            contentType: "text/html",
-            handler:     "{that}.handleText"
-        }
-    },
+fluid.defaults("gpii.express.tests.contentAware.contentSpecificRouter.request", {
+    gradeNames: ["gpii.express.requestAware", "autoInit"],
     invokers: {
-        handleDefault: {
-            funcName: "gpii.express.requestAware.sendResponse",
-            args:     ["{that}", 200, "{that}.options.messages.default"]
-        },
-        handleText: {
-            funcName: "gpii.express.requestAware.sendResponse",
-            args:     ["{that}", 200, "{that}.options.messages.text"]
-        },
-        handleJson: {
-            funcName: "gpii.express.requestAware.sendResponse",
-            args:     ["{that}", 200, "{that}.options.messages.json"]
+        handleRequest: {
+            funcName: "gpii.express.tests.contentAware.contentSpecificRouter.request.handleRequest",
+            args:     ["{that}"]
         }
     }
 });
 
 
+fluid.defaults("gpii.express.tests.contentAware.contentSpecificRouter", {
+    gradeNames:         ["gpii.express.requestAware.router", "autoInit"],
+    path:               "/gibberish",
+    requestAwareGrades: ["gpii.express.tests.contentAware.contentSpecificRouter.request"]
+});
+
 fluid.defaults("gpii.express.tests.contentAware.router", {
     gradeNames:         ["gpii.express.contentAware.router", "autoInit"],
-    requestAwareGrades: ["gpii.express.tests.contentAware.request"]
+    handlers: {
+        "default": {
+            contentType: "default",
+            handler:     "{handleDefault}"
+        },
+        json: {
+            contentType: "application/json",
+            handler:     "{handleJson}"
+        },
+        text: {
+            contentType: "text/html",
+            handler:     "{handleText}"
+        }
+    },
+    components: {
+        handleDefault: {
+            type: "gpii.express.tests.contentAware.contentSpecificRouter",
+            options: {
+                dynamicComponents: {
+                    requestHandler: {
+                        options: {
+                            statusCode: 200,
+                            body:       "This is the default response."
+                        }
+                    }
+                }
+            }
+        },
+        handleText: {
+            type: "gpii.express.tests.contentAware.contentSpecificRouter",
+            options: {
+                dynamicComponents: {
+                    requestHandler: {
+                        options: {
+                            statusCode: 200,
+                            body:       "This is the text response."
+                        }
+                    }
+                }
+            }
+        },
+        handleJson: {
+            type: "gpii.express.tests.contentAware.contentSpecificRouter",
+            options: {
+                dynamicComponents: {
+                    requestHandler: {
+                        options: {
+                            statusCode: 200,
+                            body:       "This is a JSON response."
+                        }
+                    }
+                }
+            }
+        }
+    }
 });
 
 fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {

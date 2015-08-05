@@ -19,6 +19,11 @@ gpii.express.tests.contentAware.caseHolder.verifyResponse = function (response, 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
     gradeNames: ["autoInit", "fluid.test.testCaseHolder"],
+    expected: {
+        "default": "This is the default response.",
+        text:      "This is the text response.",
+        json:      "This is a JSON response." // Our dummy handler isn't actually sending JSON.
+    },
     mergePolicy: {
         rawModules:    "noexpand",
         sequenceStart: "noexpand"
@@ -49,7 +54,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                         {
                             listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
                             event:    "{defaultRequest}.events.onComplete",
-                            args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "default"]
+                            args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.default"]
                         },
                         {
                             func: "{jsonRequest}.send"
@@ -66,7 +71,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                         {
                             listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
                             event:    "{jsonRequest}.events.onComplete",
-                            args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "json"]
+                            args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.json"]
                         }
                     ]
                 },
@@ -80,7 +85,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                         {
                             listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
                             event:    "{textRequest}.events.onComplete",
-                            args:     ["{textRequest}.nativeResponse", "{arguments}.0", "text"]
+                            args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.text"]
                         }
                     ]
                 }
