@@ -29,7 +29,6 @@ fluid.defaults("gpii.express.tests.contentAware.contentSpecificRouter.request", 
 
 fluid.defaults("gpii.express.tests.contentAware.contentSpecificRouter", {
     gradeNames:         ["gpii.express.requestAware.router", "autoInit"],
-    path:               "/gibberish",
     requestAwareGrades: ["gpii.express.tests.contentAware.contentSpecificRouter.request"]
 });
 

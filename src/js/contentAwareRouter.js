@@ -58,7 +58,16 @@ gpii.express.contentAware.router.getRouter = function (that) {
 };
 
 fluid.defaults("gpii.express.contentAware.router", {
-    gradeNames:         ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router", "autoInit"],
+    // Our child handlers will be asked to handle requests outside of the normal routing mechanism.
+    // The next few lines are required to prevent routers whose `path` is `/` from hiding our own response.
+    nonsensePath: "/gibberish",
+    distributeOptions: [
+        {
+            source: "{that}.options.nonsensePath",
+            target: "{that > gpii.express.router}.options.path"
+        }
+    ],
     invokers: {
         getRouter: {
             funcName: "gpii.express.contentAware.router.getRouter",
