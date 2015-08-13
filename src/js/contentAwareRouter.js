@@ -65,9 +65,8 @@ fluid.defaults("gpii.express.contentAware.router", {
     },
     dynamicComponents: {
         // This intermediate structure is required because we cannot directly refer to the original list of grades
-        // from a `gradeNames` option.
-        //
-        // TODO:  Review with Antranig
+        // from a `gradeNames` option.  This will be resolved once we upgrade beyond the versions of infusion affected by:
+        // https://issues.fluidproject.org/browse/FLUID-5742
         broker: {
             type:          "fluid.eventedComponent",
             createOnEvent: "onRequest",
@@ -80,9 +79,8 @@ fluid.defaults("gpii.express.contentAware.router", {
                 request:       "{arguments}.0",
                 response:      "{arguments}.1",
                 handlerGrades: "{arguments}.2",
-                dynamicComponents: {
+                components: {
                     requestHandler: {
-                        createOnEvent: "onCreate",
                         type:          "gpii.express.handler",
                         options: {
                             timeout:    "{router}.options.timeout",
