@@ -27,8 +27,8 @@ require("./src/js/router");
 // A router module to handle static content.  Wraps the built-in `express.static()` module.
 require("./src/js/static");
 
-// A convenience grade on which "request aware" components are based
-require("./src/js/requestAware");
+// A convenience grade on which "request handler" components are based
+require("./src/js/handler");
 
 // A convenience router that creates a request aware grade for each request
 require("./src/js/requestAwareRouter");

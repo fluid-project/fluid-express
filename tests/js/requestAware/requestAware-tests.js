@@ -19,7 +19,7 @@ gpii.express.tests.requestAware.instrumented.handleRequest = function (that) {
 };
 
 fluid.defaults("gpii.express.tests.requestAware.instrumented", {
-    gradeNames: ["gpii.express.requestAware", "autoInit"],
+    gradeNames: ["gpii.express.handler", "autoInit"],
     invokers: {
         handleRequest: {
             funcName: "gpii.express.tests.requestAware.instrumented.handleRequest",
@@ -56,7 +56,7 @@ fluid.defaults("gpii.express.tests.requestAware.delayed", {
 
 // Grade to simulate a timeout (or the lack of a meaningful response).
 fluid.defaults("gpii.express.tests.requestAware.timeout", {
-    gradeNames: ["gpii.express.requestAware", "autoInit"],
+    gradeNames: ["gpii.express.handler", "autoInit"],
     invokers: {
         handleRequest: {
             funcName: "fluid.identity" // Do nothing till you hear it from me, and you never will.
@@ -94,23 +94,23 @@ fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
                     instrumented: {
                         type: "gpii.express.requestAware.router",
                         options: {
-                            path:              "/instrumented",
-                            requestAwareGrades: ["gpii.express.tests.requestAware.delayed"]
+                            path:          "/instrumented",
+                            handlerGrades: ["gpii.express.tests.requestAware.delayed"]
                         }
                     },
                     delayed: {
                         type: "gpii.express.requestAware.router",
                         options: {
-                            path:              "/delayed",
-                            requestAwareGrades: ["gpii.express.tests.requestAware.delayed"]
+                            path:          "/delayed",
+                            handlerGrades: ["gpii.express.tests.requestAware.delayed"]
                         }
                     },
                     timeout: {
                         type: "gpii.express.requestAware.router",
                         options: {
-                            path:               "/timeout",
-                            requestAwareGrades: ["gpii.express.tests.requestAware.timeout"],
-                            timeout:            2000
+                            path:          "/timeout",
+                            handlerGrades: ["gpii.express.tests.requestAware.timeout"],
+                            timeout:       2000
                         }
                     }
                 }

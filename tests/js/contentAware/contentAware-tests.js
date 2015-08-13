@@ -11,82 +11,51 @@ require("./includes.js");
 
 var viewDir    = path.resolve(__dirname, "./views");
 
-fluid.registerNamespace("gpii.express.tests.contentAware.contentSpecificRouter.request");
-gpii.express.tests.contentAware.contentSpecificRouter.request.handleRequest = function (that) {
+fluid.registerNamespace("gpii.express.tests.contentAware.handler");
+gpii.express.tests.contentAware.handler.handleRequest = function (that) {
     that.sendResponse(that.options.statusCode, that.options.body);
 };
 
-fluid.defaults("gpii.express.tests.contentAware.contentSpecificRouter.request", {
-    gradeNames: ["gpii.express.requestAware", "autoInit"],
+fluid.defaults("gpii.express.tests.contentAware.handler", {
+    gradeNames: ["gpii.express.handler", "autoInit"],
+    statusCode: 200,
     invokers: {
         handleRequest: {
-            funcName: "gpii.express.tests.contentAware.contentSpecificRouter.request.handleRequest",
+            funcName: "gpii.express.tests.contentAware.handler.handleRequest",
             args:     ["{that}"]
         }
     }
 });
 
+fluid.defaults("gpii.express.tests.contentAware.defaultHandler", {
+    gradeNames: ["gpii.express.tests.contentAware.handler", "autoInit"],
+    body:       "This is the default response."
+});
 
-fluid.defaults("gpii.express.tests.contentAware.contentSpecificRouter", {
-    gradeNames:         ["gpii.express.requestAware.router", "autoInit"],
-    requestAwareGrades: ["gpii.express.tests.contentAware.contentSpecificRouter.request"]
+fluid.defaults("gpii.express.tests.contentAware.jsonHandler", {
+    gradeNames: ["gpii.express.tests.contentAware.handler", "autoInit"],
+    body:       "This is a JSON response."
+});
+
+fluid.defaults("gpii.express.tests.contentAware.textHandler", {
+    gradeNames: ["gpii.express.tests.contentAware.handler", "autoInit"],
+    body:       "This is the text response."
 });
 
 fluid.defaults("gpii.express.tests.contentAware.router", {
-    gradeNames:         ["gpii.express.contentAware.router", "autoInit"],
+    gradeNames: ["gpii.express.contentAware.router", "autoInit"],
     handlers: {
         "default": {
-            contentType: "default",
-            handler:     "{handleDefault}"
+            contentType:   "default",
+            handlerGrades: ["gpii.express.tests.contentAware.defaultHandler"]
         },
         json: {
-            contentType: "application/json",
-            handler:     "{handleJson}"
+            contentType:  "application/json",
+            handlerGrades: ["gpii.express.tests.contentAware.jsonHandler"]
         },
         text: {
-            contentType: "text/html",
-            handler:     "{handleText}"
-        }
-    },
-    components: {
-        handleDefault: {
-            type: "gpii.express.tests.contentAware.contentSpecificRouter",
-            options: {
-                dynamicComponents: {
-                    requestHandler: {
-                        options: {
-                            statusCode: 200,
-                            body:       "This is the default response."
-                        }
-                    }
-                }
-            }
-        },
-        handleText: {
-            type: "gpii.express.tests.contentAware.contentSpecificRouter",
-            options: {
-                dynamicComponents: {
-                    requestHandler: {
-                        options: {
-                            statusCode: 200,
-                            body:       "This is the text response."
-                        }
-                    }
-                }
-            }
-        },
-        handleJson: {
-            type: "gpii.express.tests.contentAware.contentSpecificRouter",
-            options: {
-                dynamicComponents: {
-                    requestHandler: {
-                        options: {
-                            statusCode: 200,
-                            body:       "This is a JSON response."
-                        }
-                    }
-                }
-            }
+            contentType:   "text/html",
+            handlerGrades: ["gpii.express.tests.contentAware.textHandler"]
         }
     }
 });

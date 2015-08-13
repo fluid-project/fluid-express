@@ -4,16 +4,16 @@
 // To use this grade, you must:
 //
 // 1. Add each `RequestAwareRouter` grade you need to your components.
-// 2. Create a map indicating which content types should be handled by which router, as in:
+// 2. Create a map indicating which content types should be handled by which `handler` grades, as in:
 //
 // handlers: {
 //   json: {
-//     contentType: "application/json",
-//     handler:     "{that}.component1"
+//     contentType:   "application/json",
+//     handlerGrades: ["name.spaced.grade1"]
 //   },
 //   text: {
 //     contentType: ["text/html", "text/plain"]
-//     handler:     "{that}.component2"
+//     handlerGrades: ["name.spaced.grade2", "name.spaced.grade1"]
 //   }
 // }
 //
@@ -22,8 +22,8 @@
 // hence the first handler will be used.   Thus, you should add handlers in the order you would prefer that they are
 // used.
 //
-// When the decision has been made and a match has been found, the request will be serviced by the
-// appropriate `RequestAwareRouter` component.
+// When the decision has been made and a match has been found, a dynamic component will be constructed using the
+// appropriate 'handlerGrades'
 //
 "use strict";
 var fluid = fluid || require("infusion");
@@ -33,49 +33,82 @@ require("./requestAwareRouter");
 
 fluid.registerNamespace("gpii.express.contentAware.router");
 gpii.express.contentAware.router.delegateToHandler = function (that, request, response) {
-    var handler = gpii.express.contentAware.router.firstMatchingHandler(that, request, that.options.handlers);
-    if (handler) {
-        handler.events.onRequest.fire(request, response);
+    var handlerGrades = gpii.express.contentAware.router.getHandlerGradesByContentType(that, request, that.options.handlers);
+    if (handlerGrades) {
+        // Add a third argument with the list of grades.
+        that.events.onRequest.fire(request, response, handlerGrades);
     }
     else {
         response.status(500).send({ok: false, message: "Could not find an appropriate handler for the content types you accept."});
     }
 };
 
-gpii.express.contentAware.router.firstMatchingHandler = function (that, request, handlers) {
-    var handler = null;
+gpii.express.contentAware.router.getHandlerGradesByContentType = function (that, request, handlers) {
+    var handlerGrades = null;
     fluid.each(handlers, function (value) {
-        if (!handler && value.handler && value.contentType && Boolean(request.accepts(value.contentType))) {
-            handler = value.handler;
+        if (!handlerGrades && Boolean(request.accepts(value.contentType))) {
+            handlerGrades = value.handlerGrades;
         }
     });
 
-    return handler;
+    return handlerGrades;
 };
 
-gpii.express.contentAware.router.getRouter = function (that) {
+gpii.express.contentAware.router.getHandler = function (that) {
     return that.delegateToHandler;
 };
 
 fluid.defaults("gpii.express.contentAware.router", {
     gradeNames: ["gpii.express.router", "autoInit"],
-    // Our child handlers will be asked to handle requests outside of the normal routing mechanism.
-    // The next few lines are required to prevent routers whose `path` is `/` from hiding our own response.
-    nonsensePath: "/gibberish",
-    distributeOptions: [
-        {
-            source: "{that}.options.nonsensePath",
-            target: "{that > gpii.express.router}.options.path"
+    events: {
+        onRequest: null
+    },
+    dynamicComponents: {
+        // This intermediate structure is required because we cannot directly refer to the original list of grades
+        // from a `gradeNames` option.
+        //
+        // TODO:  Review with Antranig
+        broker: {
+            type:          "fluid.eventedComponent",
+            createOnEvent: "onRequest",
+            options: {
+                gradeNames:    ["gpii.express.contentAware.broker"],
+                mergePolicy: {
+                    "request":  "nomerge",
+                    "response": "nomerge"
+                },
+                request:       "{arguments}.0",
+                response:      "{arguments}.1",
+                handlerGrades: "{arguments}.2",
+                dynamicComponents: {
+                    requestHandler: {
+                        createOnEvent: "onCreate",
+                        type:          "gpii.express.handler",
+                        options: {
+                            timeout:    "{router}.options.timeout",
+                            request:    "{broker}.options.request",
+                            response:   "{broker}.options.response",
+                            gradeNames: "{broker}.options.handlerGrades",
+                            listeners: {
+                                "onDestroy.killMyParent": {
+                                    func: "{broker}.destroy"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-    ],
+
+    },
     invokers: {
-        getRouter: {
-            funcName: "gpii.express.contentAware.router.getRouter",
+        getHandler: {
+            funcName: "gpii.express.contentAware.router.getHandler",
             args:     ["{that}"]
         },
         delegateToHandler: {
             funcName: "gpii.express.contentAware.router.delegateToHandler",
-            args: ["{that}", "{arguments}.0", "{arguments}.1"]
+            args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     }
 });

@@ -1,18 +1,18 @@
-// An abstract grade for "request aware" modules.  Modules that extend this grade are expected to be created dynamically,
-// as outlined here:
+// An abstract grade for "request handler" modules.  Modules that extend this grade are expected to be created
+// dynamically, as outlined here:
 //
 // http://docs.fluidproject.org/infusion/development/SubcomponentDeclaration.html#dynamic-subcomponents-with-a-source-event
 //
-// Typically, a gpii.express.router module would be constructing one of these components per request.  Note that these
-// components are not persisted.  Any data you wish to retain should be passed on to a parent component such as the
-// `requestAware.router` that is creating the object.
+// Typically, a gpii.express.router module constructs one of these components per request.  Note that these
+// components are not persisted.  Any data you wish to retain should be stored in variables retained by a parent
+// component.
 //
 // This grade expects to be passed two things when it is constructed:
 //
-//  1. The express request object.
-//  2. The express response object.
+//  1. The express `request` object.
+//  2. The express `response` object.
 //
-// The `requestAware.router` grade does this for you.
+// The `handler.router` grade and its derivatives take care of this for you.
 //
 // By default this object is created with a built-in timeout, and will respond with a timeout if nothing else occurs.
 // To prevent this (and to actually provide a meaningful response to the user), you are expected to define a
@@ -36,40 +36,40 @@
 "use strict";
 var fluid     = fluid || require("infusion");
 var gpii      = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.requestAware");
+fluid.registerNamespace("gpii.express.handler");
 
 // TODO:  Convert this to use JSON Schema validation when available: https://issues.gpii.net/browse/CTR-161
-gpii.express.requestAware.checkRequirements = function (that) {
+gpii.express.handler.checkRequirements = function (that) {
     if (!that.options) {
-        fluid.fail("Cannot instantiate a 'requestAware' component without the required options...");
+        fluid.fail("Cannot instantiate a 'handler' component without the required options...");
     }
 
     if (!that.options.request) {
-        fluid.fail("Cannot instantiate a 'requestAware' component without a request object...");
+        fluid.fail("Cannot instantiate a 'handler' component without a request object...");
     }
 
     if (!that.options.response) {
-        fluid.fail("Cannot instantiate a 'requestAware' component without a response object...");
+        fluid.fail("Cannot instantiate a 'handler' component without a response object...");
     }
 };
 
-gpii.express.requestAware.setTimeout = function (that) {
+gpii.express.handler.setTimeout = function (that) {
     that.timeout = setTimeout(that.sendTimeoutResponse, that.options.timeout);
 };
 
 // When we are destroyed, we need to clear our timeout to avoid trying to perform an action on a destroyed component.
-gpii.express.requestAware.clearTimeout = function (that) {
+gpii.express.handler.clearTimeout = function (that) {
     if (that.timeout) {
         clearTimeout(that.timeout);
     }
 };
 
-gpii.express.requestAware.sendTimeoutResponse = function (that) {
+gpii.express.handler.sendTimeoutResponse = function (that) {
     that.sendResponse("500", { ok: false, message: "Request aware component timed out before it could respond sensibly." });
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
-gpii.express.requestAware.sendResponse = function (that, statusCode, body) {
+gpii.express.handler.sendResponse = function (that, statusCode, body) {
     if (!that.response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
@@ -78,7 +78,7 @@ gpii.express.requestAware.sendResponse = function (that, statusCode, body) {
     that.events.afterResponseSent.fire(that);
 };
 
-fluid.defaults("gpii.express.requestAware", {
+fluid.defaults("gpii.express.handler", {
     gradeNames: ["fluid.eventedComponent", "autoInit"],
     timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
     mergePolicy: {
@@ -95,11 +95,11 @@ fluid.defaults("gpii.express.requestAware", {
     },
     listeners: {
         "onCreate.checkRequirements": {
-            funcName: "gpii.express.requestAware.checkRequirements",
+            funcName: "gpii.express.handler.checkRequirements",
             args:     ["{that}"]
         },
         "onCreate.setTimeout": {
-            funcName: "gpii.express.requestAware.setTimeout",
+            funcName: "gpii.express.handler.setTimeout",
             args:     ["{that}"]
         },
         "onCreate.handleRequest": {
@@ -109,17 +109,17 @@ fluid.defaults("gpii.express.requestAware", {
             func: "{that}.destroy"
         },
         "onDestroy.clearTimeout": {
-            funcName: "gpii.express.requestAware.clearTimeout",
+            funcName: "gpii.express.handler.clearTimeout",
             args:     ["{that}"]
         }
     },
     invokers: {
         sendResponse: {
-            funcName: "gpii.express.requestAware.sendResponse",
+            funcName: "gpii.express.handler.sendResponse",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         },
         sendTimeoutResponse: {
-            funcName: "gpii.express.requestAware.sendTimeoutResponse",
+            funcName: "gpii.express.handler.sendTimeoutResponse",
             args:     ["{that}"]
         },
         handleRequest: {
