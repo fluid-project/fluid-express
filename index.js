@@ -32,3 +32,6 @@ require("./src/js/requestAware");
 
 // A convenience router that creates a request aware grade for each request
 require("./src/js/requestAwareRouter");
+
+// A convenience router to handle multiple content types from the same router.
+require("./src/js/contentAwareRouter");

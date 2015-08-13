@@ -4,28 +4,29 @@
   "description": "Fluid components to model an express server and associated router modules.",
   "main":        "",
   "scripts": {
-    "test": "src/tests/all-tests.js"
+    "test":        "src/tests/all-tests.js",
+    "postinstall": "grunt dedupe-infusion"
   },
   "repository": {
     "type": "git",
     "url":  "https://github.com/the-t-in-rtf/gpii-express"
   },
-  "author":   "Tony Atkins <tony@raisingthefloor.org>",
-  "license":  "See LICENSE file for details.",
-  "homepage": "https://github.com/the-t-in-rtf/gpii-express-couchuser-frontend",
+  "author":     "Tony Atkins <tony@raisingthefloor.org>",
+  "license":    "BSD-3-Clause",
+  "repository": "https://github.com/GPII/gpii-express",
   "dependencies": {
     "body-parser":             "1.10.2",
     "cookie-parser":           "1.3.3",
     "express-session":         "1.10.1",
     "express":                 "4.10.6",
+    "grunt":                   "~0.4.4",
+    "grunt-shell":             "0.6.4",
+    "grunt-contrib-jshint":    "~0.9.0",
+    "grunt-jsonlint":          "1.0.4",
+    "grunt-gpii":              "git://github.com/GPII/grunt-gpii.git#58ae055833f437a9e91baedb9f39a22c5fdd727f",
     "infusion":                "git://github.com/fluid-project/infusion.git#a930d31ca6430dad67566e712ccad5d333d74ddb"
   },
     "devDependencies": {
-      "grunt":                "~0.4.4",
-      "grunt-shell":          "0.6.4",
-      "grunt-contrib-jshint": "~0.9.0",
-      "grunt-jsonlint":       "1.0.4",
-      "grunt-gpii":           "git://github.com/GPII/grunt-gpii.git#58ae055833f437a9e91baedb9f39a22c5fdd727f",
       "jqUnit":               "git://github.com/fluid-project/node-jqUnit.git#d46bb932fa4069770852c51a92182939958f2d75",
       "kettle":               "git://github.com/fluid-project/kettle.git#e79bb81196df68c97eaa9f96c485a4321b69af75",
       "request":              "2.51.0"
