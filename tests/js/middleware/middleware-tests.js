@@ -13,7 +13,7 @@ require("./includes.js");
 var viewDir    = path.resolve(__dirname, "../../views");
 
 fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+    gradeNames: ["fluid.test.testEnvironment"],
     port:   7531,
     baseUrl: "http://localhost:7531/",
     events: {
