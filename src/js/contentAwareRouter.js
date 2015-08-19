@@ -59,7 +59,7 @@ gpii.express.contentAware.router.getHandler = function (that) {
 };
 
 fluid.defaults("gpii.express.contentAware.router", {
-    gradeNames: ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router"],
     events: {
         onRequest: null
     },
@@ -68,7 +68,7 @@ fluid.defaults("gpii.express.contentAware.router", {
         // from a `gradeNames` option.  This will be resolved once we upgrade beyond the versions of infusion affected by:
         // https://issues.fluidproject.org/browse/FLUID-5742
         broker: {
-            type:          "fluid.eventedComponent",
+            type:          "fluid.component",
             createOnEvent: "onRequest",
             options: {
                 gradeNames:    ["gpii.express.contentAware.broker"],

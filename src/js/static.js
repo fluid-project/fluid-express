@@ -23,7 +23,7 @@ gpii.express.router.static.getHandler = function (that) {
 };
 
 fluid.defaults("gpii.express.router.static", {
-    gradeNames: ["fluid.standardRelayComponent", "gpii.express.router", "autoInit"],
+    gradeNames: ["fluid.modelComponent", "gpii.express.router"],
     content: null,
     router:  null,
     invokers: {

@@ -14,7 +14,7 @@ var viewDir    = path.resolve(__dirname, "../../views");
 var contentDir = path.resolve(__dirname, "../../html");
 
 fluid.defaults("gpii.express.tests.router.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+    gradeNames: ["fluid.test.testEnvironment"],
     port:   7532,
     baseUrl: "http://localhost:7532/",
     events: {

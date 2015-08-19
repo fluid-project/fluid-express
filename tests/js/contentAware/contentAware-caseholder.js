@@ -18,7 +18,7 @@ gpii.express.tests.contentAware.caseHolder.verifyResponse = function (response, 
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
-    gradeNames: ["autoInit", "fluid.test.testCaseHolder"],
+    gradeNames: ["fluid.test.testCaseHolder"],
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",

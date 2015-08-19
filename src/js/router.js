@@ -25,7 +25,7 @@ gpii.express.router.complainAboutMissingFunction = function () {
 };
 
 fluid.defaults("gpii.express.router", {
-    gradeNames: ["fluid.eventedComponent", "autoInit"],
+    gradeNames: ["fluid.component"],
     method:     "use",
     path:       null,
     router:     null,

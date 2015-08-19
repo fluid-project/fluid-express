@@ -19,7 +19,7 @@ gpii.express.tests.requestAware.instrumented.handleRequest = function (that) {
 };
 
 fluid.defaults("gpii.express.tests.requestAware.instrumented", {
-    gradeNames: ["gpii.express.handler", "autoInit"],
+    gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
             funcName: "gpii.express.tests.requestAware.instrumented.handleRequest",
@@ -41,7 +41,7 @@ gpii.express.tests.requestAware.delayed.actuallyHandleRequest = function (that) 
 };
 
 fluid.defaults("gpii.express.tests.requestAware.delayed", {
-    gradeNames: ["gpii.express.tests.requestAware.instrumented", "autoInit"],
+    gradeNames: ["gpii.express.tests.requestAware.instrumented"],
     invokers: {
         handleRequest: {
             funcName: "gpii.express.tests.requestAware.delayed.pretendToHandleRequest",
@@ -56,7 +56,7 @@ fluid.defaults("gpii.express.tests.requestAware.delayed", {
 
 // Grade to simulate a timeout (or the lack of a meaningful response).
 fluid.defaults("gpii.express.tests.requestAware.timeout", {
-    gradeNames: ["gpii.express.handler", "autoInit"],
+    gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
             funcName: "fluid.identity" // Do nothing till you hear it from me, and you never will.
@@ -65,7 +65,7 @@ fluid.defaults("gpii.express.tests.requestAware.timeout", {
 });
 
 fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+    gradeNames: ["fluid.test.testEnvironment"],
     port:   7533,
     baseUrl: "http://localhost:7533/",
     events: {

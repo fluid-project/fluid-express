@@ -11,7 +11,7 @@ gpii.express.tests.router.params.getHandler = function () {
 };
 
 fluid.defaults("gpii.express.tests.router.params", {
-    gradeNames: ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router"],
     method: "get",
     invokers: {
         "getHandler": {

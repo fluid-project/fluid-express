@@ -17,7 +17,7 @@ gpii.express.tests.contentAware.handler.handleRequest = function (that) {
 };
 
 fluid.defaults("gpii.express.tests.contentAware.handler", {
-    gradeNames: ["gpii.express.handler", "autoInit"],
+    gradeNames: ["gpii.express.handler"],
     statusCode: 200,
     invokers: {
         handleRequest: {
@@ -28,22 +28,22 @@ fluid.defaults("gpii.express.tests.contentAware.handler", {
 });
 
 fluid.defaults("gpii.express.tests.contentAware.defaultHandler", {
-    gradeNames: ["gpii.express.tests.contentAware.handler", "autoInit"],
+    gradeNames: ["gpii.express.tests.contentAware.handler"],
     body:       "This is the default response."
 });
 
 fluid.defaults("gpii.express.tests.contentAware.jsonHandler", {
-    gradeNames: ["gpii.express.tests.contentAware.handler", "autoInit"],
+    gradeNames: ["gpii.express.tests.contentAware.handler"],
     body:       "This is a JSON response."
 });
 
 fluid.defaults("gpii.express.tests.contentAware.textHandler", {
-    gradeNames: ["gpii.express.tests.contentAware.handler", "autoInit"],
+    gradeNames: ["gpii.express.tests.contentAware.handler"],
     body:       "This is the text response."
 });
 
 fluid.defaults("gpii.express.tests.contentAware.router", {
-    gradeNames: ["gpii.express.contentAware.router", "autoInit"],
+    gradeNames: ["gpii.express.contentAware.router"],
     handlers: {
         "default": {
             contentType:   "default",
@@ -61,7 +61,7 @@ fluid.defaults("gpii.express.tests.contentAware.router", {
 });
 
 fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+    gradeNames: ["fluid.test.testEnvironment"],
     port:   7533,
     baseUrl: "http://localhost:7533/",
     events: {

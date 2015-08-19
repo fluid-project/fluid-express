@@ -18,7 +18,7 @@ gpii.express.middleware.session.getMiddleware = function (that) {
 
 fluid.defaults("gpii.express.middleware.session", {
     config:     "{expressConfigHolder}.options.config",
-    gradeNames: ["fluid.standardRelayComponent", "gpii.express.middleware", "autoInit"],
+    gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
     invokers: {
         "getMiddleware": {
             funcName: "gpii.express.middleware.session.getMiddleware",

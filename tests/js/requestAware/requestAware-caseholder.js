@@ -39,7 +39,7 @@ gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity = function 
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
-    gradeNames: ["autoInit", "fluid.test.testCaseHolder"],
+    gradeNames: ["fluid.test.testCaseHolder"],
     mergePolicy: {
         rawModules:    "noexpand",
         sequenceStart: "noexpand"

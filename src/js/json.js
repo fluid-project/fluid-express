@@ -11,7 +11,7 @@ gpii.express.middleware.bodyparser.json.getMiddleware = function () {
 };
 
 fluid.defaults("gpii.express.middleware.bodyparser.json", {
-    gradeNames: ["gpii.express.middleware", "autoInit"],
+    gradeNames: ["gpii.express.middleware"],
     invokers: {
         "getMiddleware": {
             funcName: "gpii.express.middleware.bodyparser.json.getMiddleware",

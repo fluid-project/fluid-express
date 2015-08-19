@@ -79,7 +79,7 @@ gpii.express.handler.sendResponse = function (that, statusCode, body) {
 };
 
 fluid.defaults("gpii.express.handler", {
-    gradeNames: ["fluid.eventedComponent", "autoInit"],
+    gradeNames: ["fluid.component"],
     timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
     mergePolicy: {
         "request":  "nomerge",

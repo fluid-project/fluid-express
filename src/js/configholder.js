@@ -7,6 +7,6 @@
 var fluid = fluid || require("infusion");
 fluid.registerNamespace("gpii.express.expressConfigHolder");
 fluid.defaults("gpii.express.expressConfigHolder", {
-    gradeNames: ["fluid.littleComponent", "autoInit"],
+    gradeNames: ["fluid.littleComponent"],
     config: {}
 });

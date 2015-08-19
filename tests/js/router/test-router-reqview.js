@@ -11,7 +11,7 @@ gpii.express.tests.router.reqview.getHandler = function () {
 };
 
 fluid.defaults("gpii.express.tests.router.reqview", {
-    gradeNames: ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router"],
     path:       "/reqview",
     invokers: {
         "getHandler": {

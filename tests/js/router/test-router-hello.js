@@ -11,7 +11,7 @@ gpii.express.tests.router.hello.getHandler = function (that) {
 };
 
 fluid.defaults("gpii.express.tests.router.hello", {
-    gradeNames: ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router"],
     method:     "get",
     path:       "/hello",
     message:    "Hello, World",

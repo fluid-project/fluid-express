@@ -131,7 +131,7 @@ gpii.express.stopServer = function (that) {
 };
 
 fluid.defaults("gpii.express", {
-    gradeNames: ["fluid.standardRelayComponent", "gpii.express.expressConfigHolder", "autoInit"],
+    gradeNames: ["fluid.modelComponent", "gpii.express.expressConfigHolder"],
     members: {
         directChildrenOfInterest: [],
         childrenByParent:         {}

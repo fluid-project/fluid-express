@@ -11,7 +11,7 @@ gpii.express.tests.router.cookie.getHandler = function () {
 };
 
 fluid.defaults("gpii.express.tests.router.cookie", {
-    gradeNames: ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router"],
     path:    "/cookie",
     method: "get",
     invokers: {

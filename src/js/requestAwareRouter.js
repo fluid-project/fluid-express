@@ -13,7 +13,7 @@
 // For dynamic values, you will need to use an IoC reference from within your `handler` grade's definition, as in:
 //
 // fluid.defaults("my.handler", {
-//   gradeNames: ["gpii.express.handler", "autoInit"],
+//   gradeNames: ["gpii.express.handler"],
 //   foo: "{gpii.express.requestAware.router}.foo
 // }
 
@@ -29,7 +29,7 @@ gpii.express.requestAware.router.getHandler = function (that) {
 };
 
 fluid.defaults("gpii.express.requestAware.router", {
-    gradeNames: ["gpii.express.router", "autoInit"],
+    gradeNames: ["gpii.express.router"],
     timeout: 5000, // The default timeout we will pass to whatever grade we instantiate.
     method:     "get",
     events: {
