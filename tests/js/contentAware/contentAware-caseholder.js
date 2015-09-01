@@ -16,31 +16,20 @@ gpii.express.tests.contentAware.caseHolder.verifyResponse = function (response, 
     jqUnit.assertEquals("The body should be as expected...", expected, body);
 };
 
+fluid.defaults("gpii.express.tests.contentAware.request", {
+    gradeNames: ["kettle.test.request.http"],
+    path:       "{testEnvironment}.options.baseUrl",
+    port:       "{testEnvironment}.options.port"
+});
+
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
-    gradeNames: ["fluid.test.testCaseHolder"],
+    gradeNames: ["gpii.express.tests.caseHolder"],
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",
         json:      "This is a JSON response." // Our dummy handler isn't actually sending JSON.
     },
-    mergePolicy: {
-        rawModules:    "noexpand",
-        sequenceStart: "noexpand"
-    },
-    moduleSource: {
-        funcName: "gpii.express.tests.helpers.addRequiredSequences",
-        args:     ["{that}.options.sequenceStart", "{that}.options.rawModules"]
-    },
-    sequenceStart: [
-        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-            func: "{testEnvironment}.events.constructServer.fire"
-        },
-        {
-            listener: "fluid.identity",
-            event: "{testEnvironment}.events.onStarted"
-        }
-    ],
     rawModules: [
         {
             tests: [
@@ -55,9 +44,6 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
                             event:    "{defaultRequest}.events.onComplete",
                             args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.default"]
-                        },
-                        {
-                            func: "{jsonRequest}.send"
                         }
                     ]
                 },
@@ -97,27 +83,19 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         defaultRequest: {
-            type: "kettle.test.request.http",
-            options: {
-                path:    "{testEnvironment}.options.baseUrl",
-                port:    "{testEnvironment}.options.port"
-            }
+            type: "gpii.express.tests.contentAware.request"
         },
         jsonRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.contentAware.request",
             options: {
-                path:    "{testEnvironment}.options.baseUrl",
-                port:    "{testEnvironment}.options.port",
                 headers: {
                     accept: "application/json"
                 }
             }
         },
         textRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.contentAware.request",
             options: {
-                path:    "{testEnvironment}.options.baseUrl",
-                port:    "{testEnvironment}.options.port",
                 headers: {
                     accept: "text/html"
                 }

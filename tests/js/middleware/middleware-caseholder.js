@@ -64,24 +64,7 @@ gpii.express.tests.middleware.caseHolder.testBodyParserMiddleware = function (re
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.middleware.caseHolder", {
-    gradeNames: ["fluid.test.testCaseHolder"],
-    mergePolicy: {
-        rawModules:    "noexpand",
-        sequenceStart: "noexpand"
-    },
-    moduleSource: {
-        funcName: "gpii.express.tests.helpers.addRequiredSequences",
-        args:     ["{that}.options.sequenceStart", "{that}.options.rawModules"]
-    },
-    sequenceStart: [
-        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-            func: "{testEnvironment}.events.constructServer.fire"
-        },
-        {
-            listener: "fluid.identity",
-            event: "{testEnvironment}.events.onStarted"
-        }
-    ],
+    gradeNames: ["gpii.express.tests.caseHolder"],
     rawModules: [
         {
             tests: [
