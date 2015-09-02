@@ -19,11 +19,6 @@ gpii.express.router.createRouter = function (that) {
     that.events.routerLoaded.fire(that);
 };
 
-// If a working getHandler() is not found, someone has not properly implemented their grade.
-gpii.express.router.complainAboutMissingFunction = function () {
-    fluid.fail("Your grade must have an getHandler() invoker.");
-};
-
 fluid.defaults("gpii.express.router", {
     gradeNames: ["fluid.component"],
     method:     "use",
@@ -34,8 +29,7 @@ fluid.defaults("gpii.express.router", {
     },
     invokers: {
         getHandler: {
-            funcName: "gpii.express.router.complainAboutMissingFunction",
-            args:     ["{that}"]
+            funcName: "fluid.notImplemented"
         }
     },
     listeners: {
