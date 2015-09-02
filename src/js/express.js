@@ -83,7 +83,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     //
     // The path and method have to be used here so that parameters will be parsed correctly.
     if (fluid.hasGrade(component.options, "gpii.express.router")) {
-        component.options.router[component.options.method](component.options.path, component.getRouter());
+        component.options.router[component.options.method](component.options.path, component.getHandler());
     }
 };
 
@@ -131,7 +131,7 @@ gpii.express.stopServer = function (that) {
 };
 
 fluid.defaults("gpii.express", {
-    gradeNames: ["fluid.standardRelayComponent", "gpii.express.expressConfigHolder", "autoInit"],
+    gradeNames: ["fluid.modelComponent", "gpii.express.expressConfigHolder"],
     members: {
         directChildrenOfInterest: [],
         childrenByParent:         {}

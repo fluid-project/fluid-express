@@ -8,7 +8,7 @@ var express = require("express");
 
 // The library is actually named "static", so for clarity I want to use that name in spite of the warnings in older versions of JSHint
 /* jshint -W024 */
-gpii.express.router.static.getRouter = function (that) {
+gpii.express.router.static.getHandler = function (that) {
     if (!that.options.path) {
         fluid.fail("You must configure a path for a gpii.express.router grade...");
         return null;
@@ -23,12 +23,12 @@ gpii.express.router.static.getRouter = function (that) {
 };
 
 fluid.defaults("gpii.express.router.static", {
-    gradeNames: ["fluid.standardRelayComponent", "gpii.express.router", "autoInit"],
+    gradeNames: ["fluid.modelComponent", "gpii.express.router"],
     content: null,
     router:  null,
     invokers: {
-        "getRouter": {
-            funcName: "gpii.express.router.static.getRouter",
+        "getHandler": {
+            funcName: "gpii.express.router.static.getHandler",
             args: ["{that}"]
         }
     }

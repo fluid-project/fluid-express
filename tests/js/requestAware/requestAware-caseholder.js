@@ -22,37 +22,51 @@ gpii.express.tests.requestAware.caseHolder.testRequestAwareTimeoutResponse = fun
 
 // Look at two sequential requests and confirm that they are different.
 gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity = function (firstResponseString, secondResponseString) {
-    var firstResponseBody  = JSON.parse(firstResponseString);
-    var secondResponseBody = JSON.parse(secondResponseString);
+    // If we can evolve the response into JSON, we do.
+    var firstResponseBody  = firstResponseString;
+    var secondResponseBody = secondResponseString;
+    try {
+        firstResponseBody  = JSON.parse(firstResponseString);
+        secondResponseBody = JSON.parse(secondResponseString);
+    }
+    catch (e) {
+        // Do nothing
+    }
+
     jqUnit.assertDeepNeq("Two sequential requests should be different.", firstResponseBody, secondResponseBody);
 };
 
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
-    gradeNames: ["autoInit", "fluid.test.testCaseHolder"],
-    mergePolicy: {
-        rawModules:    "noexpand",
-        sequenceStart: "noexpand"
-    },
-    moduleSource: {
-        funcName: "gpii.express.tests.helpers.addRequiredSequences",
-        args:     ["{that}.options.sequenceStart", "{that}.options.rawModules"]
-    },
-    sequenceStart: [
-        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-            func: "{testEnvironment}.events.constructServer.fire"
-        },
-        {
-            listener: "fluid.identity",
-            event: "{testEnvironment}.events.onStarted"
-        }
-    ],
+    gradeNames: ["gpii.express.tests.caseHolder"],
     rawModules: [
         {
             tests: [
                 {
                     name: "Testing a basic 'request aware' component...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{requestAwareInstrumentedRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.requestAware.caseHolder.testRequestAwareDelayedResponse",
+                            event:    "{requestAwareInstrumentedRequest}.events.onComplete",
+                            args:     ["{requestAwareInstrumentedRequest}", "{requestAwareInstrumentedRequest}.nativeResponse", "{arguments}.0"]
+                        },
+                        {
+                            func: "{requestAwareSecondInstrumentedRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity",
+                            event:    "{requestAwareSecondInstrumentedRequest}.events.onComplete",
+                            args:     ["{requestAwareInstrumentedRequest}.body", "{arguments}.0"]
+                        }
+                    ]
+                },
+                {
+                    name: "Testing a slow but responsive 'request aware' component...",
                     type: "test",
                     sequence: [
                         {
@@ -74,7 +88,7 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
                     ]
                 },
                 {
-                    name: "Testing a basic 'request aware' component...",
+                    name: "Testing a nonresponsive 'request aware' component...",
                     type: "test",
                     sequence: [
                         {
@@ -93,6 +107,32 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
     components: {
         cookieJar: {
             type: "kettle.test.cookieJar"
+        },
+        requestAwareInstrumentedRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.helpers.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/instrumented"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        requestAwareSecondInstrumentedRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: {
+                    expander: {
+                        funcName: "gpii.express.tests.helpers.assembleUrl",
+                        args:     ["{testEnvironment}.options.baseUrl", "/instrumented"]
+                    }
+                },
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
         },
         requestAwareDelayedRequest: {
             type: "kettle.test.request.http",

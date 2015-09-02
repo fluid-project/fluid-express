@@ -45,3 +45,25 @@ gpii.express.tests.helpers.addRequiredSequences = function (sequenceStart, rawTe
 
     return completeTests;
 };
+
+
+fluid.defaults("gpii.express.tests.caseHolder", {
+    gradeNames: ["fluid.test.testCaseHolder"],
+    mergePolicy: {
+        rawModules:    "noexpand",
+        sequenceStart: "noexpand"
+    },
+    sequenceStart: [
+        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+            func: "{testEnvironment}.events.constructServer.fire"
+        },
+        {
+            listener: "fluid.identity",
+            event: "{testEnvironment}.events.onStarted"
+        }
+    ],
+    moduleSource: {
+        funcName: "gpii.express.tests.helpers.addRequiredSequences",
+        args:     ["{that}.options.sequenceStart", "{that}.options.rawModules"]
+    }
+});
