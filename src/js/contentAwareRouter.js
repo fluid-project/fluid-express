@@ -86,12 +86,7 @@ fluid.defaults("gpii.express.contentAware.router", {
                             timeout:    "{router}.options.timeout",
                             request:    "{broker}.options.request",
                             response:   "{broker}.options.response",
-                            gradeNames: "{broker}.options.handlerGrades",
-                            listeners: {
-                                "onDestroy.killMyParent": {
-                                    func: "{broker}.destroy"
-                                }
-                            }
+                            gradeNames: "{broker}.options.handlerGrades"
                         }
                     }
                 }
