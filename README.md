@@ -104,6 +104,6 @@ As demonstrated in the example above, this module expects to work with a full fi
 
 ## Writing your own router component
 
-This package provides the abstract `gpii.express.router` gradeName that all routers should extend.  At a minimum, a valid implementation must override the default `getRouter` invoker.
+This package provides the abstract `gpii.express.router` gradeName that all routers should extend.  At a minimum, a valid implementation must override the default `getHandler` invoker.
 
 For examples, check out the router modules included in the tests for this package.
