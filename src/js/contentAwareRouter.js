@@ -64,32 +64,14 @@ fluid.defaults("gpii.express.contentAware.router", {
         onRequest: null
     },
     dynamicComponents: {
-        // This intermediate structure is required because we cannot directly refer to the original list of grades
-        // from a `gradeNames` option.  This will be resolved once we upgrade beyond the versions of infusion affected by:
-        // https://issues.fluidproject.org/browse/FLUID-5742
-        broker: {
-            type:          "fluid.component",
+        handler: {
+            type:          "gpii.express.handler",
             createOnEvent: "onRequest",
             options: {
-                gradeNames:    ["gpii.express.contentAware.broker"],
-                mergePolicy: {
-                    "request":  "nomerge",
-                    "response": "nomerge"
-                },
-                request:       "{arguments}.0",
-                response:      "{arguments}.1",
-                handlerGrades: "{arguments}.2",
-                components: {
-                    requestHandler: {
-                        type:          "gpii.express.handler",
-                        options: {
-                            timeout:    "{router}.options.timeout",
-                            request:    "{broker}.options.request",
-                            response:   "{broker}.options.response",
-                            gradeNames: "{broker}.options.handlerGrades"
-                        }
-                    }
-                }
+                timeout:    "{router}.options.timeout",
+                gradeNames: "{arguments}.2",
+                request:    "{arguments}.0",
+                response:   "{arguments}.1"
             }
         }
 
