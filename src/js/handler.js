@@ -123,8 +123,7 @@ fluid.defaults("gpii.express.handler", {
             args:     ["{that}"]
         },
         handleRequest: {
-            funcName: "fluid.fail",
-            args:     ["You must override the handleRequest invoker to use this grade."]
+            funcName: "fluid.notImplemented"
         }
     }
 });

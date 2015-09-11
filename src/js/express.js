@@ -6,6 +6,8 @@ var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 require("./configholder");
 
+var express  = require("express");
+
 fluid.registerNamespace("gpii.express");
 
 // Look up the path (parent, sibling, child) relationships for a node.
@@ -83,7 +85,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     //
     // The path and method have to be used here so that parameters will be parsed correctly.
     if (fluid.hasGrade(component.options, "gpii.express.router")) {
-        component.options.router[component.options.method](component.options.path, component.handler);
+        component.options.router[component.options.method](component.options.path, component.route);
     }
 };
 
@@ -93,7 +95,6 @@ gpii.express.init = function (that) {
         return;
     }
 
-    var express  = require("express");
     that.express = express();
 
     // Wire together all routers and components, beginning with ourselves

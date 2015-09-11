@@ -76,46 +76,19 @@ fluid.defaults("gpii.express.contentAware.router", {
         onRequest: null
     },
     // This was supposed to have been possible after https://issues.fluidproject.org/browse/FLUID-5742
-    // TODO:  Review with Antranig
-    //dynamicComponents: {
-    //    handler: {
-    //        type:          "gpii.express.handler",
-    //        createOnEvent: "onRequest",
-    //        options: {
-    //            gradeNames: "{arguments}.2",
-    //            request:    "{arguments}.0",
-    //            response:   "{arguments}.1"
-    //        }
-    //    }
-    //},
     dynamicComponents: {
-        broker: {
-            type:          "fluid.component",
+        requestHandler: {
+            type:          "gpii.express.handler",
             createOnEvent: "onRequest",
             options: {
-                gradeNames:    ["gpii.express.contentAware.broker"],
-                mergePolicy: {
-                    "request":  "nomerge",
-                    "response": "nomerge"
-                },
-                request:       "{arguments}.0",
-                response:      "{arguments}.1",
-                handlerGrades: "{arguments}.2",
-                components: {
-                    requestHandler: {
-                        type:          "gpii.express.handler",
-                        options: {
-                            request:    "{broker}.options.request",
-                            response:   "{broker}.options.response",
-                            gradeNames: "{broker}.options.handlerGrades"
-                        }
-                    }
-                }
+                gradeNames: "{arguments}.2",
+                request:    "{arguments}.0",
+                response:   "{arguments}.1"
             }
         }
     },
     invokers: {
-        handler: {
+        route: {
             funcName: "gpii.express.contentAware.router.delegateToHandler",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         }

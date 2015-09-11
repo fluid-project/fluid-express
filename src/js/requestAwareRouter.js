@@ -48,7 +48,7 @@ fluid.defaults("gpii.express.requestAware.router", {
         }
     },
     invokers: {
-        "handler": {
+        route: {
             func: "{that}.events.onRequest.fire",
             args: ["{arguments}.0", "{arguments}.1"]
         }

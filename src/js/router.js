@@ -4,7 +4,7 @@
 // The express module will automatically attempt to wire in anything with this gradeName into its routing table.
 //
 // This implementation is not meant to be used directly.  When wrapping most existing Express routers, you will want
-// to implement your own `handler` method and (typically) point your `handler` invoker at that.
+// to implement your own `router` method and (typically) point your `router` invoker at that.
 //
 // For all other use cases, you should likely start with `requestAwareRouter` and implement your own handler.
 //
@@ -28,7 +28,7 @@ fluid.defaults("gpii.express.router", {
         routerLoaded: null
     },
     invokers: {
-        handler: {
+        route: {
             funcName: "fluid.notImplemented"
         }
     },
