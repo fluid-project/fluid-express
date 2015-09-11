@@ -87,7 +87,7 @@ For more information on any of these, look at their corresponding modules docume
 
 ## Writing your own middleware component
 
-This package provides the abstract `gpii.express.middleware` gradeName that all middleware should extend.  At a minimum, a valid implementation must replace the default `getMiddleware` invoker.
+This package provides the abstract `gpii.express.middleware` gradeName that all middleware should extend.  At a minimum, a valid implementation must override the default `middleware` invoker.
 
 For examples, check out the middleware modules included in the tests for this package.
 
@@ -104,6 +104,6 @@ As demonstrated in the example above, this module expects to work with a full fi
 
 ## Writing your own router component
 
-This package provides the abstract `gpii.express.router` gradeName that all routers should extend.  At a minimum, a valid implementation must override the default `getHandler` invoker.
+This package provides the abstract `gpii.express.router` gradeName that all routers should extend.  At a minimum, a valid implementation must override the default `handler` invoker.
 
 For examples, check out the router modules included in the tests for this package.
