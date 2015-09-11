@@ -6,16 +6,26 @@ fluid.registerNamespace("gpii.express.middleware.bodyparser.urlencoded");
 
 var bp = require("body-parser");
 
-gpii.express.middleware.bodyparser.urlencoded.getMiddleware = function () {
-    return bp.urlencoded({ extended: false });
+gpii.express.middleware.bodyparser.urlencoded.init = function (that) {
+    that.urlencoded = bp.urlencoded({ extended: false });
+};
+
+gpii.express.middleware.bodyparser.urlencoded.middleware = function (that, req, res, next) {
+    that.urlencoded(req, res, next);
 };
 
 fluid.defaults("gpii.express.middleware.bodyparser.urlencoded", {
     gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
     invokers: {
-        "getMiddleware": {
-            funcName: "gpii.express.middleware.bodyparser.urlencoded.getMiddleware",
-            "args": [ "{that}" ]
+        "middleware": {
+            funcName: "gpii.express.middleware.bodyparser.urlencoded.middleware",
+            args:     [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2" ]
+        }
+    },
+    listeners: {
+        "onCreate.init": {
+            funcName: "gpii.express.middleware.bodyparser.urlencoded.init",
+            args:     ["{that}"]
         }
     }
 });

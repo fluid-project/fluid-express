@@ -4,11 +4,9 @@ var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.middleware.counter");
 
-gpii.express.tests.middleware.counter.getMiddleware = function (that) {
-    return function (req, res, next) {
-        that.applier.change("count", that.model.count + 1);
-        next();
-    };
+gpii.express.tests.middleware.counter.middleware = function (that, req, res, next) {
+    that.applier.change("count", that.model.count + 1);
+    next();
 };
 
 fluid.defaults("gpii.express.tests.middleware.counter", {
@@ -17,9 +15,9 @@ fluid.defaults("gpii.express.tests.middleware.counter", {
         count: 0
     },
     invokers: {
-        "getMiddleware": {
-            "funcName": "gpii.express.tests.middleware.counter.getMiddleware",
-            "args": [ "{that}"]
+        "middleware": {
+            "funcName": "gpii.express.tests.middleware.counter.middleware",
+            "args":     [ "{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }
 });

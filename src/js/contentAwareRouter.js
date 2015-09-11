@@ -25,6 +25,13 @@
 // When the decision has been made and a match has been found, a dynamic component will be constructed using the
 // appropriate 'handlerGrades'
 //
+// There is some similarity between this and `gpii.express.requestAware.router`, but this grade uses a slightly
+// different mechanism.  When a request is received:
+//
+//    1.  The `accepts` headers are examined and compared to the list of available handlers in `options.handlers`.
+//    2.  The first available handler is used for the rest of the process.
+//    3.  An instance of `gpii.express.handler` is created with the additional grades defined in the handler options.
+//
 "use strict";
 var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -33,9 +40,8 @@ require("./requestAwareRouter");
 
 fluid.registerNamespace("gpii.express.contentAware.router");
 gpii.express.contentAware.router.delegateToHandler = function (that, request, response) {
-    var handlerGrades = gpii.express.contentAware.router.getHandlerGradesByContentType(that, request, that.options.handlers);
+    var handlerGrades = gpii.express.contentAware.router.getHandlerGradesByContentType(that, request);
     if (handlerGrades) {
-        // Add a third argument with the list of grades.
         that.events.onRequest.fire(request, response, handlerGrades);
     }
     else {
@@ -43,9 +49,9 @@ gpii.express.contentAware.router.delegateToHandler = function (that, request, re
     }
 };
 
-gpii.express.contentAware.router.getHandlerGradesByContentType = function (that, request, handlers) {
+gpii.express.contentAware.router.getHandlerGradesByContentType = function (that, request) {
     var handlerGrades = null;
-    fluid.each(handlers, function (value) {
+    fluid.each(that.options.handlers, function (value) {
         if (!handlerGrades && Boolean(request.accepts(value.contentType))) {
             handlerGrades = value.handlerGrades;
         }
@@ -58,30 +64,58 @@ gpii.express.contentAware.router.getHandler = function (that) {
     return that.delegateToHandler;
 };
 
+
 fluid.defaults("gpii.express.contentAware.router", {
     gradeNames: ["gpii.express.router"],
+    timeout: 5000,
+    distributeOptions: {
+        source: "{that}.options.timeout",
+        target: "{that gpii.express.handler}.options.timeout"
+    },
     events: {
         onRequest: null
     },
+    // This was supposed to have been possible after https://issues.fluidproject.org/browse/FLUID-5742
+    // TODO:  Review with Antranig
+    //dynamicComponents: {
+    //    handler: {
+    //        type:          "gpii.express.handler",
+    //        createOnEvent: "onRequest",
+    //        options: {
+    //            gradeNames: "{arguments}.2",
+    //            request:    "{arguments}.0",
+    //            response:   "{arguments}.1"
+    //        }
+    //    }
+    //},
     dynamicComponents: {
-        handler: {
-            type:          "gpii.express.handler",
+        broker: {
+            type:          "fluid.component",
             createOnEvent: "onRequest",
             options: {
-                timeout:    "{router}.options.timeout",
-                gradeNames: "{arguments}.2",
-                request:    "{arguments}.0",
-                response:   "{arguments}.1"
+                gradeNames:    ["gpii.express.contentAware.broker"],
+                mergePolicy: {
+                    "request":  "nomerge",
+                    "response": "nomerge"
+                },
+                request:       "{arguments}.0",
+                response:      "{arguments}.1",
+                handlerGrades: "{arguments}.2",
+                components: {
+                    requestHandler: {
+                        type:          "gpii.express.handler",
+                        options: {
+                            request:    "{broker}.options.request",
+                            response:   "{broker}.options.response",
+                            gradeNames: "{broker}.options.handlerGrades"
+                        }
+                    }
+                }
             }
         }
-
     },
     invokers: {
-        getHandler: {
-            funcName: "gpii.express.contentAware.router.getHandler",
-            args:     ["{that}"]
-        },
-        delegateToHandler: {
+        handler: {
             funcName: "gpii.express.contentAware.router.delegateToHandler",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         }

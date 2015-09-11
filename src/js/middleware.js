@@ -9,7 +9,7 @@ fluid.registerNamespace("gpii.express.middleware");
 fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.component"],
     invokers: {
-        "getMiddleware": {
+        "middleware": {
             "funcName": "fluid.notImplemented"
         }
     }

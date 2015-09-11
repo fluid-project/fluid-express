@@ -78,7 +78,7 @@ fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
                 },
                 config: {
                     express: {
-                        port: "{testEnvironment}.options.port",
+                        port:    "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
                         views:   viewDir,
                         session: {

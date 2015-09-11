@@ -4,19 +4,17 @@ var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.router.params");
 
-gpii.express.tests.router.params.getHandler = function () {
-    return function (req, res) {
-        res.status(200).send("Param is set to '" + req.params.myVar + "'...");
-    };
+gpii.express.tests.router.params.handler = function (req, res) {
+    res.status(200).send("Param is set to '" + req.params.myVar + "'...");
 };
 
 fluid.defaults("gpii.express.tests.router.params", {
     gradeNames: ["gpii.express.router"],
     method: "get",
     invokers: {
-        "getHandler": {
-            funcName: "gpii.express.tests.router.params.getHandler",
-            args: ["{that}"]
+        "handler": {
+            funcName: "gpii.express.tests.router.params.handler",
+            args:     ["{arguments}.0", "{arguments}.1"]
         }
     }
 });

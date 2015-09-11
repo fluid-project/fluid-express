@@ -19,18 +19,20 @@
 
 "use strict";
 var fluid     = fluid || require("infusion");
-var gpii      = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.requestAware.router");
-
-gpii.express.requestAware.router.getHandler = function (that) {
-    return function (req, res) {
-        that.events.onRequest.fire(req, res);
-    };
-};
 
 fluid.defaults("gpii.express.requestAware.router", {
     gradeNames: ["gpii.express.router"],
     timeout: 5000, // The default timeout we will pass to whatever grade we instantiate.
+    distributeOptions: [
+        {
+            source: "{that}.options.timeout",
+            target: "{that gpii.express.handler}.options.timeout"
+        },
+        {
+            source: "{that}.options.handlerGrades",
+            target: "{that gpii.express.handler}.options.gradeNames"
+        }
+    ],
     method:     "get",
     events: {
         "onRequest": null
@@ -41,17 +43,14 @@ fluid.defaults("gpii.express.requestAware.router", {
             type:          "gpii.express.handler",
             options: {
                 request:    "{arguments}.0",
-                response:   "{arguments}.1",
-                timeout:    "{router}.options.timeout",
-                gradeNames: "{router}.options.handlerGrades"
+                response:   "{arguments}.1"
             }
         }
-
     },
     invokers: {
-        "getHandler": {
-            funcName: "gpii.express.requestAware.router.getHandler",
-            args: ["{that}"]
+        "handler": {
+            func: "{that}.events.onRequest.fire",
+            args: ["{arguments}.0", "{arguments}.1"]
         }
     }
 });
