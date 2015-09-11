@@ -6,7 +6,7 @@ fluid.registerNamespace("gpii.express.middleware.cookieparser");
 
 var cp = require("cookie-parser");
 
-gpii.express.middleware.cookieparser.init = function(that) {
+gpii.express.middleware.cookieparser.init = function (that) {
     that.cp = cp();
 };
 
