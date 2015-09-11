@@ -24,7 +24,7 @@
     "grunt-contrib-jshint":    "~0.9.0",
     "grunt-jsonlint":          "1.0.4",
     "grunt-gpii":              "git://github.com/GPII/grunt-gpii.git#58ae055833f437a9e91baedb9f39a22c5fdd727f",
-    "infusion":                "git://github.com/fluid-project/infusion.git#282f1a318718eed0b0ec060fb8b4ad254417fd7e"
+    "infusion":                "git://github.com/fluid-project/infusion.git#a1e3d601478e57276d4143fca5bcbe00f9c6b0cd"
   },
     "devDependencies": {
       "jqUnit":  "git://github.com/fluid-project/node-jqUnit.git#b7ef53aac1ca365bf23d35d255fae874faa88b70",
