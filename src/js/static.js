@@ -22,8 +22,8 @@ gpii.express.router["static"].init = function (that) {
     that.staticHandler = express["static"](that.options.content);
 };
 
-gpii.express.router["static"].route = function (that, req, res) {
-    that.staticHandler(req, res);
+gpii.express.router["static"].route = function (that, req, res, next) {
+    that.staticHandler(req, res, next);
 };
 
 fluid.defaults("gpii.express.router.static", {
@@ -39,7 +39,7 @@ fluid.defaults("gpii.express.router.static", {
     invokers: {
         route: {
             "funcName": "gpii.express.router.static.route",
-            "args":     ["{that}", "{arguments}.0", "{arguments}.1"]
+            "args":     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }
 });

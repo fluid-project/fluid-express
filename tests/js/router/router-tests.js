@@ -40,6 +40,14 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                     }
                 },
                 components: {
+                    // This should be loaded first to detect regressions on GPII-1279
+                    staticRouter: {
+                        type: "gpii.express.router.static",
+                        options: {
+                            path:    "/",
+                            content: contentDir
+                        }
+                    },
                     hello: {
                         type: "gpii.express.tests.router.hello",
                         options: {
@@ -90,13 +98,6 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                         type: "gpii.express.tests.router.params",
                         options: {
                             path: "/params/:myVar"
-                        }
-                    },
-                    staticRouter: {
-                        type: "gpii.express.router.static",
-                        options: {
-                            path:    "/",
-                            content: contentDir
                         }
                     }
                 }
