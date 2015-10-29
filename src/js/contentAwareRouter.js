@@ -60,11 +60,6 @@ gpii.express.contentAware.router.getHandlerGradesByContentType = function (that,
     return handlerGrades;
 };
 
-gpii.express.contentAware.router.getHandler = function (that) {
-    return that.delegateToHandler;
-};
-
-
 fluid.defaults("gpii.express.contentAware.router", {
     gradeNames: ["gpii.express.router"],
     timeout: 5000,
