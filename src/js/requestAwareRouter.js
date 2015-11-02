@@ -18,7 +18,7 @@
 // }
 
 "use strict";
-var fluid     = fluid || require("infusion");
+var fluid = require("infusion");
 
 fluid.defaults("gpii.express.requestAware.router", {
     gradeNames: ["gpii.express.router"],

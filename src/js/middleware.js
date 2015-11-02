@@ -3,7 +3,7 @@
 //
 // The express module will automatically attempt to wire in anything with this gradeName into itself
 
-var fluid = fluid || require("infusion");
+var fluid = require("infusion");
 fluid.registerNamespace("gpii.express.middleware");
 
 fluid.defaults("gpii.express.middleware", {

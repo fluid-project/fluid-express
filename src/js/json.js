@@ -1,7 +1,7 @@
 // Module to add body parsing to express.
 "use strict";
-var fluid  = fluid || require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.bodyparser.json");
 
 var bp = require("body-parser");

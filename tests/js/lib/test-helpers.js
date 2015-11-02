@@ -1,6 +1,6 @@
 // Helpers for use in testing gpii.express and services built on top of it.
 "use strict";
-var fluid = fluid || require("infusion");
+var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.helpers");
 
