@@ -1,8 +1,8 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-var jqUnit       = require("jqUnit");
+var fluid  = require("infusion");
+var gpii   = fluid.registerNamespace("gpii");
+var jqUnit = require("jqUnit");
 
 fluid.registerNamespace("gpii.express.tests.staticRouter.caseHolder");
 

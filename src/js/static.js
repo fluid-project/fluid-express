@@ -1,7 +1,7 @@
 // Module to serve static content using the express static middleware
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.router.static");
 
 var express = require("express");

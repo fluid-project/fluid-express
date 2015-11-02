@@ -1,8 +1,8 @@
 /* Tests for the router grade and the "wrapper" modules for common Express routers.  */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-var jqUnit       = require("jqUnit");
+var fluid  = require("infusion");
+var gpii   = fluid.registerNamespace("gpii");
+var jqUnit = require("jqUnit");
 
 require("../lib/test-helpers");
 

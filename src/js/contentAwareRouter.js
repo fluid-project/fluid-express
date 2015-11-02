@@ -33,7 +33,7 @@
 //    3.  An instance of `gpii.express.handler` is created with the additional grades defined in the handler options.
 //
 "use strict";
-var fluid = fluid || require("infusion");
+var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 require("./requestAwareRouter");

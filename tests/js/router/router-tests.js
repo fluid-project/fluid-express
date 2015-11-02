@@ -1,7 +1,7 @@
 /* Test environment for the "router" grade and "wrapper" modules for common Express routers. */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 
 fluid.setLogging(true);
 
