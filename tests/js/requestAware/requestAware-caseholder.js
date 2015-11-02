@@ -8,9 +8,6 @@ require("../lib/test-helpers");
 
 fluid.registerNamespace("gpii.express.tests.requestAware.caseHolder");
 
-fluid.setLogging(true);
-
-
 gpii.express.tests.requestAware.caseHolder.testRequestAwareDelayedResponse = function (responseObject, response, body) {
     gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 200);
     responseObject.body = body;

@@ -3,8 +3,6 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-fluid.setLogging(true);
-
 var path         = require("path");
 
 require("./includes.js");

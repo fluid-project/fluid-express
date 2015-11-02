@@ -3,8 +3,6 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-fluid.setLogging(true);
-
 var path         = require("path");
 
 // Load all of the components to be tested and our test cases

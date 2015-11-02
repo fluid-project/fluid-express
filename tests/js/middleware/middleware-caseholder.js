@@ -8,8 +8,6 @@ require("../lib/test-helpers");
 
 fluid.registerNamespace("gpii.express.tests.middleware.caseHolder");
 
-fluid.setLogging(true);
-
 gpii.express.tests.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 
     gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
