@@ -34,8 +34,8 @@
 // For an example of how this can be used, check out the tests included with this package.
 
 "use strict";
-var fluid     = fluid || require("infusion");
-var gpii      = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.handler");
 
 // TODO:  Convert this to use JSON Schema validation when available: https://issues.gpii.net/browse/CTR-161

@@ -1,15 +1,12 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-
-fluid.setLogging(true);
-
-var path         = require("path");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 
 require("./includes.js");
 
-var viewDir    = path.resolve(__dirname, "./views");
+var path    = require("path");
+var viewDir = path.resolve(__dirname, "./views");
 
 fluid.registerNamespace("gpii.express.tests.contentAware.handler");
 gpii.express.tests.contentAware.handler.handleRequest = function (that) {

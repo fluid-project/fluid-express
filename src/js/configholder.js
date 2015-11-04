@@ -4,7 +4,7 @@
 //
 // See [GPII-1140](http://issues.gpii.net/browse/GPII-1140) for details.
 //
-var fluid = fluid || require("infusion");
+var fluid = require("infusion");
 fluid.registerNamespace("gpii.express.expressConfigHolder");
 fluid.defaults("gpii.express.expressConfigHolder", {
     gradeNames: ["fluid.littleComponent"],

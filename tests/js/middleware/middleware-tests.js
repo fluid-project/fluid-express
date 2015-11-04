@@ -1,9 +1,7 @@
 /* Tests for the "middleware" grade and "wrapper" modules for common Express middleware. */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-
-fluid.setLogging(true);
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 
 var path         = require("path");
 

@@ -1,14 +1,12 @@
 /* Tests for the router grade and the "wrapper" modules for common Express routers.  */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-var jqUnit       = require("jqUnit");
+var fluid  = require("infusion");
+var gpii   = fluid.registerNamespace("gpii");
+var jqUnit = require("jqUnit");
 
 require("../lib/test-helpers");
 
 fluid.registerNamespace("gpii.express.tests.router.caseHolder");
-
-fluid.setLogging(true);
 
 gpii.express.tests.router.caseHolder.verifyContent = function (response, body, expectedString) {
 

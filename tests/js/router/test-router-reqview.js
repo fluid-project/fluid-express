@@ -1,7 +1,7 @@
 // Test router module to expose the "req" object so that we can confirm that our middleware is installed correctly.
 "use strict";
-var fluid     = fluid || require("infusion");
-var gpii      = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.router.reqview");
 
 gpii.express.tests.router.reqview.route = function (req, res) {
