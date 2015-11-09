@@ -1,14 +1,12 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-var jqUnit       = require("jqUnit");
+var fluid  = require("infusion");
+var gpii   = fluid.registerNamespace("gpii");
+var jqUnit = require("jqUnit");
 
 require("../lib/test-helpers");
 
 fluid.registerNamespace("gpii.express.tests.middleware.caseHolder");
-
-fluid.setLogging(true);
 
 gpii.express.tests.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 

@@ -1,7 +1,7 @@
 // Module to help express understand URL-encoded data.
 "use strict";
-var fluid  = fluid || require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.bodyparser.urlencoded");
 
 var bp = require("body-parser");

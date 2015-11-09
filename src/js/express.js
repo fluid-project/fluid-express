@@ -2,7 +2,7 @@
 //
 // Add additional routers and middleware as child components of this module
 "use strict";
-var fluid = fluid || require("infusion");
+var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 require("./configholder");
 
