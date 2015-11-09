@@ -1,10 +1,8 @@
 "use strict";
 
 // The base classes we are testing
-require("../../../index.js");
-
-// TODO:  Migrate this to use `loadTestingSupport`.
-require("../lib/test-helpers");
+var express = require("../../../index.js");
+express.loadTestingSupport();
 
 // Our test fixtures and test cases
 require("./helpers-caseholder");
