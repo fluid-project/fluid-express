@@ -31,14 +31,20 @@ gpii.express.tests.helpers.assembleUrl = function (baseUrl, path) {
     return fullPath;
 };
 
-gpii.express.tests.helpers.addRequiredSequences = function (sequenceStart, rawTests) {
+gpii.express.tests.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
     var completeTests = fluid.copy(rawTests);
 
     for (var a = 0; a < completeTests.length; a++) {
         var testSuite = completeTests[a];
         for (var b = 0; b < testSuite.tests.length; b++) {
             var tests = testSuite.tests[b];
-            var modifiedSequence = sequenceStart.concat(tests.sequence);
+            var modifiedSequence = tests.sequence;
+            if (sequenceStart) {
+                modifiedSequence = sequenceStart.concat(tests.sequence);
+            }
+            if (sequenceEnd) {
+                modifiedSequence = modifiedSequence.concat(sequenceEnd);
+            }
             tests.sequence = modifiedSequence;
         }
     }
@@ -46,8 +52,9 @@ gpii.express.tests.helpers.addRequiredSequences = function (sequenceStart, rawTe
     return completeTests;
 };
 
-
-fluid.defaults("gpii.express.tests.caseHolder", {
+// If you want to avoid the defaults, extend this grade rather than `gpii.express.tests.caseHolder`.
+//
+fluid.defaults("gpii.express.tests.caseHolder.base", {
     gradeNames: ["fluid.test.testCaseHolder"],
     mergePolicy: {
         rawModules:    "noexpand",
@@ -64,6 +71,25 @@ fluid.defaults("gpii.express.tests.caseHolder", {
     ],
     moduleSource: {
         funcName: "gpii.express.tests.helpers.addRequiredSequences",
-        args:     ["{that}.options.sequenceStart", "{that}.options.rawModules"]
+        args:     ["{that}.options.rawModules", "{that}.options.sequenceStart", "{that}.options.sequenceEnd"]
     }
+});
+
+// Defaults which are useful in most case where you are testing `gpii-express` or its child components.  Your test
+// environment should:
+//
+//   1. Have a `constructServer` event and wait to construct its test components until `constructServer` is fired.
+//   2. Have an `onStarted` event which waits for all of the startup events for its child components.
+//
+fluid.defaults("gpii.express.tests.caseHolder", {
+    gradeNames: ["gpii.express.tests.caseHolder.base"],
+    sequenceStart: [
+        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+            func: "{testEnvironment}.events.constructServer.fire"
+        },
+        {
+            listener: "fluid.identity",
+            event: "{testEnvironment}.events.onStarted"
+        }
+    ]
 });
