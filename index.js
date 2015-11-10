@@ -50,6 +50,9 @@ loader.require("./src/js/requestAwareRouter");
 // A convenience router to handle multiple content types from the same router.
 loader.require("./src/js/contentAwareRouter");
 
+// An intermediate router that can be used to combine existing middleware and routers.
+loader.require("./src/js/passthroughRouter");
+
 // Provide a function to optionally load test support.
 express.loadTestingSupport = function () {
     require("./tests/js/lib/test-helpers");
