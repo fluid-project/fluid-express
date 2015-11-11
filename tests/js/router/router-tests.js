@@ -11,6 +11,21 @@ require("./includes.js");
 var viewDir    = path.resolve(__dirname, "../../views");
 var contentDir = path.resolve(__dirname, "../../html");
 
+fluid.registerNamespace("gpii.express.tests.router.deepParamHandler");
+gpii.express.tests.router.deepParamHandler.handleRequest = function (that) {
+    that.sendResponse(200, { ok: true, params: that.request.params});
+};
+
+fluid.defaults("gpii.express.tests.router.deepParamHandler", {
+    gradeName: ["gpii.express.handler"],
+    invokers: {
+        handleRequest: {
+            funcName: "gpii.express.tests.router.deepParamHandler.handleRequest",
+            args: ["{that}"]
+        }
+    }
+});
+
 fluid.defaults("gpii.express.tests.router.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     port:   7532,
@@ -95,7 +110,19 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                     params: {
                         type: "gpii.express.tests.router.params",
                         options: {
-                            path: "/params/:myVar"
+                            path: "/params/:myVar",
+                            components: {
+                                deepRouter: {
+                                    type: "gpii.express.requestAware.router",
+                                    options: {
+                                        path: "/deep",
+                                        routerOptions: {
+                                            mergeParams: true
+                                        },
+                                        handlerGrades: ["gpii.express.tests.router.deepParamHandler"]
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -3,6 +3,9 @@
 //
 // The express module will automatically attempt to wire in anything with this gradeName into its routing table.
 //
+// When the underlying router is created, its constructor will be passed `options.routerOptions`.  For a list of the
+// supported options, check out [the Express documentation](http://expressjs.com/api.html#router).
+//
 // This implementation is not meant to be used directly.  When wrapping most existing Express routers, you will want
 // to implement your own `router` method and (typically) point your `router` invoker at that.
 //
@@ -15,7 +18,7 @@ fluid.registerNamespace("gpii.express.router");
 // Instantiate our router object.  The root gpii.express object will wire everything together
 gpii.express.router.createRouter = function (that) {
     var express         = require("express");
-    that.options.router = express.Router();
+    that.options.router = express.Router(that.options.routerOptions);
     that.events.routerLoaded.fire(that);
 };
 
@@ -24,6 +27,7 @@ fluid.defaults("gpii.express.router", {
     method:     "use",
     path:       null,
     router:     null,
+    routerOptions: {},
     events: {
         routerLoaded: null
     },

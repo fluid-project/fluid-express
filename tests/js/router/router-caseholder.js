@@ -28,6 +28,26 @@ gpii.express.tests.router.caseHolder.verifyParams = function (response, body) {
     jqUnit.assertTrue("The response should contain the variable data...", body.indexOf("fooBar") !== -1);
 };
 
+gpii.express.tests.router.caseHolder.verifyDeepParams = function (response, body) {
+    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+
+    var data = typeof body === "string" ? JSON.parse(body) : body;
+    jqUnit.assertDeepEq("The response should contain the upstream parameter data...", { myVar: "fooBar"}, data.params);
+};
+
+
+fluid.defaults("gpii.express.tests.router.caseHolder.request", {
+    gradeNames: ["kettle.test.request.http"],
+    path: {
+        expander: {
+            funcName: "fluid.stringTemplate",
+            args:     ["%baseUrl%endpoint", { baseUrl: "{testEnvironment}.options.baseUrl", endpoint: "{that}.options.endpoint"}]
+        }
+    },
+    port: "{testEnvironment}.options.port",
+    method: "GET"
+});
+
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.router.caseHolder", {
     gradeNames: ["gpii.express.tests.caseHolder"],
@@ -107,7 +127,7 @@ fluid.defaults("gpii.express.tests.router.caseHolder", {
                     ]
                 },
                 {
-                    name: "Testing the 'params' router module...",
+                    name: "Testing the 'params' router module (top level)...",
                     type: "test",
                     sequence: [
                         {
@@ -119,6 +139,20 @@ fluid.defaults("gpii.express.tests.router.caseHolder", {
                             args: ["{paramsRequest}.nativeResponse", "{arguments}.0"]
                         }
                     ]
+                },
+                {
+                    name: "Testing the 'params' router module (deep)...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{deepParamsRequest}.send"
+                        },
+                        {
+                            listener: "gpii.express.tests.router.caseHolder.verifyDeepParams",
+                            event: "{deepParamsRequest}.events.onComplete",
+                            args: ["{deepParamsRequest}.nativeResponse", "{arguments}.0"]
+                        }
+                    ]
                 }
             ]
         }
@@ -128,89 +162,51 @@ fluid.defaults("gpii.express.tests.router.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         staticRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: "{testEnvironment}.options.baseUrl",
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: ""
             }
         },
         staticCustomRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "custom.html"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "custom.html"
             }
         },
         helloRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/hello"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "hello"
             }
         },
         helloWorldRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/hello/world"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "hello/world"
             }
         },
         wildcardRootRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/wildcard/"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "wildcard/"
             }
         },
         wildcardDeepRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/wildcard/many/levels/deep"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "wildcard/many/levels/deep"
             }
         },
         paramsRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.router.caseHolder.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/params/fooBar"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "params/fooBar"
+            }
+        },
+        deepParamsRequest: {
+            type: "gpii.express.tests.router.caseHolder.request",
+            options: {
+                endpoint: "params/fooBar/deep"
             }
         }
     }
