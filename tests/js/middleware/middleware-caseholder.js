@@ -2,7 +2,7 @@
 "use strict";
 var fluid  = require("infusion");
 var gpii   = fluid.registerNamespace("gpii");
-var jqUnit = require("jqUnit");
+var jqUnit = require("node-jqunit");
 
 require("../lib/test-helpers");
 
@@ -88,12 +88,12 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             func: "{counterRequest}.send"
                         },
                         {
-                            listener: "{counterRequest}.send",
+                            listener: "{counterSecondRequest}.send",
                             event: "{counterRequest}.events.onComplete"
                         },
                         {
                             listener: "gpii.express.tests.middleware.caseHolder.testCounterMiddleware",
-                            event: "{counterRequest}.events.onComplete",
+                            event: "{counterSecondRequest}.events.onComplete",
                             args: ["{testEnvironment}"]
                         }
                     ]
@@ -153,6 +153,14 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         counterRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: "{testEnvironment}.options.baseUrl",
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        counterSecondRequest: {
             type: "kettle.test.request.http",
             options: {
                 path: "{testEnvironment}.options.baseUrl",

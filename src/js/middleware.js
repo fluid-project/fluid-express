@@ -50,7 +50,7 @@ gpii.express.middleware.matchesMethod = function (req, methods) {
         }
     });
 
-        return matches;
+    return matches;
 };
 
 fluid.defaults("gpii.express.middleware", {

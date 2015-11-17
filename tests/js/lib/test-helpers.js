@@ -4,7 +4,7 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.helpers");
 
-var jqUnit = require("jqUnit");
+var jqUnit = require("node-jqunit");
 
 gpii.express.tests.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;

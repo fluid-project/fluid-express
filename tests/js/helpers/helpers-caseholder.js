@@ -7,7 +7,7 @@
  */
 "use strict";
 var fluid  = require("infusion");
-var jqUnit = require("jqUnit");
+var jqUnit = require("node-jqunit");
 
 // TODO:  Replace this with a call to loadTestSupport
 require("../lib/test-helpers");
