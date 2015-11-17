@@ -10,26 +10,26 @@ fluid.registerNamespace("gpii.express.tests.router.caseHolder");
 
 gpii.express.tests.router.caseHolder.verifyContent = function (response, body, expectedString) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
 gpii.express.tests.router.caseHolder.verifyWildcard = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertEquals("The nested body should match the configured content...", "Hello, wild world.", body);
 };
 
 gpii.express.tests.router.caseHolder.verifyParams = function (response, body) {
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The response should contain the variable data...", body.indexOf("fooBar") !== -1);
 };
 
 gpii.express.tests.router.caseHolder.verifyDeepParams = function (response, body) {
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     var data = typeof body === "string" ? JSON.parse(body) : body;
     jqUnit.assertDeepEq("The response should contain the upstream parameter data...", { myVar: "fooBar"}, data.params);

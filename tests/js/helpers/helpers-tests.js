@@ -15,8 +15,8 @@ var viewDir = path.resolve(__dirname, "./views");
 
 fluid.defaults("gpii.express.tests.helpers.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
-    port:       7533,
-    baseUrl:    "http://localhost:7533/",
+    port:       7030,
+    baseUrl:    "http://localhost:7030/",
     events: {
         constructServer: null,
         onStarted: null

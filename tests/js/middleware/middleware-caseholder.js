@@ -10,14 +10,14 @@ fluid.registerNamespace("gpii.express.tests.middleware.caseHolder");
 
 gpii.express.tests.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
 gpii.express.tests.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     var data = JSON.parse(body);
 
@@ -32,7 +32,7 @@ gpii.express.tests.middleware.caseHolder.testCounterMiddleware = function (that)
 
 gpii.express.tests.middleware.caseHolder.testCookieMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be cookie data...", body.cookies);
     if (body.cookies) {
@@ -42,7 +42,7 @@ gpii.express.tests.middleware.caseHolder.testCookieMiddleware = function (respon
 
 gpii.express.tests.middleware.caseHolder.testSessionMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be session data...", body.session);
     if (body.session) {
@@ -52,7 +52,7 @@ gpii.express.tests.middleware.caseHolder.testSessionMiddleware = function (respo
 
 gpii.express.tests.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be body data...", body.body);
     if (body.body) {

@@ -64,8 +64,8 @@ fluid.defaults("gpii.express.tests.requestAware.timeout", {
 
 fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
-    port:   7533,
-    baseUrl: "http://localhost:7533/",
+    port:   7433,
+    baseUrl: "http://localhost:7433/",
     events: {
         constructServer: null,
         onStarted: null

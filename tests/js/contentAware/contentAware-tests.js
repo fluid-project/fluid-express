@@ -59,8 +59,8 @@ fluid.defaults("gpii.express.tests.contentAware.router", {
 
 fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
-    port:   7533,
-    baseUrl: "http://localhost:7533/",
+    port:   6533,
+    baseUrl: "http://localhost:6533/",
     events: {
         constructServer: null,
         onStarted: null

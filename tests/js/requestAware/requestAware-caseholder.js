@@ -9,12 +9,12 @@ require("../lib/test-helpers");
 fluid.registerNamespace("gpii.express.tests.requestAware.caseHolder");
 
 gpii.express.tests.requestAware.caseHolder.testRequestAwareDelayedResponse = function (responseObject, response, body) {
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 200);
+    gpii.express.tests.helpers.isSaneResponse(response, body, 200);
     responseObject.body = body;
 };
 
 gpii.express.tests.requestAware.caseHolder.testRequestAwareTimeoutResponse = function (response, body) {
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 500);
+    gpii.express.tests.helpers.isSaneResponse(response, body, 500);
 };
 
 // Look at two sequential requests and confirm that they are different.

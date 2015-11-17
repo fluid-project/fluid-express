@@ -7,7 +7,7 @@ var jqUnit = require("jqUnit");
 fluid.registerNamespace("gpii.express.tests.contentAware.caseHolder");
 
 gpii.express.tests.contentAware.caseHolder.verifyResponse = function (response, body, expected) {
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body, 200);
+    gpii.express.tests.helpers.isSaneResponse(response, body, 200);
     jqUnit.assertEquals("The body should be as expected...", expected, body);
 };
 

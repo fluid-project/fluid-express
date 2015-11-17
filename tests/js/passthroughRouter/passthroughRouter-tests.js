@@ -95,8 +95,8 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
 
 fluid.defaults("gpii.express.tests.passthroughRouter.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
-    port:   7533,
-    baseUrl: "http://localhost:7533/",
+    port:   7593,
+    baseUrl: "http://localhost:7593/",
     events: {
         constructServer: null,
         onStarted: null

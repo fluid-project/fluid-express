@@ -4,7 +4,9 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.helpers");
 
-gpii.express.tests.helpers.isSaneResponse = function (jqUnit, response, body, status) {
+var jqUnit = require("jqUnit");
+
+gpii.express.tests.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;
 
     jqUnit.assertEquals("The response should have a reasonable status code", status, response.statusCode);
