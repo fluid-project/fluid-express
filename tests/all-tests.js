@@ -1,3 +1,4 @@
+// TODO: Testing in this order works, alphabetical order does not.  Review with Antranig.
 require("./js/method/method-isolation-tests");
 require("./js/middleware/middleware-tests");
 require("./js/requestAware/requestAware-tests");
