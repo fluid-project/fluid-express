@@ -29,11 +29,11 @@ var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware");
 
 gpii.express.middleware.checkMethod = function (that, req, res, next) {
-    if (that.options.method && gpii.express.middleware.matchesMethod(req, that.options.method)) {
-        that.middleware(req, res, next);
+    if (that.options.method && !gpii.express.middleware.matchesMethod(req, that.options.method)) {
+        next();
     }
     else {
-        next();
+        that.middleware(req, res, next);
     }
 };
 
