@@ -107,3 +107,7 @@ As demonstrated in the example above, this module expects to work with a full fi
 This package provides the abstract `gpii.express.router` gradeName that all routers should extend.  At a minimum, a valid implementation must override the default `handler` invoker.
 
 For examples, check out the router modules included in the tests for this package.
+
+# How do I test it?
+
+Tests are located in the ``tests`` directory and can be run using the ``npm test`` command. Alternatively a [VM](https://github.com/GPII/qi-development-environments/) can be used for running tests once its [requirements](https://github.com/GPII/qi-development-environments/blob/master/README.md#requirements) have been met. To create a VM run ``vagrant up`` in this directory and then use the ``grunt run-vm-tests`` command to run tests within it.
