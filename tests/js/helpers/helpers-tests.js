@@ -8,7 +8,8 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-require("./includes.js");
+require("../includes.js");
+require("./helpers-caseholder");
 
 var viewDir = fluid.module.resolvePath("%gpii-express/views");
 

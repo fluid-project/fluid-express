@@ -4,7 +4,15 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
-require("./includes.js");
+require("../includes.js");
+require("./test-middleware-counter");
+
+// We borrow a router from the router tests to help in testing middleware isolation
+require("../router/test-router-hello");
+require("../router/test-router-reqview");
+require("./test-router-cookiesetter");
+
+require("./middleware-caseholder");
 
 var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
 

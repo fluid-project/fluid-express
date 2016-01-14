@@ -3,7 +3,8 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-require("./includes.js");
+require("../includes.js");
+require("./handler-caseholder");
 
 fluid.defaults("gpii.express.tests.handler.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],

@@ -5,13 +5,9 @@
  */
 "use strict";
 var fluid = require("infusion");
-fluid.loadTestingSupport();
-
 var gpii  = fluid.registerNamespace("gpii");
 
-var express = require("../../../index");
-express.loadTestingSupport();
-
+require("../includes");
 require("../middleware/test-middleware-counter");
 
 require("./method-caseholder");

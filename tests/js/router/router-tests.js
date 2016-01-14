@@ -4,7 +4,11 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
-require("./includes.js");
+require("../includes.js");
+require("./router-caseholder");
+require("./test-router-hello");
+require("./test-router-params");
+require("./test-router-reqview");
 
 var viewDir    = fluid.module.resolvePath("%gpii-express/tests/views");
 var contentDir = fluid.module.resolvePath("%gpii-express/tests/html");
