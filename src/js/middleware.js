@@ -41,9 +41,9 @@ gpii.express.middleware.matchesMethod = function (req, methods) {
     var methodArray = fluid.makeArray(methods);
     var matches = false;
 
+    var requestMethod = req.method.toLowerCase();
     fluid.each(methodArray, function (methodAllowedByComponent) {
         if (!matches) {
-            var requestMethod = req.method.toLowerCase();
             if (methodAllowedByComponent === requestMethod) {
                 matches = true;
             }
