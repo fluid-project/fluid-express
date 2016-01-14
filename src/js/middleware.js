@@ -39,14 +39,11 @@ gpii.express.middleware.checkMethod = function (that, req, res, next) {
 
 gpii.express.middleware.matchesMethod = function (req, methods) {
     var methodArray = fluid.makeArray(methods);
-    var matches = false;
 
     var requestMethod = req.method.toLowerCase();
-    fluid.each(methodArray, function (methodAllowedByComponent) {
-        if (!matches) {
-            if (methodAllowedByComponent === requestMethod) {
-                matches = true;
-            }
+    var matches = fluid.find(methodArray, function (method) {
+        if (method === requestMethod) {
+            return true;
         }
     });
 
