@@ -1,8 +1,8 @@
 "use strict";
-
-// The base classes we are testing
-var express = require("../../../index.js");
-express.loadTestingSupport();
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
+require("../../../index");
+gpii.express.loadTestingSupport();
 
 // Our test fixtures and test cases
 require("./requestAware-caseholder");

@@ -8,10 +8,10 @@
 //
 "use strict";
 var fluid = require("infusion");
-var express = fluid.registerNamespace("gpii.express");
-fluid.module.register("gpii-express", __dirname, require);
+var gpii  = fluid.registerNamespace("gpii");
 
-fluid.module.register("gpii.express", __dirname, require);
+fluid.registerNamespace("gpii.express");
+fluid.module.register("gpii-express", __dirname, require);
 
 // `gpii.express`, a component for express itself
 require("./src/js/express");
@@ -53,8 +53,8 @@ require("./src/js/contentAwareRouter");
 require("./src/js/passthroughRouter");
 
 // Provide a function to optionally load test support.
-express.loadTestingSupport = function () {
+gpii.express.loadTestingSupport = function () {
     require("./tests/js/lib/test-helpers");
 };
 
-module.exports = express;
+module.exports = gpii.express;
