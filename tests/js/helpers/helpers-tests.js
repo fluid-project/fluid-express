@@ -10,8 +10,7 @@ var gpii  = fluid.registerNamespace("gpii");
 
 require("./includes.js");
 
-var path    = require("path");
-var viewDir = path.resolve(__dirname, "./views");
+var viewDir = fluid.module.resolvePath("%gpii-express/views");
 
 fluid.defaults("gpii.express.tests.helpers.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],

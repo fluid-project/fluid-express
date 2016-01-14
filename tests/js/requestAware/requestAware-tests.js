@@ -3,11 +3,9 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-var path         = require("path");
-
 require("./includes.js");
 
-var viewDir    = path.resolve(__dirname, "./views");
+var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
 
 fluid.registerNamespace("gpii.express.tests.requestAware.instrumented");
 gpii.express.tests.requestAware.instrumented.handleRequest = function (that) {

@@ -3,13 +3,11 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-var path         = require("path");
-
 // Load all of the components to be tested and our test cases
 require("./includes.js");
 
-var viewDir    = path.resolve(__dirname, "../../views");
-var contentDir = path.resolve(__dirname, "../../html");
+var viewDir    = fluid.module.resolvePath("%gpii-express/tests/views");
+var contentDir = fluid.module.resolvePath("%gpii-express/tests/html");
 
 fluid.registerNamespace("gpii.express.tests.router.deepParamHandler");
 gpii.express.tests.router.deepParamHandler.handleRequest = function (that) {

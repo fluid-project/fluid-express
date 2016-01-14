@@ -8,8 +8,8 @@ var gpii  = fluid.registerNamespace("gpii");
 
 require("./includes.js");
 
-var path    = require("path");
-var viewDir = path.resolve(__dirname, "./views");
+var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
+
 
 fluid.registerNamespace("gpii.express.tests.passthroughRouter.handler");
 gpii.express.tests.passthroughRouter.handler.handleRequest = function (that) {
