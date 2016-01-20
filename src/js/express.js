@@ -1,6 +1,20 @@
-// Express instance represented as a component
+// An [Express.js](http://expressjs.com/) instance represented as a Fluid component.
 //
-// Add additional routers and middleware as child components of this module
+// By default, this instance does nothing useful.  Your instance will need to add at least one `gpii.express.router`
+// or `gpii.express.middleware` child component that will respond to incoming requests.  See those grades for more
+// details.
+//
+// Express configuration options are set using `options.config.express`.  The `options.config.express.views` variable
+// has special meaning for template renderers like `gpii-handlebars`.  It represents one or more directories containing
+// template subdirectories (`layouts`, `pages`, and `partials`). You may either have a single string value, or an array
+// of values.
+//
+// Each value will be passed through `fluid.model.resolvePath`, so that references to Fluid component packages can
+// be resolved relative to where they are installed, regardless of whether they are immediate or inherited dependencies.
+// You should be using these references, which generally are of the form `%npm-package-name/path/within/package`.
+//
+// See the `gpii-handlebars` package for more details about view directories.
+//
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -135,7 +149,21 @@ fluid.defaults("gpii.express", {
     gradeNames: ["fluid.modelComponent", "gpii.express.expressConfigHolder"],
     members: {
         directChildrenOfInterest: [],
-        childrenByParent:         {}
+        childrenByParent:         {},
+        views: {
+            expander: {
+                funcName: "fluid.transform",
+                args: [
+                    {
+                        expander: {
+                            funcName: "fluid.makeArray",
+                            args: ["{that}.options.config.express.viewSources"]
+                        }
+                    },
+                    fluid.module.resolvePath
+                ]
+            }
+        }
     },
     path: "/",
     express: null,

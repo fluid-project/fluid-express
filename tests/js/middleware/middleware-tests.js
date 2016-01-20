@@ -14,8 +14,6 @@ require("./test-router-cookiesetter");
 
 require("./middleware-caseholder");
 
-var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
-
 fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     port:   7531,
@@ -36,7 +34,7 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
                     express: {
                         port: "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

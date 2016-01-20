@@ -10,9 +10,6 @@ require("./test-router-hello");
 require("./test-router-params");
 require("./test-router-reqview");
 
-var viewDir    = fluid.module.resolvePath("%gpii-express/tests/views");
-var contentDir = fluid.module.resolvePath("%gpii-express/tests/html");
-
 fluid.registerNamespace("gpii.express.tests.router.deepParamHandler");
 gpii.express.tests.router.deepParamHandler.handleRequest = function (that) {
     that.sendResponse(200, { ok: true, params: that.request.params});
@@ -48,7 +45,7 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                     express: {
                         port: "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }
@@ -60,7 +57,7 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                         type: "gpii.express.router.static",
                         options: {
                             path:    "/",
-                            content: contentDir
+                            content: "%gpii-express/tests/html"
                         }
                     },
                     hello: {

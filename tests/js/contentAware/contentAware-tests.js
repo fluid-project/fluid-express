@@ -6,8 +6,6 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes");
 require("./contentAware-caseholder");
 
-var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
-
 fluid.registerNamespace("gpii.express.tests.contentAware.handler");
 gpii.express.tests.contentAware.handler.handleRequest = function (that) {
     that.sendResponse(that.options.statusCode, that.options.body);
@@ -77,7 +75,7 @@ fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
                     express: {
                         port:    "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

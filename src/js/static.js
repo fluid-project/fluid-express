@@ -1,4 +1,14 @@
-// Module to serve static content using the express static middleware
+// Module to serve up the static files available in the `content` directory.
+//
+// You can use full directory references, but best practice is to register your package's home directory using
+// `fluid.module.register`, as in:
+//
+// `fluid.module.register("npm-package-name", __dirname, require);`
+//
+// You should then set `options.content` using notation like:
+//
+// `%npm-package-name/path/to/content/within/package`
+//
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -17,7 +27,7 @@ gpii.express.router["static"].init = function (that) {
         fluid.fail("You must configure a content value to indicate what static content is to be served.");
     }
 
-    that.staticHandler = express["static"](that.options.content);
+    that.staticHandler = express["static"](fluid.module.resolve(that.options.content));
 };
 
 gpii.express.router["static"].route = function (that, req, res, next) {

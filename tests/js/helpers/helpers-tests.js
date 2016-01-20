@@ -11,8 +11,6 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./helpers-caseholder");
 
-var viewDir = fluid.module.resolvePath("%gpii-express/views");
-
 fluid.defaults("gpii.express.tests.helpers.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     port:       7030,
@@ -33,7 +31,7 @@ fluid.defaults("gpii.express.tests.helpers.testEnvironment", {
                     express: {
                         port: "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

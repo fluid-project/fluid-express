@@ -1,12 +1,10 @@
-/* Tests for the "express" and "router" module */
+/* Tests for the `requestAware` modules. */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes.js");
 require("./requestAware-caseholder");
-
-var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
 
 fluid.registerNamespace("gpii.express.tests.requestAware.instrumented");
 gpii.express.tests.requestAware.instrumented.handleRequest = function (that) {
@@ -81,7 +79,7 @@ fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
                     express: {
                         port: "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

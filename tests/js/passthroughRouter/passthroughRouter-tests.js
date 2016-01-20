@@ -9,9 +9,6 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./passthroughRouter-caseholder");
 
-var viewDir = fluid.module.resolvePath("%gpii-express/tests/views");
-
-
 fluid.registerNamespace("gpii.express.tests.passthroughRouter.handler");
 gpii.express.tests.passthroughRouter.handler.handleRequest = function (that) {
     that.sendResponse(that.options.statusCode, that.options.body);
@@ -114,7 +111,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.testEnvironment", {
                     express: {
                         port:    "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir
+                        views:   "%gpii-express/tests/views"
                     }
                 },
                 components: {
