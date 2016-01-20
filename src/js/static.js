@@ -27,7 +27,7 @@ gpii.express.router["static"].init = function (that) {
         fluid.fail("You must configure a content value to indicate what static content is to be served.");
     }
 
-    that.staticHandler = express["static"](fluid.module.resolve(that.options.content));
+    that.staticHandler = express["static"](fluid.module.resolvePath(that.options.content));
 };
 
 gpii.express.router["static"].route = function (that, req, res, next) {
