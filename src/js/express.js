@@ -76,15 +76,15 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
             var childComponent = component[childNickname];
             if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
                 // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                component.options.router.use(component.options.path, childComponent.options.router);
+                component.router.use(component.options.path, childComponent.router);
 
                 // Recurse from here on down.
                 that.connectDirectDescendants(childComponent, path + "." + childNickname);
             }
             else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-                if (component.options.router) {
+                if (component.router) {
                     // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                    component.options.router.use(component.options.path, childComponent.checkMethod);
+                    component.router.use(component.options.path, childComponent.checkMethod);
                 }
                 else {
                     fluid.fail("A component must expose a router in order to work with child middleware components.");
@@ -99,7 +99,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     //
     // The path and method have to be used here so that parameters will be parsed correctly.
     if (fluid.hasGrade(component.options, "gpii.express.router")) {
-        component.options.router[component.options.method](component.options.path, component.route);
+        component.router[component.options.method](component.options.path, component.route);
     }
 };
 
@@ -118,7 +118,7 @@ gpii.express.init = function (that) {
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // The router has to wire its own paths to preserve methods and path variables.
             // We just "use" it at the root level, and let it do the rest.
-            that.express.use("/", childComponent.options.router);
+            that.express.use("/", childComponent.router);
         }
         else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
             that.express.use(childComponent.middleware);

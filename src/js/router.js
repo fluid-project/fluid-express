@@ -17,8 +17,8 @@ fluid.registerNamespace("gpii.express.router");
 
 // Instantiate our router object.  The root gpii.express object will wire everything together
 gpii.express.router.createRouter = function (that) {
-    var express         = require("express");
-    that.options.router = express.Router(that.options.routerOptions);
+    var express = require("express");
+    that.router = express.Router(that.options.routerOptions);
     that.events.routerLoaded.fire(that);
 };
 

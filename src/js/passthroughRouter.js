@@ -19,7 +19,7 @@ var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.router.passthrough");
 
 gpii.express.router.passthrough.route = function (that, request, response, next) {
-    that.options.router(request, response, next);
+    that.router(request, response, next);
 };
 
 fluid.defaults("gpii.express.router.passthrough", {
