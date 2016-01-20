@@ -157,7 +157,7 @@ fluid.defaults("gpii.express", {
                     {
                         expander: {
                             funcName: "fluid.makeArray",
-                            args: ["{that}.options.config.express.viewSources"]
+                            args: ["{that}.options.config.express.views"]
                         }
                     },
                     fluid.module.resolvePath
