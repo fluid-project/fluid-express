@@ -1,7 +1,7 @@
 // Module to add session handling to express.
 "use strict";
-var fluid     = fluid || require("infusion");
-var gpii      = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware.session");
 
 require("./configholder");

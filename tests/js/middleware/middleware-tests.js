@@ -1,16 +1,18 @@
 /* Tests for the "middleware" grade and "wrapper" modules for common Express middleware. */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-
-fluid.setLogging(true);
-
-var path         = require("path");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
-require("./includes.js");
+require("../includes.js");
+require("./test-middleware-counter");
 
-var viewDir    = path.resolve(__dirname, "../../views");
+// We borrow a router from the router tests to help in testing middleware isolation
+require("../router/test-router-hello");
+require("../router/test-router-reqview");
+require("./test-router-cookiesetter");
+
+require("./middleware-caseholder");
 
 fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
@@ -32,7 +34,7 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
                     express: {
                         port: "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

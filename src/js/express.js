@@ -1,8 +1,22 @@
-// Express instance represented as a component
+// An [Express.js](http://expressjs.com/) instance represented as a Fluid component.
 //
-// Add additional routers and middleware as child components of this module
+// By default, this instance does nothing useful.  Your instance will need to add at least one `gpii.express.router`
+// or `gpii.express.middleware` child component that will respond to incoming requests.  See those grades for more
+// details.
+//
+// Express configuration options are set using `options.config.express`.  The `options.config.express.views` variable
+// has special meaning for template renderers like `gpii-handlebars`.  It represents one or more directories containing
+// template subdirectories (`layouts`, `pages`, and `partials`). You may either have a single string value, or an array
+// of values.
+//
+// Each value will be passed through `fluid.model.resolvePath`, so that references to Fluid component packages can
+// be resolved relative to where they are installed, regardless of whether they are immediate or inherited dependencies.
+// You should be using these references, which generally are of the form `%npm-package-name/path/within/package`.
+//
+// See the `gpii-handlebars` package for more details about view directories.
+//
 "use strict";
-var fluid = fluid || require("infusion");
+var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 require("./configholder");
 
@@ -62,15 +76,15 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
             var childComponent = component[childNickname];
             if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
                 // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                component.options.router.use(component.options.path, childComponent.options.router);
+                component.router.use(component.options.path, childComponent.router);
 
                 // Recurse from here on down.
                 that.connectDirectDescendants(childComponent, path + "." + childNickname);
             }
             else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-                if (component.options.router) {
+                if (component.router) {
                     // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                    component.options.router.use(component.options.path, childComponent.middleware);
+                    component.router.use(component.options.path, childComponent.checkMethod);
                 }
                 else {
                     fluid.fail("A component must expose a router in order to work with child middleware components.");
@@ -85,7 +99,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     //
     // The path and method have to be used here so that parameters will be parsed correctly.
     if (fluid.hasGrade(component.options, "gpii.express.router")) {
-        component.options.router[component.options.method](component.options.path, component.route);
+        component.router[component.options.method](component.options.path, component.route);
     }
 };
 
@@ -104,7 +118,7 @@ gpii.express.init = function (that) {
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // The router has to wire its own paths to preserve methods and path variables.
             // We just "use" it at the root level, and let it do the rest.
-            that.express.use("/", childComponent.options.router);
+            that.express.use("/", childComponent.router);
         }
         else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
             that.express.use(childComponent.middleware);
@@ -131,11 +145,17 @@ gpii.express.stopServer = function (that) {
     });
 };
 
+// Resolve any package references (e. g. `%package-name/path/within/package/`)
+gpii.express.expandPaths = function (views) {
+    return fluid.transform(fluid.makeArray(views), fluid.module.resolvePath);
+};
+
 fluid.defaults("gpii.express", {
     gradeNames: ["fluid.modelComponent", "gpii.express.expressConfigHolder"],
     members: {
         directChildrenOfInterest: [],
-        childrenByParent:         {}
+        childrenByParent:         {},
+        views: "@expand:gpii.express.expandPaths({that}.options.config.express.views)"
     },
     path: "/",
     express: null,

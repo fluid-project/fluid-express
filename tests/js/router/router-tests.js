@@ -1,17 +1,29 @@
 /* Test environment for the "router" grade and "wrapper" modules for common Express routers. */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-
-fluid.setLogging(true);
-
-var path         = require("path");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
-require("./includes.js");
+require("../includes.js");
+require("./router-caseholder");
+require("./test-router-hello");
+require("./test-router-params");
+require("./test-router-reqview");
 
-var viewDir    = path.resolve(__dirname, "../../views");
-var contentDir = path.resolve(__dirname, "../../html");
+fluid.registerNamespace("gpii.express.tests.router.deepParamHandler");
+gpii.express.tests.router.deepParamHandler.handleRequest = function (that) {
+    that.sendResponse(200, { ok: true, params: that.request.params});
+};
+
+fluid.defaults("gpii.express.tests.router.deepParamHandler", {
+    gradeName: ["gpii.express.handler"],
+    invokers: {
+        handleRequest: {
+            funcName: "gpii.express.tests.router.deepParamHandler.handleRequest",
+            args: ["{that}"]
+        }
+    }
+});
 
 fluid.defaults("gpii.express.tests.router.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
@@ -33,7 +45,7 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                     express: {
                         port: "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }
@@ -45,7 +57,7 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                         type: "gpii.express.router.static",
                         options: {
                             path:    "/",
-                            content: contentDir
+                            content: "%gpii-express/tests/html"
                         }
                     },
                     hello: {
@@ -97,7 +109,19 @@ fluid.defaults("gpii.express.tests.router.testEnvironment", {
                     params: {
                         type: "gpii.express.tests.router.params",
                         options: {
-                            path: "/params/:myVar"
+                            path: "/params/:myVar",
+                            components: {
+                                deepRouter: {
+                                    type: "gpii.express.requestAware.router",
+                                    options: {
+                                        path: "/deep",
+                                        routerOptions: {
+                                            mergeParams: true
+                                        },
+                                        handlerGrades: ["gpii.express.tests.router.deepParamHandler"]
+                                    }
+                                }
+                            }
                         }
                     }
                 }

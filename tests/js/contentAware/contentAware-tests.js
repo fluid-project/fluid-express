@@ -1,15 +1,10 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+var gpii  = fluid.registerNamespace("gpii");
 
-fluid.setLogging(true);
-
-var path         = require("path");
-
-require("./includes.js");
-
-var viewDir    = path.resolve(__dirname, "./views");
+require("../includes");
+require("./contentAware-caseholder");
 
 fluid.registerNamespace("gpii.express.tests.contentAware.handler");
 gpii.express.tests.contentAware.handler.handleRequest = function (that) {
@@ -62,8 +57,8 @@ fluid.defaults("gpii.express.tests.contentAware.router", {
 
 fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
-    port:   7533,
-    baseUrl: "http://localhost:7533/",
+    port:   6533,
+    baseUrl: "http://localhost:6533/",
     events: {
         constructServer: null,
         onStarted: null
@@ -80,7 +75,7 @@ fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
                     express: {
                         port:    "{testEnvironment}.options.port",
                         baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   viewDir,
+                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

@@ -1,25 +1,23 @@
 /* Tests for the "express" and "router" module */
 "use strict";
-var fluid        = fluid || require("infusion");
-var gpii         = fluid.registerNamespace("gpii");
-var jqUnit       = require("jqUnit");
+var fluid  = require("infusion");
+var gpii   = fluid.registerNamespace("gpii");
+var jqUnit = require("node-jqunit");
 
 require("../lib/test-helpers");
 
 fluid.registerNamespace("gpii.express.tests.middleware.caseHolder");
 
-fluid.setLogging(true);
-
 gpii.express.tests.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
 gpii.express.tests.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     var data = JSON.parse(body);
 
@@ -34,7 +32,7 @@ gpii.express.tests.middleware.caseHolder.testCounterMiddleware = function (that)
 
 gpii.express.tests.middleware.caseHolder.testCookieMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be cookie data...", body.cookies);
     if (body.cookies) {
@@ -44,7 +42,7 @@ gpii.express.tests.middleware.caseHolder.testCookieMiddleware = function (respon
 
 gpii.express.tests.middleware.caseHolder.testSessionMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be session data...", body.session);
     if (body.session) {
@@ -54,7 +52,7 @@ gpii.express.tests.middleware.caseHolder.testSessionMiddleware = function (respo
 
 gpii.express.tests.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(jqUnit, response, body);
+    gpii.express.tests.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be body data...", body.body);
     if (body.body) {
@@ -90,12 +88,12 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             func: "{counterRequest}.send"
                         },
                         {
-                            listener: "{counterRequest}.send",
+                            listener: "{counterSecondRequest}.send",
                             event: "{counterRequest}.events.onComplete"
                         },
                         {
                             listener: "gpii.express.tests.middleware.caseHolder.testCounterMiddleware",
-                            event: "{counterRequest}.events.onComplete",
+                            event: "{counterSecondRequest}.events.onComplete",
                             args: ["{testEnvironment}"]
                         }
                     ]
@@ -155,6 +153,14 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         counterRequest: {
+            type: "kettle.test.request.http",
+            options: {
+                path: "{testEnvironment}.options.baseUrl",
+                port: "{testEnvironment}.options.port",
+                method: "GET"
+            }
+        },
+        counterSecondRequest: {
             type: "kettle.test.request.http",
             options: {
                 path: "{testEnvironment}.options.baseUrl",

@@ -4,8 +4,7 @@
   "description": "Fluid components to model an express server and associated router modules.",
   "main":        "",
   "scripts": {
-    "test":        "node tests/all-tests.js",
-    "postinstall": "grunt dedupe-infusion"
+    "test":        "node tests/all-tests.js"
   },
   "repository": {
     "type": "git",
@@ -18,17 +17,16 @@
     "body-parser":             "1.10.2",
     "cookie-parser":           "1.3.3",
     "express-session":         "1.10.1",
-    "express":                 "4.10.6",
-    "grunt":                   "~0.4.4",
-    "grunt-shell":             "0.6.4",
-    "grunt-contrib-jshint":    "~0.9.0",
-    "grunt-jsonlint":          "1.0.4",
-    "grunt-gpii":              "git://github.com/GPII/grunt-gpii.git#58ae055833f437a9e91baedb9f39a22c5fdd727f",
-    "infusion":                "git://github.com/fluid-project/infusion.git#a1e3d601478e57276d4143fca5bcbe00f9c6b0cd"
+    "express":                 "4.13.3",
+    "infusion":                "2.0.0-dev.20151211T025229Z.eabb4fc"
   },
     "devDependencies": {
-      "jqUnit":  "git://github.com/fluid-project/node-jqUnit.git#b7ef53aac1ca365bf23d35d255fae874faa88b70",
-      "kettle":  "git://github.com/amb26/kettle.git#33e2826e78315c6d29b13c8ba810f54fef29e8ac",
+      "kettle": "git://github.com/amb26/kettle.git#2517cc1d9d047d58aef70db48d1580da718ffc16",
+      "grunt": "~0.4.4",
+      "grunt-shell": "0.6.4",
+      "grunt-contrib-jshint": "~0.9.0",
+      "grunt-jsonlint": "1.0.4",
+      "node-jqunit": "~1.1.3",
       "request": "2.51.0"
   }
 }
