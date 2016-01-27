@@ -155,7 +155,7 @@ fluid.defaults("gpii.express", {
     members: {
         directChildrenOfInterest: [],
         childrenByParent:         {},
-        views: "@expand:gpii.express.expandViews({that}.options.config.express.views)"
+        views: "@expand:gpii.express.expandPaths({that}.options.config.express.views)"
     },
     path: "/",
     express: null,
