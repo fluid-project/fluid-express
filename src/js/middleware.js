@@ -38,16 +38,7 @@ gpii.express.middleware.checkMethod = function (that, req, res, next) {
 };
 
 gpii.express.middleware.matchesMethod = function (req, methods) {
-    var methodArray = fluid.makeArray(methods);
-
-    var requestMethod = req.method.toLowerCase();
-    var matches = fluid.find(methodArray, function (method) {
-        if (method === requestMethod) {
-            return true;
-        }
-    });
-
-    return matches;
+    return fluid.contains(fluid.makeArray(methods), req.method.toLowerCase());
 };
 
 fluid.defaults("gpii.express.middleware", {
