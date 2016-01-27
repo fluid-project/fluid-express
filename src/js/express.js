@@ -146,7 +146,7 @@ gpii.express.stopServer = function (that) {
 };
 
 // Resolve any package references (e. g. `%package-name/path/within/package/`)
-gpii.express.expandViews = function (views) {
+gpii.express.expandPaths = function (views) {
     return fluid.transform(fluid.makeArray(views), fluid.module.resolvePath);
 };
 
