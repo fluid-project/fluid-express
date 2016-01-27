@@ -145,25 +145,17 @@ gpii.express.stopServer = function (that) {
     });
 };
 
+// Resolve any package references (e. g. `%package-name/path/within/package/`)
+gpii.express.expandViews = function (views) {
+    return fluid.transform(fluid.makeArray(views), fluid.module.resolvePath);
+};
+
 fluid.defaults("gpii.express", {
     gradeNames: ["fluid.modelComponent", "gpii.express.expressConfigHolder"],
     members: {
         directChildrenOfInterest: [],
         childrenByParent:         {},
-        views: {
-            expander: {
-                funcName: "fluid.transform",
-                args: [
-                    {
-                        expander: {
-                            funcName: "fluid.makeArray",
-                            args: ["{that}.options.config.express.views"]
-                        }
-                    },
-                    fluid.module.resolvePath
-                ]
-            }
-        }
+        views: "@expand:gpii.express.expandViews({that}.options.config.express.views)"
     },
     path: "/",
     express: null,
