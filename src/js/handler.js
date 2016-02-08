@@ -69,17 +69,38 @@ gpii.express.handler.sendTimeoutResponse = function (that) {
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
-gpii.express.handler.sendResponse = function (that, statusCode, body) {
-    if (!that.response) {
+gpii.express.handler.sendResponse = function (that, response, statusCode, body) {
+    if (!response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
 
-    that.response.status(statusCode).send(body);
+    response.status(statusCode).send(body);
     that.events.afterResponseSent.fire(that);
 };
 
-fluid.defaults("gpii.express.handler", {
+
+// A base grade for use in contexts where request isolation is handled without creating dynamic components.
+//
+// This component has the `afterResponseSent` event handler so that it can use the standard `sendResponse` function
+// above. It does not require you to implement a `handleRequest` function, you can use the `sendResponse` invoker
+// directly.
+//
+fluid.defaults("gpii.express.handler.base", {
     gradeNames: ["fluid.component"],
+    events: {
+        afterResponseSent: null
+    },
+    invokers: {
+        sendResponse: {
+            funcName: "gpii.express.handler.sendResponse",
+            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, statusCode, body
+        }
+    }
+});
+
+// The default implementation, which is designed to be "single use" and to be dynamically created per request.
+fluid.defaults("gpii.express.handler", {
+    gradeNames: ["gpii.express.handler.base"],
     timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
     mergePolicy: {
         "request":  "nomerge",
@@ -89,9 +110,6 @@ fluid.defaults("gpii.express.handler", {
         "request":  "{that}.options.request",
         "response": "{that}.options.response",
         "timeout":  null
-    },
-    events: {
-        afterResponseSent: null
     },
     listeners: {
         "onCreate.checkRequirements": {
@@ -116,7 +134,7 @@ fluid.defaults("gpii.express.handler", {
     invokers: {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1"]
+            args:     ["{that}", "{that}.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
             funcName: "gpii.express.handler.sendTimeoutResponse",
