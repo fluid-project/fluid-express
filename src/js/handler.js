@@ -93,7 +93,7 @@ fluid.defaults("gpii.express.handler.base", {
     invokers: {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, statusCode, body
+            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // response, statusCode, body
         }
     }
 });
