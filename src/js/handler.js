@@ -78,30 +78,12 @@ gpii.express.handler.sendResponse = function (that, response, statusCode, body) 
     that.events.afterResponseSent.fire(that);
 };
 
-
-// A base grade for use in contexts where request isolation is handled without creating dynamic components.
-//
-// This component has the `afterResponseSent` event handler so that it can use the standard `sendResponse` function
-// above. It does not require you to implement a `handleRequest` function, you can use the `sendResponse` invoker
-// directly.
-//
-fluid.defaults("gpii.express.handler.base", {
+fluid.defaults("gpii.express.handler", {
     gradeNames: ["fluid.component"],
+    timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
     events: {
         afterResponseSent: null
     },
-    invokers: {
-        sendResponse: {
-            funcName: "gpii.express.handler.sendResponse",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // response, statusCode, body
-        }
-    }
-});
-
-// The default implementation, which is designed to be "single use" and to be dynamically created per request.
-fluid.defaults("gpii.express.handler", {
-    gradeNames: ["gpii.express.handler.base"],
-    timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
     mergePolicy: {
         "request":  "nomerge",
         "response": "nomerge"
