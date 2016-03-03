@@ -1,14 +1,10 @@
 {
   "name":        "gpii-express",
-  "version":     "0.0.0",
+  "version":     "1.0.0",
   "description": "Fluid components to model an express server and associated router modules.",
-  "main":        "",
+  "main":        "index.js",
   "scripts": {
     "test":        "node tests/all-tests.js"
-  },
-  "repository": {
-    "type": "git",
-    "url":  "https://github.com/the-t-in-rtf/gpii-express"
   },
   "author":     "Tony Atkins <tony@raisingthefloor.org>",
   "license":    "BSD-3-Clause",
