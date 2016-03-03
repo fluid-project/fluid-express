@@ -69,18 +69,21 @@ gpii.express.handler.sendTimeoutResponse = function (that) {
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
-gpii.express.handler.sendResponse = function (that, statusCode, body) {
-    if (!that.response) {
+gpii.express.handler.sendResponse = function (that, response, statusCode, body) {
+    if (!response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
 
-    that.response.status(statusCode).send(body);
+    response.status(statusCode).send(body);
     that.events.afterResponseSent.fire(that);
 };
 
 fluid.defaults("gpii.express.handler", {
     gradeNames: ["fluid.component"],
     timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
+    events: {
+        afterResponseSent: null
+    },
     mergePolicy: {
         "request":  "nomerge",
         "response": "nomerge"
@@ -89,9 +92,6 @@ fluid.defaults("gpii.express.handler", {
         "request":  "{that}.options.request",
         "response": "{that}.options.response",
         "timeout":  null
-    },
-    events: {
-        afterResponseSent: null
     },
     listeners: {
         "onCreate.checkRequirements": {
@@ -116,7 +116,7 @@ fluid.defaults("gpii.express.handler", {
     invokers: {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1"]
+            args:     ["{that}", "{that}.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
             funcName: "gpii.express.handler.sendTimeoutResponse",
