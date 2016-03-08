@@ -25,7 +25,7 @@ fluid.registerNamespace("gpii.express.middleware.headerSetter");
  */
 gpii.express.middleware.headerSetter.addHeaders = function (that, req, res, next) {
     fluid.each(that.options.headers, function (headerOptions) {
-        var templateData = fluid.model.transformWithRules({ that: that, request: req }, headerOptions.dataRules)
+        var templateData = fluid.model.transformWithRules({ that: that, request: req }, headerOptions.dataRules);
         var fieldValue = fluid.stringTemplate(headerOptions.template, templateData);
 
         res.setHeader(headerOptions.fieldName, fieldValue);
