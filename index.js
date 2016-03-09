@@ -22,6 +22,9 @@ require("./src/js/configholder");
 // `gpii.express.middleware`, the base grade for all middleware components
 require("./src/js/middleware");
 
+// `gpii.express.middleware.headerSetter`, middleware to set HTTP response headers
+require("./src/js/headerMiddleware");
+
 // A middleware component to add support for cookies
 require("./src/js/cookieparser");
 

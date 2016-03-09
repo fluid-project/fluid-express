@@ -20,8 +20,10 @@
 "use strict";
 var fluid = require("infusion");
 
-fluid.defaults("gpii.express.requestAware.router", {
-    gradeNames: ["gpii.express.router"],
+// A base grade to allow the dynamic request handling infrastructure to be used in things that are not routers
+// (such as the `schemaMiddleware` grade in `gpii-json-schema`.
+fluid.defaults("gpii.express.requestAware.base", {
+    gradeNames: ["fluid.component"],
     timeout: 5000, // The default timeout we will pass to whatever grade we instantiate.
     distributeOptions: [
         {
@@ -46,7 +48,11 @@ fluid.defaults("gpii.express.requestAware.router", {
                 response:   "{arguments}.1"
             }
         }
-    },
+    }
+});
+
+fluid.defaults("gpii.express.requestAware.router", {
+    gradeNames: ["gpii.express.requestAware.base", "gpii.express.router"],
     invokers: {
         route: {
             func: "{that}.events.onRequest.fire",
