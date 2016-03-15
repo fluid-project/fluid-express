@@ -1,26 +1,6 @@
 /* Tests for the "express" and "router" module */
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
-var jqUnit = require("node-jqunit");
-
-fluid.registerNamespace("gpii.express.tests.passthroughRouter.caseHolder");
-
-gpii.express.tests.passthroughRouter.caseHolder.verifyResponse = function (response, body, expected) {
-    gpii.express.tests.helpers.isSaneResponse(response, body, 200);
-    jqUnit.assertEquals("The body should be as expected...", expected, body);
-};
-
-fluid.defaults("gpii.express.tests.passthroughRouter.request", {
-    gradeNames: ["kettle.test.request.http"],
-    path:       {
-        expander: {
-            funcName: "fluid.stringTemplate",
-            args:     ["%baseUrl%endpoint", { baseUrl: "{testEnvironment}.options.baseUrl", endpoint: "{that}.options.endpoint"}]
-        }
-    },
-    port:       "{testEnvironment}.options.port"
-});
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
@@ -36,7 +16,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
                             func: "{topRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.passthroughRouter.caseHolder.verifyResponse",
+                            listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{topRequest}.events.onComplete",
                             args:     ["{topRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.top"]
                         }
@@ -50,7 +30,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
                             func: "{middleRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.passthroughRouter.caseHolder.verifyResponse",
+                            listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{middleRequest}.events.onComplete",
                             args:     ["{middleRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.middle"]
                         }
@@ -64,7 +44,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
                             func: "{bottomRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.passthroughRouter.caseHolder.verifyResponse",
+                            listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{bottomRequest}.events.onComplete",
                             args:     ["{bottomRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.bottom"]
                         }
@@ -80,19 +60,19 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
     },
     components: {
         topRequest: {
-            type: "gpii.express.tests.passthroughRouter.request",
+            type: "gpii.express.tests.request",
             options: {
                 endpoint: "top"
             }
         },
         middleRequest: {
-            type: "gpii.express.tests.passthroughRouter.request",
+            type: "gpii.express.tests.request",
             options: {
                 endpoint: "top/middle"
             }
         },
         bottomRequest: {
-            type: "gpii.express.tests.passthroughRouter.request",
+            type: "gpii.express.tests.request",
             options: {
                 endpoint: "top/middle/bottom"
             }

@@ -17,20 +17,24 @@ gpii.express.tests.helpers.isSaneResponse = function (response, body, status) {
     jqUnit.assertNotNull("There should be a body.", body);
 };
 
-gpii.express.tests.helpers.assembleUrl = function (baseUrl, path) {
-    var fullPath;
-    // We have to be careful of double slashes (or no slashes)
-    if (baseUrl[baseUrl.length - 1] === "/" && path[0] === "/") {
-        fullPath = baseUrl + path.substring(1);
+// Confirm that a response body contains the expected string content.
+gpii.express.tests.helpers.verifyStringContent = function (response, body, expectedString) {
 
-    }
-    else if (baseUrl[baseUrl.length - 1] !== "/" && path[0] !== "/") {
-        fullPath = baseUrl + "/" + path;
-    }
-    else {
-        fullPath = baseUrl + path;
-    }
-    return fullPath;
+    gpii.express.tests.helpers.isSaneResponse(response, body);
+
+    jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
+};
+
+// Confirm that a JSON payload is as expected.
+gpii.express.tests.helpers.verifyJSONContent = function (response, body, expected) {
+    gpii.express.tests.helpers.isSaneResponse(response, body);
+
+    var payload = JSON.parse(body);
+    jqUnit.assertDeepEq("The payload should be as expected...", expected, payload);
+};
+
+gpii.express.tests.helpers.assembleUrl = function () {
+    fluid.fail("This function has been removed.  You will need to migrate to using fluid.stringTemplate instead.");
 };
 
 gpii.express.tests.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
@@ -86,4 +90,39 @@ fluid.defaults("gpii.express.tests.caseHolder", {
             event: "{testEnvironment}.events.onStarted"
         }
     ]
+});
+
+
+// A test environment with events that match those used in `gpii.express.tests.caseHolder`.
+//
+fluid.defaults("gpii.express.tests.testEnvironment", {
+    gradeNames: ["fluid.test.testEnvironment"],
+    port:   7777,
+    baseUrl: {
+        expander: {
+            funcName: "fluid.stringTemplate",
+            args: ["http://localhost:%port/", { port: "{gpii.express.tests.testEnvironment}.options.port"}]
+        }
+    },
+    events: {
+        constructServer: null,
+        onStarted: null
+    },
+    components: {
+        express: {
+            createOnEvent: "constructServer",
+            type: "gpii.express",
+            options: {
+                events: {
+                    onStarted: "{testEnvironment}.events.onStarted"
+                },
+                config: {
+                    express: {
+                        port: "{testEnvironment}.options.port",
+                        baseUrl: "{testEnvironment}.options.baseUrl"
+                    }
+                }
+            }
+        }
+    }
 });

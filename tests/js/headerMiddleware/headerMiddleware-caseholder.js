@@ -11,20 +11,6 @@ gpii.express.tests.headerMiddleware.caseHolder.checkHeader = function (message, 
     jqUnit.assertEquals(message, expected, headerContent);
 };
 
-fluid.defaults("gpii.express.tests.headerMiddleware.request", {
-    gradeNames: ["kettle.test.request.http"],
-    method: "GET",
-    endpoint: "hello?variable=set",
-    path: {
-        expander: {
-            funcName: "fluid.stringTemplate",
-            args:     ["%baseUrl%endpoint", { baseUrl: "{testEnvironment}.options.baseUrl", endpoint: "{that}.options.endpoint"}]
-        }
-    },
-    port: "{testEnvironment}.options.port"
-});
-
-// Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.headerMiddleware.caseHolder", {
     gradeNames: ["gpii.express.tests.caseHolder"],
     rawModules: [
@@ -79,10 +65,13 @@ fluid.defaults("gpii.express.tests.headerMiddleware.caseHolder", {
     ],
     components: {
         request: {
-            type: "gpii.express.tests.headerMiddleware.request"
+            type: "gpii.express.tests.request",
+            options: {
+                endpoint: "hello?variable=set"
+            }
         },
         requestSansQueryData: {
-            type: "gpii.express.tests.headerMiddleware.request",
+            type: "gpii.express.tests.request",
             options: {
                 endpoint: "hello"
             }

@@ -4,37 +4,22 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
-require("../includes.js");
-require("./test-middleware-counter");
+require("../includes");
+require("./fixtures/");
 
 // We borrow a router from the router tests to help in testing middleware isolation
-require("../router/test-router-hello");
-require("../router/test-router-reqview");
-require("./test-router-cookiesetter");
+require("../router/fixtures/");
 
 require("./middleware-caseholder");
 
 fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+    gradeNames: ["gpii.express.tests.testEnvironment"],
     port:   7531,
-    baseUrl: "http://localhost:7531/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
-        express: {       // instance of component under test
-            createOnEvent: "constructServer",
-            type: "gpii.express",
+        express: {
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
                 config: {
                     express: {
-                        port: "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   "%gpii-express/tests/views",
                         session: {
                             secret: "Printer, printer take a hint-ter."
                         }

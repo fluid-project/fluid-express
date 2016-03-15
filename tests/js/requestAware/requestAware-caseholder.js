@@ -34,7 +34,6 @@ gpii.express.tests.requestAware.caseHolder.testRequestAwareIntegrity = function 
 };
 
 
-// Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
     gradeNames: ["gpii.express.tests.caseHolder"],
     rawModules: [
@@ -106,68 +105,33 @@ fluid.defaults("gpii.express.tests.requestAware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         requestAwareInstrumentedRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/instrumented"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "instrumented"
             }
         },
         requestAwareSecondInstrumentedRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/instrumented"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "instrumented"
             }
         },
         requestAwareDelayedRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/delayed"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "delayed"
             }
         },
         requestAwareSecondDelayedRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/delayed"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "delayed"
             }
         },
         requestAwareTimeoutRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/timeout"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "timeout"
             }
         }
     }

@@ -169,68 +169,33 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
             }
         },
         middlewareIsolationRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/hello/rv"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "hello/rv"
             }
         },
         cookieSetRequest: {
-            type: "kettle.test.request.httpCookie",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/cookie"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "cookie"
             }
         },
         cookieReadRequest: {
-            type: "kettle.test.request.httpCookie",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "reqview"
             }
         },
         sessionRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "reqview"
             }
         },
         bodyParserRequest: {
-            type: "kettle.test.request.http",
+            type: "gpii.express.tests.request",
             options: {
-                path: {
-                    expander: {
-                        funcName: "gpii.express.tests.helpers.assembleUrl",
-                        args:     ["{testEnvironment}.options.baseUrl", "/reqview"]
-                    }
-                },
-                port: "{testEnvironment}.options.port",
-                method: "GET"
+                endpoint: "reqview"
             }
         }
     }

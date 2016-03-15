@@ -8,7 +8,7 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes");
-require("../middleware/test-middleware-counter");
+require("../middleware/fixtures/");
 
 require("./method-caseholder");
 
@@ -56,21 +56,11 @@ fluid.defaults("gpii.express.tests.method.deleteHandler", {
 });
 
 fluid.defaults("gpii.express.tests.method.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+    gradeNames: ["gpii.express.tests.testEnvironment"],
     port:   7521,
-    baseUrl: "http://localhost:7521/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
         express: {
-            createOnEvent: "constructServer",
-            type: "gpii.express",
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
                 config: {
                     express: {
                         port: "{testEnvironment}.options.port",

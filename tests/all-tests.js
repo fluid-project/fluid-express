@@ -5,6 +5,5 @@ require("./js/method/method-isolation-tests");
 require("./js/middleware/middleware-tests");
 require("./js/headerMiddleware/headerMiddleware-tests");
 require("./js/requestAware/requestAware-tests");
-require("./js/router/router-tests");
-require("./js/router/static/static-tests");
+require("./js/router/");
 

@@ -1,8 +1,16 @@
-/* Tests for the "express" and "router" module */
+/*
+
+    Tests for various startup failures in the "static" router module.
+
+ */
 "use strict";
-var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
+var fluid = require("infusion");
+fluid.loadTestingSupport();
+
+var gpii  = fluid.registerNamespace("gpii");
 var jqUnit = require("node-jqunit");
+
+require("../../../");
 
 fluid.registerNamespace("gpii.express.tests.staticRouter.caseHolder");
 
@@ -41,3 +49,14 @@ fluid.defaults("gpii.express.tests.staticRouter.caseHolder", {
         }
     ]
 });
+
+fluid.defaults("gpii.express.tests.staticRouter.testEnvironment", {
+    gradeNames: ["fluid.test.testEnvironment"],
+    components: {
+        testCaseHolder: {
+            type: "gpii.express.tests.staticRouter.caseHolder"
+        }
+    }
+});
+
+gpii.express.tests.staticRouter.testEnvironment();

@@ -92,28 +92,11 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
 });
 
 fluid.defaults("gpii.express.tests.passthroughRouter.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+    gradeNames: ["gpii.express.tests.testEnvironment"],
     port:   7593,
-    baseUrl: "http://localhost:7593/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
         express: {
-            createOnEvent: "constructServer",
-            type:          "gpii.express",
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
-                config: {
-                    express: {
-                        port:    "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   "%gpii-express/tests/views"
-                    }
-                },
                 components: {
                     router: {
                         type: "gpii.express.tests.passthroughRouter.router",

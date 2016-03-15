@@ -9,6 +9,9 @@
 //
 // `%npm-package-name/path/to/content/within/package`
 //
+// You can either pass in a string, or an array of strings.  The first directory that contains matching content will
+// respond.  If no directories contain a match, a 404 error will be returned.
+//
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -16,7 +19,7 @@ fluid.registerNamespace("gpii.express.router.static");
 
 var express = require("express");
 
-// The library is actually named "static", so for clarity I want to use that name in spite of the warnings in older versions of JSHint
+// The Express module is actually named "static", so for clarity I want to use that name in spite of the warnings in older versions of JSHint
 /* jshint -W024 */
 gpii.express.router["static"].init = function (that) {
     if (!that.options.path) {
@@ -27,27 +30,18 @@ gpii.express.router["static"].init = function (that) {
         fluid.fail("You must configure a content value to indicate what static content is to be served.");
     }
 
-    that.staticHandler = express["static"](fluid.module.resolvePath(that.options.content));
-};
-
-gpii.express.router["static"].route = function (that, req, res, next) {
-    that.staticHandler(req, res, next);
+    fluid.each(fluid.makeArray(that.options.content), function (contentDir) {
+        that.router.use(express["static"](fluid.module.resolvePath(contentDir)));
+    });
 };
 
 fluid.defaults("gpii.express.router.static", {
-    gradeNames: ["fluid.modelComponent", "gpii.express.router"],
+    gradeNames: ["fluid.modelComponent", "gpii.express.router.passthrough"],
     content: null,
-    router:  null,
     listeners: {
         "onCreate.init": {
             funcName: "gpii.express.router.static.init",
             args:     ["{that}"]
-        }
-    },
-    invokers: {
-        route: {
-            "funcName": "gpii.express.router.static.route",
-            "args":     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }
 });

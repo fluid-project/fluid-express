@@ -1,20 +1,10 @@
 /* Tests for the "express" and "router" module */
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
-var jqUnit = require("node-jqunit");
-
-fluid.registerNamespace("gpii.express.tests.contentAware.caseHolder");
-
-gpii.express.tests.contentAware.caseHolder.verifyResponse = function (response, body, expected) {
-    gpii.express.tests.helpers.isSaneResponse(response, body, 200);
-    jqUnit.assertEquals("The body should be as expected...", expected, body);
-};
 
 fluid.defaults("gpii.express.tests.contentAware.request", {
-    gradeNames: ["kettle.test.request.http"],
-    path:       "{testEnvironment}.options.baseUrl",
-    port:       "{testEnvironment}.options.port"
+    gradeNames: ["gpii.express.tests.request"],
+    endpoint:   ""
 });
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
@@ -36,7 +26,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{defaultRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
+                            listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{defaultRequest}.events.onComplete",
                             args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.default"]
                         }
@@ -50,7 +40,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{jsonRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
+                            listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{jsonRequest}.events.onComplete",
                             args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.json"]
                         }
@@ -64,7 +54,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{textRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
+                            listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{textRequest}.events.onComplete",
                             args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.text"]
                         }
