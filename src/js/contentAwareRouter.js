@@ -60,8 +60,11 @@ gpii.express.contentAware.router.getHandlerGradesByContentType = function (that,
     return handlerGrades;
 };
 
-fluid.defaults("gpii.express.contentAware.router", {
-    gradeNames: ["gpii.express.router"],
+// A "base" contentAware grade to allow for reuse of the request handling cycle in things other than
+// `gpii.express.router` grades (for example, the `schemaMiddleware` in `gpii-json-schema`).
+//
+fluid.defaults("gpii.express.contentAware.base", {
+    gradeNames: ["fluid.component"],
     timeout: 5000,
     distributeOptions: {
         source: "{that}.options.timeout",
@@ -70,7 +73,6 @@ fluid.defaults("gpii.express.contentAware.router", {
     events: {
         onRequest: null
     },
-    // This was supposed to have been possible after https://issues.fluidproject.org/browse/FLUID-5742
     dynamicComponents: {
         requestHandler: {
             type:          "gpii.express.handler",
@@ -81,7 +83,11 @@ fluid.defaults("gpii.express.contentAware.router", {
                 response:   "{arguments}.1"
             }
         }
-    },
+    }
+});
+
+fluid.defaults("gpii.express.contentAware.router", {
+    gradeNames: ["gpii.express.contentAware.base", "gpii.express.router"],
     invokers: {
         route: {
             funcName: "gpii.express.contentAware.router.delegateToHandler",
