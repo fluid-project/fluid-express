@@ -57,7 +57,7 @@ require("./src/js/passthroughRouter");
 
 // Provide a function to optionally load test support.
 gpii.express.loadTestingSupport = function () {
-    require("./tests/js/lib/test-helpers");
+    require("./tests/js/lib/");
 };
 
 module.exports = gpii.express;
