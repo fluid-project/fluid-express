@@ -24,6 +24,20 @@ var express  = require("express");
 
 fluid.registerNamespace("gpii.express");
 
+// Sort an array or map by `priority`: http://docs.fluidproject.org/infusion/development/Priorities.html
+//
+// As maps do not preserve order, an array will be returned.  When used with a map, the keys will be discarded.
+//
+gpii.express.orderByPriority = function (map) {
+    var array = fluid.hashToArray(map, "namespace", function (newEl, el) {
+        newEl = fluid.censorKeys(el, ["priority"]);
+        newEl.priority = fluid.parsePriority(el.priority, 0, false);
+        return newEl;
+    });
+    fluid.sortByPriority(array);
+    return array;
+};
+
 // Look up the path (parent, sibling, child) relationships for a node.
 // Used in constructing the hierarchy we will use to wire together everything in our onCreate method.
 //
