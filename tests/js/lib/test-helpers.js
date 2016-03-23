@@ -22,7 +22,7 @@ gpii.express.tests.helpers.verifyStringContent = function (response, body, expec
 
     gpii.express.tests.helpers.isSaneResponse(response, body);
 
-    jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
+    jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString) !== -1);
 };
 
 // Confirm that a JSON payload is as expected.
