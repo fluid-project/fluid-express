@@ -3,13 +3,67 @@
 This component sets one or more [HTTP response headers](https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.2)
 based on the contents of `options.headers` (see below).
 
+## Using this grade
+
+This grade can only do its job when it is added as a child component of either a `gpii.express` or `gpii.express.router`
+instance.  Here's an example of adding a single header to all responses send from a `gpii.express` instance:
+
+    gpii.express({
+        path: 8080,
+        components: {
+            headerSetter: {
+                type: "gpii.express.middleware.headerSetter",
+                options: {
+                    headers: {
+                        server: {
+                            fieldName: "Server",
+                            template:  "Custom gpii-express Server/1.0.0"
+                        }
+                    }
+                }
+            }
+            // TODO:  add at least one actual router here
+        }
+    });
+
+Note that as with any other `gpii.express.middleware`, this component will only add headers for conversations it's
+involved in.  When you add an instance of this component as a component of `gpii.express`, it will be allowed to modify
+every response for the whole instance, unless other middleware steps in and interrupts the conversation before it gets the chance.
+
+Here's an example of how this component can be used with a `gpii.express.router` instance:
+
+    gpii.express({
+        path: 8081,
+        components: {
+            staticRouter: {
+                type: "gpii.express.router.static",
+                options: {
+                    content: "%my-package/src",
+                    components: {
+                        headerSetter: {
+                            type: "gpii.express.middleware.headerSetter",
+                            options: {
+                                headers: {
+                                    cors: {
+                                        fieldName: "Access-Control-Allow-Origin",
+                                        template:  "*"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
 ## Component Options
 
 The following component configuration options are supported:
 
 | Option    | Type       | Description |
 | --------- | ---------- | ----------- |
-| `headers` | `{Object}` | A map of options including details on what field name and value to set (see below).  This option is not merged, the rightmost grade that defines this option will win. See [the options merging docs](http://docs.fluidproject.org/infusion/development/OptionsMerging.html#structure-of-the-merge-policy-object) for details. |
+| `headers` | `{Object}` | A map of options including details on what field name and value to set (see below).  This option is not merged, the rightmost grade that defines a given option will win. See [the options merging docs](http://docs.fluidproject.org/infusion/development/OptionsMerging.html#structure-of-the-merge-policy-object) for details. |
 
 Individual headers are defined as in the following example:
 
@@ -109,57 +163,3 @@ can also set static values in the `template` value itself, as illustrated in the
 
 This invoker fulfills the standard contract for a `gpii.express.middleware` component.  It uses `fluid.model.transformWithRules`
 to generate data that is combined with `template` using `fluid.stringTemplate` (see above).
-
-# Using this grade
-
-This grade can only do its job when it is added as a child component of either a `gpii.express` or `gpii.express.router`
-instance.  Here's an example of adding a single header to all responses send from a `gpii.express` instance:
-
-    gpii.express({
-        path: 8080,
-        components: {
-            headerSetter: {
-                type: "gpii.express.middleware.headerSetter",
-                options: {
-                    headers: {
-                        server: {
-                            fieldName: "Server",
-                            template:  "Custom gpii-express Server/1.0.0"
-                        }
-                    }
-                }
-            }
-            // TODO:  add at least one actual router here
-        }
-    });
-
-Note that as with any other `gpii.express.middleware`, this component will only add headers for conversations it's
-involved in.  When you add an instance of this component as a component of `gpii.express`, it will be allowed to modify
-every response for the whole instance, unless other middleware steps in and interrupts the conversation before it gets the chance.
-
-Here's an example of how this component can be used with a `gpii.express.router` instance:
-
-    gpii.express({
-        path: 8081,
-        components: {
-            staticRouter: {
-                type: "gpii.express.router.static",
-                options: {
-                    content: "%my-package/src",
-                    components: {
-                        headerSetter: {
-                            type: "gpii.express.middleware.headerSetter",
-                            options: {
-                                headers: {
-                                    cors: {
-                                        fieldName: "Access-Control-Allow-Origin",
-                                        template:  "*"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    });

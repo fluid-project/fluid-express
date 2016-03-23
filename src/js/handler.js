@@ -1,38 +1,10 @@
-// An abstract grade for "request handler" modules.  Modules that extend this grade are expected to be created
-// dynamically, as outlined here:
-//
-// http://docs.fluidproject.org/infusion/development/SubcomponentDeclaration.html#dynamic-subcomponents-with-a-source-event
-//
-// Typically, a gpii.express.router module constructs one of these components per request.  Note that these
-// components are not persisted.  Any data you wish to retain should be stored in variables retained by a parent
-// component.
-//
-// This grade expects to be passed two things when it is constructed:
-//
-//  1. The express `request` object.
-//  2. The express `response` object.
-//
-// The `handler.router` grade and its derivatives take care of this for you.
-//
-// By default this object is created with a built-in timeout, and will respond with a timeout if nothing else occurs.
-// To prevent this (and to actually provide a meaningful response to the user), you are expected to define a
-// `handleRequest` invoker that does the following:
-//
-//  1. Sends the user a response.
-//  2. Fires an `afterResponseSent` event.  This prevents the timeout and destroys the component.
-//
-// The `sendResponse` function included with this grade takes care of both, so the simplest `handleRequest` invoker
-// can be defined like this:
-//
-// invokers: {
-//   handleRequest: {
-//     func: "{that}.sendResponse",
-//     args: [ 200, "I am happy to hear from you whatever you have to say." ]
-//   }
-// }
-//
-// For an example of how this can be used, check out the tests included with this package.
+/*
+ An abstract grade for "request handler" modules, which respond to individual requests sent to a `requestAware` or
+ `contentAware` router.  See the documentation for more details:
 
+ https://github.com/GPII/gpii-express/blob/master/docs/handler.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");

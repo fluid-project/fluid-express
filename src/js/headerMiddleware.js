@@ -4,7 +4,7 @@
 
     See the documentation for more details:
 
-    https://github.com/the-t-in-rtf/gpii-express/blob/GPII-1647/docs/headerMiddleware.md
+    https://github.com/GPII/gpii-express/blob/master/docs/headerMiddleware.md
 
  */
 "use strict";
