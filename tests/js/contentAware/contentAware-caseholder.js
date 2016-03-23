@@ -28,7 +28,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                         {
                             listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{defaultRequest}.events.onComplete",
-                            args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.default"]
+                            args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.default"]
                         }
                     ]
                 },
@@ -42,7 +42,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                         {
                             listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{jsonRequest}.events.onComplete",
-                            args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.json"]
+                            args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
                         }
                     ]
                 },
@@ -56,7 +56,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                         {
                             listener: "gpii.express.tests.helpers.verifyStringContent",
                             event:    "{textRequest}.events.onComplete",
-                            args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.text"]
+                            args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.text"]
                         }
                     ]
                 }

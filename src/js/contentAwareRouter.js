@@ -44,14 +44,12 @@ gpii.express.contentAware.router.delegateToHandler = function (that, request, re
  * 
  */
 gpii.express.contentAware.router.getHandlerGradesByContentType = function (that, request) {
-    var handlerGrades = null;
-    fluid.each(that.options.handlers, function (value) {
-        if (!handlerGrades && Boolean(request.accepts(value.contentType))) {
-            handlerGrades = value.handlerGrades;
-        }
+    var orderedHandlers = gpii.express.orderByPriority(that.options.handlers);
+    var matchingHandler = fluid.find(orderedHandlers, function (value) {
+        return Boolean(value.contentType && request.accepts(value.contentType)) ? value : undefined;
     });
 
-    return handlerGrades;
+    return matchingHandler.handlerGrades;
 };
 
 // A "base" contentAware grade to allow for reuse of the request handling cycle in things other than

@@ -27,6 +27,12 @@ fluid.defaults("gpii.express.tests.contentAware.defaultHandler", {
     body:       "This is the default response."
 });
 
+fluid.defaults("gpii.express.tests.contentAware.badDefaultHandler", {
+    gradeNames: ["gpii.express.tests.contentAware.handler"],
+    body:       "You should never see this."
+});
+
+
 fluid.defaults("gpii.express.tests.contentAware.jsonHandler", {
     gradeNames: ["gpii.express.tests.contentAware.handler"],
     body:       "This is a JSON response."
@@ -40,17 +46,24 @@ fluid.defaults("gpii.express.tests.contentAware.textHandler", {
 fluid.defaults("gpii.express.tests.contentAware.router", {
     gradeNames: ["gpii.express.contentAware.router"],
     handlers: {
-        "default": {
+        // Confirm that we support "priorities".  This should not be allowed to handle requests with no `accept` header.
+        badDefault: {
+            contentType:   "default",
+            handlerGrades: ["gpii.express.tests.contentAware.badDefaultHandler"]
+        },
+        // Confirm that we support "priorities".  This should be allowed to handle request with no `accept` headers.
+        goodDefault: {
+            priority:      "first",
             contentType:   "default",
             handlerGrades: ["gpii.express.tests.contentAware.defaultHandler"]
-        },
-        json: {
-            contentType:  "application/json",
-            handlerGrades: ["gpii.express.tests.contentAware.jsonHandler"]
         },
         text: {
             contentType:   "text/html",
             handlerGrades: ["gpii.express.tests.contentAware.textHandler"]
+        },
+        json: {
+            contentType:  "application/json",
+            handlerGrades: ["gpii.express.tests.contentAware.jsonHandler"]
         }
     }
 });
