@@ -28,12 +28,16 @@ fluid.registerNamespace("gpii.express");
 //
 // As maps do not preserve order, an array will be returned.  When used with a map, the keys will be discarded.
 //
-gpii.express.orderByPriority = function (map) {
-    var array = fluid.hashToArray(map, "namespace", function (newEl, el) {
+// NOTE: Routers and middleware take advantage of the priority handling built into `components`, and do not need this
+// function directly.  This function is used by handlers and other objects that do not have inherent priority handling.
+//
+gpii.express.orderByPriority = function (mapOrArray) {
+    var array = fluid.hashToArray(mapOrArray, "namespace", function (newEl, el) {
         newEl = fluid.censorKeys(el, ["priority"]);
         newEl.priority = fluid.parsePriority(el.priority, 0, false);
         return newEl;
     });
+
     fluid.sortByPriority(array);
     return array;
 };
@@ -80,32 +84,27 @@ gpii.express.registerComponentLineage = function (childComponent, expressCompone
 
 // Wire a child to its immediate descendants.
 gpii.express.connectDirectDescendants = function (that, component, path) {
-    var descendants =  that.childrenByParent[path];
+    // Order our descendants by priority so that we have predictable control over which is loaded when.
+    // This component has descendants, wire them in first.
+    fluid.each(that.childrenByParent[path], function (childNickname) {
+        var childComponent = component[childNickname];
+        if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
+            // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
+            component.router.use(component.options.path, childComponent.router);
 
-    // This component has descendants, wire them in first
-    if (descendants !== undefined) {
-        // Wire together one level of routers and middleware, then recurse
-        for (var a = 0; a < descendants.length; a++) {
-            var childNickname  = descendants[a];
-            var childComponent = component[childNickname];
-            if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
+            // Recurse from here on down.
+            that.connectDirectDescendants(childComponent, path + "." + childNickname);
+        }
+        else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
+            if (component.router) {
                 // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                component.router.use(component.options.path, childComponent.router);
-
-                // Recurse from here on down.
-                that.connectDirectDescendants(childComponent, path + "." + childNickname);
+                component.router.use(component.options.path, childComponent.checkMethod);
             }
-            else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-                if (component.router) {
-                    // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-                    component.router.use(component.options.path, childComponent.checkMethod);
-                }
-                else {
-                    fluid.fail("A component must expose a router in order to work with child middleware components.");
-                }
+            else {
+                fluid.fail("A component must expose a router in order to work with child middleware components.");
             }
         }
-    }
+    });
 
     // After our child components are in place, wire the router to itself.
     //
