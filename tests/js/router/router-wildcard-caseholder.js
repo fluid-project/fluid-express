@@ -20,7 +20,7 @@ fluid.defaults("gpii.express.tests.router.wildcard.caseHolder", {
                         {
                             listener: "gpii.express.tests.helpers.verifyStringContent",
                             event: "{wildcardRootRequest}.events.onComplete",
-                            args: ["{wildcardRootRequest}.nativeResponse", "{arguments}.0"]
+                            args: ["{wildcardRootRequest}.nativeResponse", "{arguments}.0", "Hello, wild world."]
                         }
                     ]
                 },
@@ -34,7 +34,7 @@ fluid.defaults("gpii.express.tests.router.wildcard.caseHolder", {
                         {
                             listener: "gpii.express.tests.helpers.verifyStringContent",
                             event: "{wildcardDeepRequest}.events.onComplete",
-                            args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0"]
+                            args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0", "Hello, wild world."]
                         }
                     ]
                 }
