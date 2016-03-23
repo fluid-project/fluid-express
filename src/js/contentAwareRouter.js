@@ -49,7 +49,7 @@ gpii.express.contentAware.router.getHandlerGradesByContentType = function (that,
         return Boolean(value.contentType && request.accepts(value.contentType)) ? value : undefined;
     });
 
-    return matchingHandler.handlerGrades;
+    return matchingHandler ? matchingHandler.handlerGrades : undefined;
 };
 
 // A "base" contentAware grade to allow for reuse of the request handling cycle in things other than
