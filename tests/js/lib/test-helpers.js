@@ -1,10 +1,18 @@
-// Helpers for use in testing gpii.express and services built on top of it.
+/*
+
+    Helpers for use in testing gpii.express and services built on top of it.  These support client-side usage because
+    of the `addRequiredSequences` method, which likely needs to be moved to a micro module or into Fluid itself.
+
+    TODO:  Discuss with Antranig.
+
+ */
+
 "use strict";
-var fluid = require("infusion");
+var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.tests.helpers");
 
-var jqUnit = require("node-jqunit");
+var jqUnit = jqUnit || require("node-jqunit");
 
 gpii.express.tests.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;
