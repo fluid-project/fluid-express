@@ -116,8 +116,8 @@ fluid.defaults("gpii.express.tests.priority.testEnvironment", {
                     // wrong numbers.
                     tooSoon: {
                         type:      "gpii.express.tests.priority.oneStringRouter",
-                        priority:  "after:justInTime",
                         options: {
+                            priority:  "after:justInTime",
                             namespace: "tooSoon",
                             path:      "/whoWins",
                             theString: "Hello, too soon."
@@ -125,8 +125,8 @@ fluid.defaults("gpii.express.tests.priority.testEnvironment", {
                     },
                     justInTime: {
                         type:      "gpii.express.tests.priority.oneStringRouter",
-                        priority:  "before:tooLate",
                         options: {
+                            priority:  "before:tooLate",
                             namespace: "justInTime",
                             path:      "/whoWins",
                             theString: "Hello, just in time."
@@ -149,8 +149,8 @@ fluid.defaults("gpii.express.tests.priority.testEnvironment", {
                             components: {
                                 lastWord: {
                                     type:      "gpii.express.tests.priority.oneStringRouter",
-                                    priority:  "after:ordered",
                                     options: {
+                                        priority:  "after:ordered",
                                         namespace: "lastWord",
                                         path:      "/",
                                         theString: " world."
@@ -158,8 +158,8 @@ fluid.defaults("gpii.express.tests.priority.testEnvironment", {
                                 },
                                 ordered: {
                                     type:      "gpii.express.tests.priority.oneStringMiddleware",
-                                    priority:  "after:hello",
                                     options: {
+                                        priority:  "after:hello",
                                         namespace: "ordered",
                                         theString: " ordered"
                                     }

@@ -13,8 +13,8 @@ require("../../../");
 
 var jqUnit = require("node-jqunit");
 
-fluid.registerNamespace("gpii.express.tests");
-gpii.express.tests.runSingleTest = function (testDef) {
+fluid.registerNamespace("gpii.express.tests.orderByPriority");
+gpii.express.tests.orderByPriority.runSingleTest = function (testDef) {
     jqUnit.test(testDef.message, function () {
         var output = gpii.express.orderByPriority(testDef.input);
 
@@ -26,7 +26,7 @@ gpii.express.tests.runSingleTest = function (testDef) {
     });
 };
 
-fluid.defaults("gpii.express.tests.priority", {
+fluid.defaults("gpii.express.tests.orderByPriority", {
     gradeNames: ["fluid.component"],
     tests: [
         {
@@ -91,9 +91,9 @@ fluid.defaults("gpii.express.tests.priority", {
         },
         "onCreate.runAllTests": {
             funcName: "fluid.each",
-            args: ["{that}.options.tests", gpii.express.tests.runSingleTest]
+            args: ["{that}.options.tests", gpii.express.tests.orderByPriority.runSingleTest]
         }
     }
 });
 
-gpii.express.tests.priority();
+gpii.express.tests.orderByPriority();

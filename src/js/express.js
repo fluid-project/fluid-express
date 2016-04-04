@@ -86,19 +86,26 @@ gpii.express.extractNicks = function (entry) {
     return entry.nick;
 };
 
-// Wire a child to its immediate descendants.
-gpii.express.connectDirectDescendants = function (that, component, path) {
+// Start with the nicknames each child component registered with us and combine it with the relevant priority data
+// to produce an ordered array.
+//
+gpii.express.getOrderedNicknames = function (nicknames, component) {
     // Create an array that combines the "nicknames" in `that.childrenByParent[path]` with each component's hints about
     // `priority` and `namespace`.
     var nickNamesWithComponentPrioritiesAndNamespaces = [];
-    fluid.each(that.childrenByParent[path], function (childNickname) {
+    fluid.each(nicknames, function (childNickname) {
         var childComponent = component[childNickname];
-        nickNamesWithComponentPrioritiesAndNamespaces.push({ nick: childNickname, namespace: childComponent.namespace, priority: childComponent.priority });
+        nickNamesWithComponentPrioritiesAndNamespaces.push({ nick: childNickname, namespace: childComponent.options.namespace, priority: childComponent.options.priority });
     });
 
     // Order the combined data by priority so that we have predictable control over which is loaded when, then map it
     // back to a simple ordered array.
-    var orderedNicknames = gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
+    return gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
+};
+
+// Wire a child to its immediate descendants.
+gpii.express.connectDirectDescendants = function (that, component, path) {
+    var orderedNicknames = gpii.express.getOrderedNicknames(that.childrenByParent[path], component);
 
     // This component has descendants, wire them in first.
     fluid.each(orderedNicknames, function (childNickname) {
@@ -139,9 +146,11 @@ gpii.express.init = function (that) {
 
     that.express = express();
 
+    var orderedNicknames = gpii.express.getOrderedNicknames(that.directChildrenOfInterest, that);
+
     // Wire together all routers and components, beginning with ourselves
-    for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
-        var directChildNickname = that.directChildrenOfInterest[a];
+    // for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
+    fluid.each(orderedNicknames, function (directChildNickname) {
         var childComponent      = that[directChildNickname];
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // The router has to wire its own paths to preserve methods and path variables.
@@ -154,7 +163,7 @@ gpii.express.init = function (that) {
 
         // Recurse from here on down.
         that.connectDirectDescendants(childComponent, directChildNickname);
-    }
+    });
 
     var port = that.options.config.express.port;
     that.express.set("port", port);
