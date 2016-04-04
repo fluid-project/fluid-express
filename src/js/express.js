@@ -82,11 +82,26 @@ gpii.express.registerComponentLineage = function (childComponent, expressCompone
     }
 };
 
+gpii.express.extractNicks = function (entry) {
+    return entry.nick;
+};
+
 // Wire a child to its immediate descendants.
 gpii.express.connectDirectDescendants = function (that, component, path) {
-    // Order our descendants by priority so that we have predictable control over which is loaded when.
-    // This component has descendants, wire them in first.
+    // Create an array that combines the "nicknames" in `that.childrenByParent[path]` with each component's hints about
+    // `priority` and `namespace`.
+    var nickNamesWithComponentPrioritiesAndNamespaces = [];
     fluid.each(that.childrenByParent[path], function (childNickname) {
+        var childComponent = component[childNickname];
+        nickNamesWithComponentPrioritiesAndNamespaces.push({ nick: childNickname, namespace: childComponent.namespace, priority: childComponent.priority });
+    });
+
+    // Order the combined data by priority so that we have predictable control over which is loaded when, then map it
+    // back to a simple ordered array.
+    var orderedNicknames = gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
+
+    // This component has descendants, wire them in first.
+    fluid.each(orderedNicknames, function (childNickname) {
         var childComponent = component[childNickname];
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
