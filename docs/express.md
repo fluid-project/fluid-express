@@ -8,10 +8,8 @@ routers and middleware written using this package without using this grade (see 
 To use this grade, you will generally need to wire in at least one [`gpii.express.router`](router.md) instance.
 You may also need one or more [`gpii.express.middleware`](middleware.md) instances.
 
+## Component Options
 
-
-
-# What is a router?
-
-A router is a type of middleware that is associated with a particular path (part of the requested URL).
-
+| Option | Type       | Description |
+| ------ | ---------- | ----------- |
+| `port` | `{Number}` | The port `express` should listen on. |

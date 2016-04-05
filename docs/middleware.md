@@ -133,7 +133,14 @@ Parses client cookie headers and makes them available via `request.cookies`.  Wr
 
 Parses client session cookies makes server-side session data associated with the cookie available via
 `request.sesssion`.  Wraps the standard [session middleware](https://github.com/expressjs/session) previously bundled
-with Express.  Requires the `cookieparser` middleware above to be in the chain before it.
+with Express.  Requires the `cookieparser` middleware above to be in the middleware chain before it.
+
+### Component Options
+
+| Option                  | Type       | Description |
+| ----------------------- | ---------- | ----------- |
+| `sessionOptions`        | `{Object}` | The configuration options to pass on to [the underlying `express-session` instance](https://github.com/expressjs/session). |
+| `sessionOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
 
 ## `gpii.express.middleware.urlencoded`
 
