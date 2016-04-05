@@ -1,4 +1,10 @@
-// Module to add session handling to express.
+/*
+
+    Module to add session handling to express.  See the documentation for details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -23,6 +29,7 @@ gpii.express.middleware.session.middleware = function (that, req, res, next) {
 fluid.defaults("gpii.express.middleware.session", {
     config:     "{expressConfigHolder}.options.config",
     gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
+    namespace:  "session",
     invokers: {
         "middleware": {
             funcName: "gpii.express.middleware.session.middleware",

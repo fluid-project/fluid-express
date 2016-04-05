@@ -16,6 +16,7 @@ gpii.express.middleware.cookieparser.middleware = function (that, req, res, next
 
 fluid.defaults("gpii.express.middleware.cookieparser", {
     gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
+    namespace:  "cookieparser",
     invokers: {
         "middleware": {
             funcName: "gpii.express.middleware.cookieparser.middleware",

@@ -16,6 +16,7 @@ gpii.express.middleware.bodyparser.urlencoded.middleware = function (that, req, 
 
 fluid.defaults("gpii.express.middleware.bodyparser.urlencoded", {
     gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
+    namespace: "urlencoded",
     invokers: {
         "middleware": {
             funcName: "gpii.express.middleware.bodyparser.urlencoded.middleware",
