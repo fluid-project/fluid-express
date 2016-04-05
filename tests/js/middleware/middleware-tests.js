@@ -18,13 +18,6 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
     components: {
         express: {
             options: {
-                config: {
-                    express: {
-                        session: {
-                            secret: "Printer, printer take a hint-ter."
-                        }
-                    }
-                },
                 components: {
                     middleware: {
                         type: "gpii.express.tests.middleware.counter"
@@ -61,7 +54,12 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
                                     options: {
                                         components: {
                                             session: {
-                                                type: "gpii.express.middleware.session"
+                                                type: "gpii.express.middleware.session",
+                                                options: {
+                                                    sessionOptions: {
+                                                        secret: "Printer, printer take a hint-ter."
+                                                    }
+                                                }
                                             }
                                         },
                                         path:    "/world",
@@ -85,7 +83,12 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
                                     type: "gpii.express.middleware.cookieparser"
                                 },
                                 session: {
-                                    type: "gpii.express.middleware.session"
+                                    type: "gpii.express.middleware.session",
+                                    options: {
+                                        sessionOptions: {
+                                            secret: "Printer, printer take a hint-ter."
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -61,15 +61,8 @@ fluid.defaults("gpii.express.tests.method.testEnvironment", {
     components: {
         express: {
             options: {
-                config: {
-                    express: {
-                        port: "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        session: {
-                            secret: "Printer, printer take a hint-ter."
-                        }
-                    }
-                },
+                port: "{testEnvironment}.options.port",
+                baseUrl: "{testEnvironment}.options.baseUrl",
                 components: {
                     get: {
                         type: "gpii.express.tests.method.router",

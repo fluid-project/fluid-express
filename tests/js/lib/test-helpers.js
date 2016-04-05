@@ -121,14 +121,10 @@ fluid.defaults("gpii.express.tests.testEnvironment", {
             createOnEvent: "constructServer",
             type: "gpii.express",
             options: {
+                port: "{testEnvironment}.options.port",
+                baseUrl: "{testEnvironment}.options.baseUrl",
                 events: {
                     onStarted: "{testEnvironment}.events.onStarted"
-                },
-                config: {
-                    express: {
-                        port: "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl"
-                    }
                 }
             }
         }

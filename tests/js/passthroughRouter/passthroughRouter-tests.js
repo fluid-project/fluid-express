@@ -51,6 +51,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
                     topResponder: {
                         type: "gpii.express.requestAware.router",
                         options: {
+                            namespace:     "top",
                             path:          "/",
                             handlerGrades: ["gpii.express.tests.passthroughRouter.top.handler"]
                         }
@@ -58,11 +59,13 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
                     middle: {
                         type: "gpii.express.router.passthrough",
                         options: {
+                            priority: "before:top",
                             path: "/middle",
                             components: {
                                 middleResponder: {
                                     type: "gpii.express.requestAware.router",
                                     options: {
+                                        namespace:     "middleResponder",
                                         path:          "/",
                                         handlerGrades: ["gpii.express.tests.passthroughRouter.middle.handler"]
                                     }
@@ -71,6 +74,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
                                     type: "gpii.express.router.passthrough",
                                     options: {
                                         path: "/bottom",
+                                        priority: "before:middleResponder",
                                         components: {
                                             bottomResponder: {
                                                 type: "gpii.express.requestAware.router",

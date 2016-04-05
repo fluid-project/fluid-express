@@ -1,36 +1,28 @@
-// An [Express.js](http://expressjs.com/) instance represented as a Fluid component.
-//
-// By default, this instance does nothing useful.  Your instance will need to add at least one `gpii.express.router`
-// or `gpii.express.middleware` child component that will respond to incoming requests.  See those grades for more
-// details.
-//
-// Express configuration options are set using `options.config.express`.  The `options.config.express.views` variable
-// has special meaning for template renderers like `gpii-handlebars`.  It represents one or more directories containing
-// template subdirectories (`layouts`, `pages`, and `partials`). You may either have a single string value, or an array
-// of values.
-//
-// Each value will be passed through `fluid.model.resolvePath`, so that references to Fluid component packages can
-// be resolved relative to where they are installed, regardless of whether they are immediate or inherited dependencies.
-// You should be using these references, which generally are of the form `%npm-package-name/path/within/package`.
-//
-// See the `gpii-handlebars` package for more details about view directories.
-//
+/*
+
+    An [Express.js](http://expressjs.com/) instance represented as a Fluid component.  See the documentation for details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/express.md
+
+*/
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
-require("./configholder");
 
 var express  = require("express");
 
 fluid.registerNamespace("gpii.express");
 
-// Sort an array or map by `priority`: http://docs.fluidproject.org/infusion/development/Priorities.html
-//
-// As maps do not preserve order, an array will be returned.  When used with a map, the keys will be discarded.
-//
-// NOTE: Routers and middleware take advantage of the priority handling built into `components`, and do not need this
-// function directly.  This function is used by handlers and other objects that do not have inherent priority handling.
-//
+/**
+ *
+ * @param mapOrArray {Object} - A map or array to be sorted.
+ * @returns {Array} - An array of elements, ordered by namespace and priority.
+ *
+ * Sorts an array or map by `priority`: http://docs.fluidproject.org/infusion/development/Priorities.html
+ *
+ * As maps do not preserve order, an array is always returned.  When used with a map, the keys will be discarded.
+ *
+ */
 gpii.express.orderByPriority = function (mapOrArray) {
     var array = fluid.hashToArray(mapOrArray, "namespace", function (newEl, el) {
         newEl = fluid.censorKeys(el, ["priority"]);
@@ -42,10 +34,14 @@ gpii.express.orderByPriority = function (mapOrArray) {
     return array;
 };
 
-// Look up the path (parent, sibling, child) relationships for a node.
-// Used in constructing the hierarchy we will use to wire together everything in our onCreate method.
-//
-// This does not require an invoker as it is basically a static method.
+/**
+ *
+ * @param that {Object} - The `gpii.express` instance itself.
+ *
+ * Look up the path (parent, sibling, child) relationships for a node.  Used in constructing the hierarchy we will
+ * use to wire together everything in our init method.
+ *
+ */
 gpii.express.pathForComponent = function (that) {
     var instantiator  = fluid.getInstantiator(that);
     var path          = instantiator.idToPath(that.id);
@@ -53,10 +49,19 @@ gpii.express.pathForComponent = function (that) {
     return fluid.model.parseEL(path);
 };
 
-// Make a note of the lineage of this middleware or router component, all the way back presumably to this gpii.express
-// instance itself.
-//
-// This information will be used to wire together all nested routers and any middleware dependencies they have.
+/**
+ *
+ * @param childComponent
+ * @param expressComponent
+ *
+ * Make a note of the lineage of this middleware or router component, all the way back presumably to the `gpii.express`
+ * instance itself.  This function is distributed as a listener to child `gpii.express.router` and
+ * `gpii.express.middleware` components, which use it to register themselves.
+ *
+ * The registry gathered by this process will be used to wire together all nested routers and any middleware
+ * dependencies they have.
+ *
+ */
 gpii.express.registerComponentLineage = function (childComponent, expressComponent) {
     // Get the list of parents for this component
     var segments = gpii.express.pathForComponent(childComponent);
@@ -82,13 +87,28 @@ gpii.express.registerComponentLineage = function (childComponent, expressCompone
     }
 };
 
+/**
+ *
+ * @param entry {Object} - A single entry object, which is expected to contain a `nick` variable.
+ * @returns {String} - The contents of the `nick` variable.
+ *
+ * Static function for use with `Array.prototype.map`.  Extracts just the "nick" variable from the structure we construct in `getOrderedNicknames`.
+ *
+ */
 gpii.express.extractNicks = function (entry) {
     return entry.nick;
 };
 
-// Start with the nicknames each child component registered with us and combine it with the relevant priority data
-// to produce an ordered array.
-//
+/**
+ *
+ * @param nicknames {Object} - An unordered array of "nicknames" representing children of a given component.
+ * @param component {Object} - The component we will resolve the "nicknames" against.
+ * @returns {Array} - An array that contains all of the original "nicknames", but ordered by priority and namespace.
+ *
+ * Start with the nicknames each child component registered with us and combine it with the relevant priority data to
+ * produce an ordered array.
+ *
+ */
 gpii.express.getOrderedNicknames = function (nicknames, component) {
     // Create an array that combines the "nicknames" in `that.childrenByParent[path]` with each component's hints about
     // `priority` and `namespace`.
@@ -103,7 +123,16 @@ gpii.express.getOrderedNicknames = function (nicknames, component) {
     return gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
 };
 
-// Wire a child to its immediate descendants.
+/**
+ *
+ * @param that {Object} - The `gpii.express` instance itself.
+ * @param component {Object} - The component we are working with at this level.  As we are treeing down through a hierarchy, this will change depending on the level we're at.
+ * @param path {String} - The path segment where we can fine the child components we need to wire in to ourselves.
+ *
+ * Wire a child component to its immediate descendants using the `use` method common to both `express` and all
+ * middleware.
+ *
+ */
 gpii.express.connectDirectDescendants = function (that, component, path) {
     var orderedNicknames = gpii.express.getOrderedNicknames(that.childrenByParent[path], component);
 
@@ -138,43 +167,56 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     }
 };
 
+/**
+ *
+ * @param that {Object} - The `gpii.express` component itself.
+ *
+ * Create, configure and start our internal instance of `express`.  Wire up all middleware and routers.
+ *
+ */
 gpii.express.init = function (that) {
-    if (!that.options.config || !that.options.config.express) {
-        console.error("Cannot initialize express because you have not supplied a 'config' option.");
-        return;
+    if (!that.options.port) {
+        fluid.fail("Cannot initialize express because you have not supplied a 'port' option.");
     }
+    else {
+        that.express = express();
 
-    that.express = express();
+        var orderedNicknames = gpii.express.getOrderedNicknames(that.directChildrenOfInterest, that);
 
-    var orderedNicknames = gpii.express.getOrderedNicknames(that.directChildrenOfInterest, that);
+        // Wire together all routers and components, beginning with ourselves
+        // for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
+        fluid.each(orderedNicknames, function (directChildNickname) {
+            var childComponent      = that[directChildNickname];
+            if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
+                // The router has to wire its own paths to preserve methods and path variables.
+                // We just "use" it at the root level, and let it do the rest.
+                that.express.use("/", childComponent.router);
+            }
+            else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
+                that.express.use(childComponent.middleware);
+            }
 
-    // Wire together all routers and components, beginning with ourselves
-    // for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
-    fluid.each(orderedNicknames, function (directChildNickname) {
-        var childComponent      = that[directChildNickname];
-        if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-            // The router has to wire its own paths to preserve methods and path variables.
-            // We just "use" it at the root level, and let it do the rest.
-            that.express.use("/", childComponent.router);
-        }
-        else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-            that.express.use(childComponent.middleware);
-        }
+            // Recurse from here on down.
+            that.connectDirectDescendants(childComponent, directChildNickname);
+        });
 
-        // Recurse from here on down.
-        that.connectDirectDescendants(childComponent, directChildNickname);
-    });
+        that.express.set("port", that.options.port);
+        that.server = that.express.listen(that.options.port, function () {
+            fluid.log("Express server listening on port " + that.express.get("port"));
 
-    var port = that.options.config.express.port;
-    that.express.set("port", port);
-    that.server = that.express.listen(port, function () {
-        fluid.log("Express server listening on port " + that.express.get("port"));
-
-        fluid.log("Express started...");
-        that.events.onStarted.fire(that.express, that);
-    });
+            fluid.log("Express started...");
+            that.events.onStarted.fire(that.express, that);
+        });
+    }
 };
 
+/**
+ *
+ * @param that {Object} = The `gpii.express` component itself.
+ *
+ * Stop our internal instance of `express` when our component is destroyed.
+ *
+ */
 gpii.express.stopServer = function (that) {
     that.server.close(function () {
         fluid.log("Express stopped...");
@@ -182,17 +224,24 @@ gpii.express.stopServer = function (that) {
     });
 };
 
-// Resolve any package references (e. g. `%package-name/path/within/package/`)
-gpii.express.expandPaths = function (views) {
-    return fluid.transform(fluid.makeArray(views), fluid.module.resolvePath);
+/**
+ *
+ * @param array {Object} - An array of strings.
+ * @returns {Array} - A new array with all references resolved.  The order of elements is preserved.
+ *
+ * Resolves package references (e. g. `%package-name/path/within/package/`) in an array of strings, which are presumed
+ * to represent filesystem paths.
+ *
+ */
+gpii.express.expandPaths = function (array) {
+    return fluid.transform(fluid.makeArray(array), fluid.module.resolvePath);
 };
 
 fluid.defaults("gpii.express", {
     gradeNames: ["fluid.modelComponent", "gpii.express.expressConfigHolder"],
     members: {
         directChildrenOfInterest: [],
-        childrenByParent:         {},
-        views: "@expand:gpii.express.expandPaths({that}.options.config.express.views)"
+        childrenByParent:         {}
     },
     path: "/",
     express: null,
