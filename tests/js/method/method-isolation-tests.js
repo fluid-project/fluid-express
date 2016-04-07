@@ -12,20 +12,20 @@ require("../middleware/fixtures/");
 
 require("./method-caseholder");
 
-fluid.defaults("gpii.express.tests.method.router", {
+fluid.defaults("gpii.tests.express.method.router", {
     gradeNames: ["gpii.express.requestAware.router"],
     path: "/",
     components: {
         counter: {
-            type: "gpii.express.tests.middleware.counter",
+            type: "gpii.tests.express.middleware.counter",
             options: {
-                method: "{gpii.express.tests.method.router}.options.method"
+                method: "{gpii.tests.express.method.router}.options.method"
             }
         }
     }
 });
 
-fluid.defaults("gpii.express.tests.method.handler", {
+fluid.defaults("gpii.tests.express.method.handler", {
     gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
@@ -35,28 +35,28 @@ fluid.defaults("gpii.express.tests.method.handler", {
     }
 });
 
-fluid.defaults("gpii.express.tests.method.getHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.getHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the GET endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.postHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.postHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the POST endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.putHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.putHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the PUT endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.deleteHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.deleteHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the DELETE endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.method.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7521,
     components: {
         express: {
@@ -65,40 +65,40 @@ fluid.defaults("gpii.express.tests.method.testEnvironment", {
                 baseUrl: "{testEnvironment}.options.baseUrl",
                 components: {
                     get: {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "get",
-                            handlerGrades: ["gpii.express.tests.method.getHandler"]
+                            handlerGrades: ["gpii.tests.express.method.getHandler"]
                         }
                     },
                     post: {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "post",
-                            handlerGrades: ["gpii.express.tests.method.postHandler"]
+                            handlerGrades: ["gpii.tests.express.method.postHandler"]
                         }
                     },
                     put: {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "put",
-                            handlerGrades: ["gpii.express.tests.method.putHandler"]
+                            handlerGrades: ["gpii.tests.express.method.putHandler"]
                         }
                     },
                     "delete": {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "delete",
-                            handlerGrades: ["gpii.express.tests.method.deleteHandler"]
+                            handlerGrades: ["gpii.tests.express.method.deleteHandler"]
                         }
                     }
                 }
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.method.caseHolder"
+            type: "gpii.tests.express.method.caseHolder"
         }
     }
 });
 
-gpii.express.tests.method.testEnvironment();
+gpii.tests.express.method.testEnvironment();

@@ -9,8 +9,8 @@ var fluid  = require("infusion");
 require("../includes");
 require("./fixtures");
 
-fluid.defaults("gpii.express.tests.router.nesting.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder"],
+fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
+    gradeNames: ["gpii.tests.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -22,7 +22,7 @@ fluid.defaults("gpii.express.tests.router.nesting.caseHolder", {
                             func: "{topLevelRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event: "{topLevelRequest}.events.onComplete",
                             args: ["{topLevelRequest}.nativeResponse", "{arguments}.0", "Hello, World"]
                         }
@@ -36,7 +36,7 @@ fluid.defaults("gpii.express.tests.router.nesting.caseHolder", {
                             func: "{deepRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event: "{deepRequest}.events.onComplete",
                             args: ["{deepRequest}.nativeResponse", "{arguments}.0", "Hello, yourself"]
                         }
@@ -47,13 +47,13 @@ fluid.defaults("gpii.express.tests.router.nesting.caseHolder", {
     ],
     components: {
         topLevelRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "hello"
             }
         },
         deepRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "hello/world"
             }

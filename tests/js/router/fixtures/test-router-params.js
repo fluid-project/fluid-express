@@ -2,18 +2,18 @@
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.tests.router.params");
+fluid.registerNamespace("gpii.tests.express.router.params");
 
-gpii.express.tests.router.params.route = function (req, res) {
+gpii.tests.express.router.params.route = function (req, res) {
     res.status(200).send("Param is set to '" + req.params.myVar + "'...");
 };
 
-fluid.defaults("gpii.express.tests.router.params", {
+fluid.defaults("gpii.tests.express.router.params", {
     gradeNames: ["gpii.express.router"],
     method: "get",
     invokers: {
         route: {
-            funcName: "gpii.express.tests.router.params.route",
+            funcName: "gpii.tests.express.router.params.route",
             args:     ["{arguments}.0", "{arguments}.1"]
         }
     }

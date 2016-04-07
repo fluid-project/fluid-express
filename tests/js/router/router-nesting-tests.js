@@ -12,19 +12,19 @@ require("../includes.js");
 require("./fixtures");
 require("./router-nesting-caseholder");
 
-fluid.defaults("gpii.express.tests.router.nesting.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7532,
     components: {
         express: {
             options: {
                 components: {
                     hello: {
-                        type: "gpii.express.tests.router.hello",
+                        type: "gpii.tests.express.router.hello",
                         options: {
                             components: {
                                 world: {
-                                    type: "gpii.express.tests.router.hello",
+                                    type: "gpii.tests.express.router.hello",
                                     options: {
                                         path:    "/world",
                                         message: "Hello, yourself"
@@ -37,9 +37,9 @@ fluid.defaults("gpii.express.tests.router.nesting.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.router.nesting.caseHolder"
+            type: "gpii.tests.express.router.nesting.caseHolder"
         }
     }
 });
 
-gpii.express.tests.router.nesting.testEnvironment();
+gpii.tests.express.router.nesting.testEnvironment();

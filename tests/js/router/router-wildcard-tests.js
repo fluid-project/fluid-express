@@ -8,15 +8,15 @@ require("../includes.js");
 require("./fixtures");
 require("./router-wildcard-caseholder");
 
-fluid.defaults("gpii.express.tests.router.wildcard.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7522,
     components: {
         express: {
             options: {
                 components: {
                     wildcard: {
-                        type: "gpii.express.tests.router.hello",
+                        type: "gpii.tests.express.router.hello",
                         options: {
                             path:    "/wildcard/*",
                             message: "Hello, wild world."
@@ -26,9 +26,9 @@ fluid.defaults("gpii.express.tests.router.wildcard.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.router.wildcard.caseHolder"
+            type: "gpii.tests.express.router.wildcard.caseHolder"
         }
     }
 });
 
-gpii.express.tests.router.wildcard.testEnvironment();
+gpii.tests.express.router.wildcard.testEnvironment();

@@ -12,8 +12,8 @@ var fluid  = require("infusion");
 require("../lib/test-helpers");
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.express.tests.helpers.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder.base"],
+fluid.defaults("gpii.tests.express.helpers.caseHolder", {
+    gradeNames: ["gpii.tests.express.caseHolder.base"],
     sequenceStart: [
         // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
         {

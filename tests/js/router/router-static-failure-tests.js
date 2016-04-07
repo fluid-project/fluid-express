@@ -12,15 +12,15 @@ var jqUnit = require("node-jqunit");
 
 require("../../../");
 
-fluid.registerNamespace("gpii.express.tests.staticRouter.caseHolder");
+fluid.registerNamespace("gpii.tests.express.staticRouter.caseHolder");
 
-gpii.express.tests.staticRouter.caseHolder.createWithOptions = function (options, errorTexts) {
+gpii.tests.express.staticRouter.caseHolder.createWithOptions = function (options, errorTexts) {
     jqUnit.expectFrameworkDiagnostic("Creating component with bogus options...", function () {
         gpii.express.router["static"](options);
     }, errorTexts);
 };
 
-fluid.defaults("gpii.express.tests.staticRouter.caseHolder", {
+fluid.defaults("gpii.tests.express.staticRouter.caseHolder", {
     gradeNames: ["fluid.test.testCaseHolder"],
     modules: [
         {
@@ -30,7 +30,7 @@ fluid.defaults("gpii.express.tests.staticRouter.caseHolder", {
                     type: "test",
                     sequence: [
                         {
-                            funcName: "gpii.express.tests.staticRouter.caseHolder.createWithOptions",
+                            funcName: "gpii.tests.express.staticRouter.caseHolder.createWithOptions",
                             args:     [{ content: "foo" }, ["You must configure a path"]] // options, errorTexts
                         }
                     ]
@@ -40,7 +40,7 @@ fluid.defaults("gpii.express.tests.staticRouter.caseHolder", {
                     type: "test",
                     sequence: [
                         {
-                            funcName: "gpii.express.tests.staticRouter.caseHolder.createWithOptions",
+                            funcName: "gpii.tests.express.staticRouter.caseHolder.createWithOptions",
                             args:     [{ path: "foo" }, ["You must configure a content value"]] // options, errorTexts
                         }
                     ]
@@ -50,13 +50,13 @@ fluid.defaults("gpii.express.tests.staticRouter.caseHolder", {
     ]
 });
 
-fluid.defaults("gpii.express.tests.staticRouter.testEnvironment", {
+fluid.defaults("gpii.tests.express.staticRouter.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     components: {
         testCaseHolder: {
-            type: "gpii.express.tests.staticRouter.caseHolder"
+            type: "gpii.tests.express.staticRouter.caseHolder"
         }
     }
 });
 
-gpii.express.tests.staticRouter.testEnvironment();
+gpii.tests.express.staticRouter.testEnvironment();

@@ -2,14 +2,14 @@
 "use strict";
 var fluid  = require("infusion");
 
-fluid.defaults("gpii.express.tests.contentAware.request", {
-    gradeNames: ["gpii.express.tests.request"],
+fluid.defaults("gpii.tests.express.contentAware.request", {
+    gradeNames: ["gpii.tests.express.request"],
     endpoint:   ""
 });
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder"],
+fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
+    gradeNames: ["gpii.tests.express.caseHolder"],
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",
@@ -26,7 +26,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{defaultRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event:    "{defaultRequest}.events.onComplete",
                             args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.default"]
                         }
@@ -40,7 +40,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{jsonRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event:    "{jsonRequest}.events.onComplete",
                             args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
                         }
@@ -54,7 +54,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{textRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event:    "{textRequest}.events.onComplete",
                             args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.text"]
                         }
@@ -68,10 +68,10 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         defaultRequest: {
-            type: "gpii.express.tests.contentAware.request"
+            type: "gpii.tests.express.contentAware.request"
         },
         jsonRequest: {
-            type: "gpii.express.tests.contentAware.request",
+            type: "gpii.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "application/json"
@@ -79,7 +79,7 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
             }
         },
         textRequest: {
-            type: "gpii.express.tests.contentAware.request",
+            type: "gpii.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "text/html"

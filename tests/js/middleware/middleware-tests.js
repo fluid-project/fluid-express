@@ -12,30 +12,30 @@ require("../router/fixtures/");
 
 require("./middleware-caseholder");
 
-fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
             options: {
                 components: {
                     middleware: {
-                        type: "gpii.express.tests.middleware.counter"
+                        type: "gpii.tests.express.middleware.counter"
                     },
                     cookie: {
-                        type: "gpii.express.tests.router.cookie"
+                        type: "gpii.tests.express.router.cookie"
                     },
                     hello: {
-                        type: "gpii.express.tests.router.hello",
+                        type: "gpii.tests.express.router.hello",
                         options: {
                             components: {
                                 reqview: {
-                                    type: "gpii.express.tests.router.reqview",
+                                    type: "gpii.tests.express.router.reqview",
                                     options: {
                                         path: "/rv",
                                         components: {
                                             reqviewChild: {
-                                                type: "gpii.express.tests.router.hello",
+                                                type: "gpii.tests.express.router.hello",
                                                 options: {
                                                     path:    "/jailed",
                                                     message: "This is provided by a module nested four levels deep.",
@@ -50,7 +50,7 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
                                     }
                                 },
                                 world: {
-                                    type: "gpii.express.tests.router.hello",
+                                    type: "gpii.tests.express.router.hello",
                                     options: {
                                         components: {
                                             session: {
@@ -70,7 +70,7 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
                         }
                     },
                     reqview: {
-                        type: "gpii.express.tests.router.reqview",
+                        type: "gpii.tests.express.router.reqview",
                         options: {
                             components: {
                                 json: {
@@ -97,9 +97,9 @@ fluid.defaults("gpii.express.tests.middleware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.middleware.caseHolder"
+            type: "gpii.tests.express.middleware.caseHolder"
         }
     }
 });
 
-gpii.express.tests.middleware.testEnvironment();
+gpii.tests.express.middleware.testEnvironment();

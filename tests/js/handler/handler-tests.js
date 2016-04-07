@@ -6,13 +6,13 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./handler-caseholder");
 
-fluid.defaults("gpii.express.tests.handler.testEnvironment", {
+fluid.defaults("gpii.tests.express.handler.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     components: {
         testCaseHolder: {
-            type: "gpii.express.tests.handler.caseHolder"
+            type: "gpii.tests.express.handler.caseHolder"
         }
     }
 });
 
-gpii.express.tests.handler.testEnvironment();
+gpii.tests.express.handler.testEnvironment();

@@ -9,38 +9,38 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./passthroughRouter-caseholder");
 
-fluid.registerNamespace("gpii.express.tests.passthroughRouter.handler");
-gpii.express.tests.passthroughRouter.handler.handleRequest = function (that) {
+fluid.registerNamespace("gpii.tests.express.passthroughRouter.handler");
+gpii.tests.express.passthroughRouter.handler.handleRequest = function (that) {
     that.sendResponse(that.options.statusCode, that.options.body);
 };
 
-fluid.defaults("gpii.express.tests.passthroughRouter.handler", {
+fluid.defaults("gpii.tests.express.passthroughRouter.handler", {
     gradeNames: ["gpii.express.handler"],
     statusCode: 200,
     invokers: {
         handleRequest: {
-            funcName: "gpii.express.tests.passthroughRouter.handler.handleRequest",
+            funcName: "gpii.tests.express.passthroughRouter.handler.handleRequest",
             args:     ["{that}"]
         }
     }
 });
 
-fluid.defaults("gpii.express.tests.passthroughRouter.top.handler", {
-    gradeNames: ["gpii.express.tests.passthroughRouter.handler"],
+fluid.defaults("gpii.tests.express.passthroughRouter.top.handler", {
+    gradeNames: ["gpii.tests.express.passthroughRouter.handler"],
     body:       "You are at the top."
 });
 
-fluid.defaults("gpii.express.tests.passthroughRouter.middle.handler", {
-    gradeNames: ["gpii.express.tests.passthroughRouter.handler"],
+fluid.defaults("gpii.tests.express.passthroughRouter.middle.handler", {
+    gradeNames: ["gpii.tests.express.passthroughRouter.handler"],
     body:       "You are in the middle."
 });
 
-fluid.defaults("gpii.express.tests.passthroughRouter.bottom.handler", {
-    gradeNames: ["gpii.express.tests.passthroughRouter.handler"],
+fluid.defaults("gpii.tests.express.passthroughRouter.bottom.handler", {
+    gradeNames: ["gpii.tests.express.passthroughRouter.handler"],
     body:       "You are on the bottom."
 });
 
-fluid.defaults("gpii.express.tests.passthroughRouter.router", {
+fluid.defaults("gpii.tests.express.passthroughRouter.router", {
     gradeNames: ["gpii.express.router.passthrough"],
     components: {
         top: {
@@ -53,7 +53,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
                         options: {
                             namespace:     "top",
                             path:          "/",
-                            handlerGrades: ["gpii.express.tests.passthroughRouter.top.handler"]
+                            handlerGrades: ["gpii.tests.express.passthroughRouter.top.handler"]
                         }
                     },
                     middle: {
@@ -67,7 +67,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
                                     options: {
                                         namespace:     "middleResponder",
                                         path:          "/",
-                                        handlerGrades: ["gpii.express.tests.passthroughRouter.middle.handler"]
+                                        handlerGrades: ["gpii.tests.express.passthroughRouter.middle.handler"]
                                     }
                                 },
                                 bottom: {
@@ -80,7 +80,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
                                                 type: "gpii.express.requestAware.router",
                                                 options: {
                                                     path:          "/",
-                                                    handlerGrades: ["gpii.express.tests.passthroughRouter.bottom.handler"]
+                                                    handlerGrades: ["gpii.tests.express.passthroughRouter.bottom.handler"]
                                                 }
                                             }
                                         }
@@ -95,15 +95,15 @@ fluid.defaults("gpii.express.tests.passthroughRouter.router", {
     }
 });
 
-fluid.defaults("gpii.express.tests.passthroughRouter.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.passthroughRouter.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7593,
     components: {
         express: {
             options: {
                 components: {
                     router: {
-                        type: "gpii.express.tests.passthroughRouter.router",
+                        type: "gpii.tests.express.passthroughRouter.router",
                         options: {
                             path: "/"
                         }
@@ -112,9 +112,9 @@ fluid.defaults("gpii.express.tests.passthroughRouter.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.passthroughRouter.caseHolder"
+            type: "gpii.tests.express.passthroughRouter.caseHolder"
         }
     }
 });
 
-gpii.express.tests.passthroughRouter.testEnvironment();
+gpii.tests.express.passthroughRouter.testEnvironment();

@@ -10,8 +10,8 @@ require("../includes.js");
 require("../router/fixtures");
 require("./headerMiddleware-caseholder");
 
-fluid.defaults("gpii.express.tests.headerMiddleware.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
@@ -47,7 +47,7 @@ fluid.defaults("gpii.express.tests.headerMiddleware.testEnvironment", {
                         }
                     },
                     hello: {
-                        type: "gpii.express.tests.router.hello",
+                        type: "gpii.tests.express.router.hello",
                         options: {
                             components: {
                                 deepMiddleware: {
@@ -71,9 +71,9 @@ fluid.defaults("gpii.express.tests.headerMiddleware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.headerMiddleware.caseHolder"
+            type: "gpii.tests.express.headerMiddleware.caseHolder"
         }
     }
 });
 
-gpii.express.tests.headerMiddleware.testEnvironment();
+gpii.tests.express.headerMiddleware.testEnvironment();

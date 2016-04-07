@@ -6,18 +6,18 @@ var jqUnit = require("node-jqunit");
 
 require("../lib/test-helpers");
 
-fluid.registerNamespace("gpii.express.tests.middleware.caseHolder");
+fluid.registerNamespace("gpii.tests.express.middleware.caseHolder");
 
-gpii.express.tests.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
+gpii.tests.express.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 
-    gpii.express.tests.helpers.isSaneResponse(response, body);
+    gpii.tests.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
-gpii.express.tests.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
+gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(response, body);
+    gpii.tests.express.helpers.isSaneResponse(response, body);
 
     var data = JSON.parse(body);
 
@@ -26,13 +26,13 @@ gpii.express.tests.middleware.caseHolder.verifyMiddlewareIsolation = function (r
 };
 
 // This test does not need to see the request per se, only the test environment after at least one request has gone through.
-gpii.express.tests.middleware.caseHolder.testCounterMiddleware = function (that) {
+gpii.tests.express.middleware.caseHolder.testCounterMiddleware = function (that) {
     jqUnit.assertTrue("The counter should be greater than one...", that.express.middleware.model.count > 1);
 };
 
-gpii.express.tests.middleware.caseHolder.testCookieMiddleware = function (response, body) {
+gpii.tests.express.middleware.caseHolder.testCookieMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(response, body);
+    gpii.tests.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be cookie data...", body.cookies);
     if (body.cookies) {
@@ -40,9 +40,9 @@ gpii.express.tests.middleware.caseHolder.testCookieMiddleware = function (respon
     }
 };
 
-gpii.express.tests.middleware.caseHolder.testSessionMiddleware = function (response, body) {
+gpii.tests.express.middleware.caseHolder.testSessionMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(response, body);
+    gpii.tests.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be session data...", body.session);
     if (body.session) {
@@ -50,9 +50,9 @@ gpii.express.tests.middleware.caseHolder.testSessionMiddleware = function (respo
     }
 };
 
-gpii.express.tests.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
+gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
 
-    gpii.express.tests.helpers.isSaneResponse(response, body);
+    gpii.tests.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be body data...", body.body);
     if (body.body) {
@@ -61,8 +61,8 @@ gpii.express.tests.middleware.caseHolder.testBodyParserMiddleware = function (re
 };
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.express.tests.middleware.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder"],
+fluid.defaults("gpii.tests.express.middleware.caseHolder", {
+    gradeNames: ["gpii.tests.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -74,7 +74,7 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             func: "{middlewareIsolationRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.middleware.caseHolder.verifyMiddlewareIsolation",
+                            listener: "gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation",
                             event: "{middlewareIsolationRequest}.events.onComplete",
                             args: ["{middlewareIsolationRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -92,7 +92,7 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             event: "{counterRequest}.events.onComplete"
                         },
                         {
-                            listener: "gpii.express.tests.middleware.caseHolder.testCounterMiddleware",
+                            listener: "gpii.tests.express.middleware.caseHolder.testCounterMiddleware",
                             event: "{counterSecondRequest}.events.onComplete",
                             args: ["{testEnvironment}"]
                         }
@@ -106,7 +106,7 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             func: "{sessionRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.middleware.caseHolder.testSessionMiddleware",
+                            listener: "gpii.tests.express.middleware.caseHolder.testSessionMiddleware",
                             event: "{sessionRequest}.events.onComplete",
                             args: ["{sessionRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -121,7 +121,7 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             args: [{ foo: "bar" }]
                         },
                         {
-                            listener: "gpii.express.tests.middleware.caseHolder.testBodyParserMiddleware",
+                            listener: "gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware",
                             event: "{bodyParserRequest}.events.onComplete",
                             args: ["{bodyParserRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -139,7 +139,7 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
                             event: "{cookieSetRequest}.events.onComplete"
                         },
                         {
-                            listener: "gpii.express.tests.middleware.caseHolder.testCookieMiddleware",
+                            listener: "gpii.tests.express.middleware.caseHolder.testCookieMiddleware",
                             event: "{cookieReadRequest}.events.onComplete",
                             args: ["{cookieReadRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -169,31 +169,31 @@ fluid.defaults("gpii.express.tests.middleware.caseHolder", {
             }
         },
         middlewareIsolationRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "hello/rv"
             }
         },
         cookieSetRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "cookie"
             }
         },
         cookieReadRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         sessionRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         bodyParserRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "reqview"
             }

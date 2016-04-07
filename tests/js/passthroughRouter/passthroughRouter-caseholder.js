@@ -3,8 +3,8 @@
 var fluid  = require("infusion");
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder"],
+fluid.defaults("gpii.tests.express.passthroughRouter.caseHolder", {
+    gradeNames: ["gpii.tests.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -16,7 +16,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
                             func: "{topRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event:    "{topRequest}.events.onComplete",
                             args:     ["{topRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.top"]
                         }
@@ -30,7 +30,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
                             func: "{middleRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event:    "{middleRequest}.events.onComplete",
                             args:     ["{middleRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.middle"]
                         }
@@ -44,7 +44,7 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
                             func: "{bottomRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event:    "{bottomRequest}.events.onComplete",
                             args:     ["{bottomRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.bottom"]
                         }
@@ -60,19 +60,19 @@ fluid.defaults("gpii.express.tests.passthroughRouter.caseHolder", {
     },
     components: {
         topRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "top"
             }
         },
         middleRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "top/middle"
             }
         },
         bottomRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "top/middle/bottom"
             }

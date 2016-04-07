@@ -8,30 +8,30 @@ require("../includes.js");
 require("./fixtures");
 require("./router-params-caseholder");
 
-fluid.registerNamespace("gpii.express.tests.router.params.deepParamHandler");
-gpii.express.tests.router.params.deepParamHandler.handleRequest = function (that) {
+fluid.registerNamespace("gpii.tests.express.router.params.deepParamHandler");
+gpii.tests.express.router.params.deepParamHandler.handleRequest = function (that) {
     that.sendResponse(200, { ok: true, params: that.request.params});
 };
 
-fluid.defaults("gpii.express.tests.router.params.deepParamHandler", {
+fluid.defaults("gpii.tests.express.router.params.deepParamHandler", {
     gradeName: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
-            funcName: "gpii.express.tests.router.params.deepParamHandler.handleRequest",
+            funcName: "gpii.tests.express.router.params.deepParamHandler.handleRequest",
             args: ["{that}"]
         }
     }
 });
 
-fluid.defaults("gpii.express.tests.router.params.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7512,
     components: {
         express: {
             options: {
                 components: {
                     params: {
-                        type: "gpii.express.tests.router.params",
+                        type: "gpii.tests.express.router.params",
                         options: {
                             path: "/params/:myVar",
                             components: {
@@ -42,7 +42,7 @@ fluid.defaults("gpii.express.tests.router.params.testEnvironment", {
                                         routerOptions: {
                                             mergeParams: true
                                         },
-                                        handlerGrades: ["gpii.express.tests.router.params.deepParamHandler"]
+                                        handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
                                     }
                                 }
                             }
@@ -52,9 +52,9 @@ fluid.defaults("gpii.express.tests.router.params.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.router.params.caseHolder"
+            type: "gpii.tests.express.router.params.caseHolder"
         }
     }
 });
 
-gpii.express.tests.router.params.testEnvironment();
+gpii.tests.express.router.params.testEnvironment();

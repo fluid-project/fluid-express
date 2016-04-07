@@ -11,8 +11,8 @@ require("../includes");
 require("./fixtures");
 require("./router-static-caseholder");
 
-fluid.defaults("gpii.express.tests.router.static.testEnvironment", {
-    gradeNames: ["gpii.express.tests.testEnvironment"],
+fluid.defaults("gpii.tests.express.router.static.testEnvironment", {
+    gradeNames: ["gpii.tests.express.testEnvironment"],
     port:   7432,
     components: {
         express: {
@@ -36,9 +36,9 @@ fluid.defaults("gpii.express.tests.router.static.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.router.static.caseHolder"
+            type: "gpii.tests.express.router.static.caseHolder"
         }
     }
 });
 
-gpii.express.tests.router["static"].testEnvironment();
+gpii.tests.express.router["static"].testEnvironment();

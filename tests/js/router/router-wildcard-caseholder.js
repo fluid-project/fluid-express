@@ -5,8 +5,8 @@ var fluid  = require("infusion");
 require("../includes");
 require("./fixtures");
 
-fluid.defaults("gpii.express.tests.router.wildcard.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder"],
+fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
+    gradeNames: ["gpii.tests.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -18,7 +18,7 @@ fluid.defaults("gpii.express.tests.router.wildcard.caseHolder", {
                             func: "{wildcardRootRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event: "{wildcardRootRequest}.events.onComplete",
                             args: ["{wildcardRootRequest}.nativeResponse", "{arguments}.0", "Hello, wild world."]
                         }
@@ -32,7 +32,7 @@ fluid.defaults("gpii.express.tests.router.wildcard.caseHolder", {
                             func: "{wildcardDeepRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.helpers.verifyStringContent",
+                            listener: "gpii.tests.express.helpers.verifyStringContent",
                             event: "{wildcardDeepRequest}.events.onComplete",
                             args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0", "Hello, wild world."]
                         }
@@ -43,13 +43,13 @@ fluid.defaults("gpii.express.tests.router.wildcard.caseHolder", {
     ],
     components: {
         wildcardRootRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "wildcard/"
             }
         },
         wildcardDeepRequest: {
-            type: "gpii.express.tests.request",
+            type: "gpii.tests.express.request",
             options: {
                 endpoint: "wildcard/many/levels/deep"
             }
