@@ -1,4 +1,3 @@
-/* Tests for the router grade and the "wrapper" modules for common Express routers.  */
 "use strict";
 var fluid  = require("infusion");
 

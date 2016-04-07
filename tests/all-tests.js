@@ -1,4 +1,5 @@
 require("./js/contentAware/contentAware-tests");
+require("./js/errorMiddleware/errorMiddleware-tests");
 require("./js/handler/handler-tests");
 require("./js/headerMiddleware/headerMiddleware-tests");
 require("./js/helpers/helpers-tests");

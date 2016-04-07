@@ -1,17 +1,10 @@
-// Module to serve up the static files available in the `content` directory.
-//
-// You can use full directory references, but best practice is to register your package's home directory using
-// `fluid.module.register`, as in:
-//
-// `fluid.module.register("npm-package-name", __dirname, require);`
-//
-// You should then set `options.content` using notation like:
-//
-// `%npm-package-name/path/to/content/within/package`
-//
-// You can either pass in a string, or an array of strings.  The first directory that contains matching content will
-// respond.  If no directories contain a match, a 404 error will be returned.
-//
+/*
+
+    Module to serve up static files available in the `content` directory.  See the documentation for more details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/router.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");

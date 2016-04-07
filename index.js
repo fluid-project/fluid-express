@@ -34,6 +34,9 @@ require("./src/js/json");
 // A middleware component to add support for URL encoding of variables
 require("./src/js/urlencoded");
 
+// A middleware component to handle errors
+require("./src/js/errorMiddleware");
+
 // `gpii.express.router`, the base grade for all router components
 require("./src/js/router");
 

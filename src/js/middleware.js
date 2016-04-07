@@ -12,47 +12,42 @@ fluid.registerNamespace("gpii.express.middleware");
 
 /**
  *
- * @param that {Object} - The middleware component itself.
- * @param req {Object} - The Express request object.
- * @param res {Object} - The Express response object.
- * @param next {Function} - The next piece of middleware in the chain.
- *
- * A function which confirm that this request matches our HTTP method.  If it does, our `middleware` invoker is called.
- * If not, the next piece of middleware in the chain is called immediately.
- *
- */
-gpii.express.middleware.checkMethod = function (that, req, res, next) {
-    if (that.options.method && !gpii.express.middleware.matchesMethod(req, that.options.method)) {
-        next();
-    }
-    else {
-        that.middleware(req, res, next);
-    }
-};
-
-/**
- *
  * @param req {Object} - The Express request object.
  * @param methods {Array} - The list of accepted methods.
  * @returns {Boolean} `true` if the request matches our accepted methods, `false` if it does not.
  *
  * Check the method of the request to confirm whether we should handle it (see above).
- * 
+ *
  */
 gpii.express.middleware.matchesMethod = function (req, methods) {
-    return fluid.contains(fluid.makeArray(methods), req.method.toLowerCase());
+    var methodArray = fluid.makeArray(methods);
+    return fluid.contains(methodArray, req.method.toLowerCase()) || fluid.contains(methodArray, "use");
+};
+
+// We must use this construct so that we always expose a function with the right signature, as Express determines
+// that we are a standard piece of middleware based on the method signature.
+// 
+// It incorporates the previous mechanism for gating requests by method (get, post, put, use, etc.).
+gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
+    return function wrappedStandardMiddleware(request, response, next) {
+        if (that.options.method && !gpii.express.middleware.matchesMethod(request, that.options.method)) {
+            next();
+        }
+        else {
+            that.middleware(request, response, next);
+        }
+    };
 };
 
 fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.component"],
     invokers: {
+        "getMiddlewareFn": {
+            funcName: "gpii.express.middleware.getWrappedMiddlewareFunction",
+            args: ["{that}"]
+        },
         "middleware": {
             funcName: "fluid.notImplemented"
-        },
-        "checkMethod": {
-            funcName: "gpii.express.middleware.checkMethod",
-            args:       ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
-
         }
     }
 });

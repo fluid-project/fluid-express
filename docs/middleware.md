@@ -122,7 +122,7 @@ invokers: {
 }
 ```
 
-See above for more details about the range of things middleware functions typically do.
+For a reference example of an error handler, see the ["error handler" middleware docs](errorMiddleware.md).
 
 ## `gpii.express.middleware.cookieparser`
 
@@ -151,6 +151,10 @@ Parses URL encoded data passed by the client and makes it available via `request
 
 Parses JSON data passed by the client and makes it available via `request.body`.  Wraps part of the
 [body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
+
+## `gpii.express.middleware.error`
+
+See the ["error handler" middleware documentation](errorMiddleware.md).
 
 ## `gpii.express.middleware.headerSetter`
 

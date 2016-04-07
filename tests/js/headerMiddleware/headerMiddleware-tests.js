@@ -1,4 +1,8 @@
-/* Tests for the "middleware" grade and "wrapper" modules for common Express middleware. */
+/*
+
+    Tests for the "header setter" middleware.
+
+*/
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");

@@ -1,4 +1,10 @@
-// Module to help express understand URL-encoded data.
+/*
+
+    Router module to parse URL-encoded data in requests.  See the documentation for more details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");

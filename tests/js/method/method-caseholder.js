@@ -1,4 +1,8 @@
-/* Test cases to confirm the clean separation of routers that use the same path but a different method */
+/*
+
+    Test cases to confirm the clean separation of routers that use the same path but a different method.
+
+*/
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");

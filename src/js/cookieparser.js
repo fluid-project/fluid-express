@@ -1,4 +1,10 @@
-// Module to add body parsing to express.
+/*
+
+    Module to add body parsing to express.  See the documentation for more details:
+    
+    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
