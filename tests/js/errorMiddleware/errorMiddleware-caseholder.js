@@ -82,7 +82,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                     ]
                 },
                 {
-                    name: "Testing the root error handler...",
+                    name: "Testing the root error handler payload...",
                     type: "test",
                     sequence: [
                         {
@@ -92,6 +92,10 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                             listener: "jqUnit.assertEquals",
                             event:    "{rootRequest}.events.onComplete",
                             args:    ["The root error handler should have responded...", "{that}.options.expected.string", "{arguments}.0"]
+                        },
+                        {
+                            func: "gpii.tests.express.checkHeader",
+                            args: ["A custom request header should have been set for the error...", "{rootRequest}.nativeResponse", "My-Request-Went-To-Hell", "and all I got was this lousy header..."] // message, response, header, expected
                         }
                     ]
                 }
@@ -121,6 +125,12 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
             type: "gpii.tests.express.request",
             options: {
                 endpoint: "nested"
+            }
+        },
+        rootHeaderRequest: {
+            type: "gpii.tests.express.request",
+            options: {
+                endpoint: ""
             }
         },
         rootRequest: {

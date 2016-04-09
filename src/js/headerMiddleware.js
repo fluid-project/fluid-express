@@ -23,7 +23,7 @@ fluid.registerNamespace("gpii.express.middleware.headerSetter");
  * A middleware function that adds one or more headers before launching the next middleware function in the chain.
  *
  */
-gpii.express.middleware.headerSetter.addHeaders = function (that, req, res, next) {
+gpii.express.middleware.headerSetter.addHeaders = function (that, err, req, res, next) {
     fluid.each(that.options.headers, function (headerOptions) {
         var templateData = fluid.model.transformWithRules({ that: that, request: req }, headerOptions.dataRules);
         var fieldValue = fluid.stringTemplate(headerOptions.template, templateData);
@@ -31,19 +31,38 @@ gpii.express.middleware.headerSetter.addHeaders = function (that, req, res, next
         res.setHeader(headerOptions.fieldName, fieldValue);
     });
 
-    next();
+    if (err) {
+        next(err);
+    }
+    else {
+        next();
+    }
 };
 
 
-fluid.defaults("gpii.express.middleware.headerSetter", {
-    gradeNames: ["gpii.express.middleware"],
+fluid.defaults("gpii.express.middleware.headerSetter.base", {
     mergePolicy: {
         "headers": "nomerge"
-    },
+    }
+});
+
+fluid.defaults("gpii.express.middleware.headerSetter", {
+    gradeNames: ["gpii.express.middleware.headerSetter.base", "gpii.express.middleware"],
     invokers: {
         middleware: {
             funcName: "gpii.express.middleware.headerSetter.addHeaders",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // req, res, next
+            args:     ["{that}", null, "{arguments}.0", "{arguments}.1", "{arguments}.2"] // err, req, res, next
+        }
+    }
+
+});
+
+fluid.defaults("gpii.express.middleware.headerSetter.error", {
+    gradeNames: ["gpii.express.middleware.headerSetter.base", "gpii.express.middleware.error"],
+    invokers: {
+        middleware: {
+            funcName: "gpii.express.middleware.headerSetter.addHeaders",
+            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{arguments}.3"] // err, req, res, next
         }
     }
 

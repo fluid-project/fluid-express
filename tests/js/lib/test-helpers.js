@@ -14,6 +14,14 @@ fluid.registerNamespace("gpii.tests.express.helpers");
 
 var jqUnit = jqUnit || require("node-jqunit");
 
+/**
+ *
+ * Confirm that a response has a body and the expected status.
+ *
+ * @param response {Object} - The Express response object.
+ * @param body {Object} - The response body.
+ * @param status {Number} - The expected status code (defaults to `200`).
+ */
 gpii.tests.express.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;
 
@@ -45,6 +53,31 @@ gpii.tests.express.helpers.assembleUrl = function () {
     fluid.fail("This function has been removed.  You will need to migrate to using fluid.stringTemplate instead.");
 };
 
+/**
+ *
+ * Confirm that a request has the expected value for a particular header.
+ *
+ * @param message {Object} - The message to use for test output.
+ * @param response {Object} - The Express response object to inspect.
+ * @param header {String} - The header to inspect.
+ * @param expected {String} - The expected value.
+ */
+gpii.tests.express.checkHeader = function (message, response, header, expected) {
+    var headerContent = response.headers[header.toLowerCase()];
+    jqUnit.assertEquals(message, expected, headerContent);
+};
+
+/**
+ *
+ * Add boilerplate test sequence steps that are required to (for example) safely create all fixtures on startup or
+ * safely tear down fixtures after a test is complete.
+ *
+ * @param rawTests {Object} - The original unmodified tests.
+ * @param sequenceStart {Object} - The sequence steps (if any) to insert before each test's sequences.
+ * @param sequenceEnd {Object} - The sequence steps (if any) to append after each test's sequences.
+ * @returns {Object} - The tests with the required start and end steps wired into all test sequences.
+ *
+ */
 gpii.tests.express.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
     var completeTests = fluid.copy(rawTests);
 
@@ -66,7 +99,8 @@ gpii.tests.express.helpers.addRequiredSequences = function (rawTests, sequenceSt
     return completeTests;
 };
 
-// If you want to avoid the defaults, extend this grade rather than `gpii.tests.express.caseHolder`.
+// A `caseHolder` that uses `options.rawModules` and the above function to create its modules.  If you want to avoid
+// the default `sequenceStart`, extend this grade rather than `gpii.tests.express.caseHolder`.
 //
 fluid.defaults("gpii.tests.express.caseHolder.base", {
     gradeNames: ["fluid.test.testCaseHolder"],
@@ -81,11 +115,12 @@ fluid.defaults("gpii.tests.express.caseHolder.base", {
     }
 });
 
-// Defaults which are useful in most case where you are testing `gpii-express` or its child components.  Your test
-// environment should:
+// A caseholder for use in testing `gpii-express` or its child components.  Your test environment should:
 //
 //   1. Have a `constructServer` event and wait to construct its test components until `constructServer` is fired.
 //   2. Have an `onStarted` event which waits for all of the startup events for its child components.
+//
+// A reference `testEnvironment` is included below.
 //
 fluid.defaults("gpii.tests.express.caseHolder", {
     gradeNames: ["gpii.tests.express.caseHolder.base"],

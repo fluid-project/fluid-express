@@ -116,10 +116,24 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                             priority: "after:stringErrorPitcher"
                         }
                     },
+                    errorHeaderSetter: {
+                        type: "gpii.express.middleware.headerSetter.error",
+                        options: {
+                            namespace: "errorHeaderSetter",
+                            priority:  "after:rootErrorPitcher",
+                            headers: {
+                                queryVar: {
+                                    fieldName: "My-Request-Went-To-Hell",
+                                    template:  "and all I got was this lousy header...",
+                                    dataRules: {}
+                                }
+                            }
+                        }
+                    },
                     rootErrorCatcher: {
                         type: "gpii.express.middleware.error",
                         options: {
-                            priority: "after:rootErrorPitcher",
+                            priority: "after:errorHeaderSetter",
                             errorOutputRules: {
                                 "": { literalValue: "The root error handler responded." }
                             }
