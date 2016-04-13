@@ -10,9 +10,8 @@ example of what middleware typically does, the `gpii.express.middleware.bodypars
 down information found there, and add variables that present the same data in a more usable form.  See below for details.
 
 The `response` object gives you a way to send information (headers, content) back to the user.  A lot of what we refer to
-as middleware in this package doesn't make use of the `request`, but there are many use cases (setting common headers for
-example) where you might want to do so.  More commonly, router grades do respond to the user.  See the
-["router" documentation](router.md) for examples.
+as middleware in this package doesn't make use of the `request`, but the original request will only receive a response
+if some piece of middleware eventually makes use of the `response` object.
 
 The `next` function gives your middleware control over whether processing should continue.  At the time it is given a
 chance to process a `request`, each piece of middleware is aware of the next piece of middleware in the chain.  It can
