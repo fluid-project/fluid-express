@@ -1,6 +1,6 @@
 # `gpii.express.middleware.contentAware`
 
-A router which passes a request to different handlers based on the content type.  The most basic use case is to allow a
+Middleware which passes a request to different handlers based on the content type.  The most basic use case is to allow a
 single API endpoint to:
 
 * Return HTML in response to a request from a browser.
@@ -50,13 +50,13 @@ Note that the nonsensical `contentType` value `default` in the above example is 
 
 # Component Invokers
 
-## `{that}.route(req, res)`
+## `{that}.middleware(request, response, next)`
 
+This invoker fulfills the standard contract for a `gpii.express.middleware` component.  It locates an appropriate handler
+if possible, and allows that to handle the original request.  If no handler can be found, `next(err)` is called and
+downstream [error handling middleware](middleware.md) is expected to handle things from there.
 
-This invoker fulfills the standard contract for a `gpii.express.router` component.  It locates an appropriate handler
-if possible, and allows that to handle the original request.  If no handler can be found, the router itself send
-an error response.
-
-* `req`: The [request object](http://expressjs.com/en/api.html#req) provided by Express, which wraps node's [`http.incomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage).
-* `res`: The [response object](http://expressjs.com/en/api.html#res) provided by Express, which wraps node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse).
+* `reques`: The [request object](http://expressjs.com/en/api.html#req) provided by Express, which wraps node's [`http.incomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage).
+* `response`: The [response object](http://expressjs.com/en/api.html#res) provided by Express, which wraps node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse).
+* `next`: The next middleware function in the chain.
 * Returns: Nothing.

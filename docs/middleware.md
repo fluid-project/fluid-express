@@ -166,11 +166,11 @@ See the ["header setter" middleware documentation](headerMiddleware.md).
 
 ## `gpii.express.middleware.contentAware`
 
-See the [`contentAwareRouter` documentation](contentAwareRouter.md).
+See the [`contentAwareMiddleware` documentation](contentAwareMiddleware.md).
 
 ## `gpii.express.middleware.requestAware`
 
-See the [`requestAwareRouter` documentation](requestAwareRouter.md).
+See the [`requestAwareMiddleware` documentation](requestAwareMiddleware.md).
 
 ## `gpii.express.middleware.static`
 

@@ -32,7 +32,7 @@ dynamicComponents: {
 }
 ```
 
-Options that already exist when the router is created will be merged with the defaults as expected.  This approach
+Options that already exist when the component is created will be merged with the defaults as expected.  This approach
 will not work for dynamic values such as model or member variables.
 
 For dynamic values, you will need to use an IoC reference from within your `handler` grade's definition, as in:

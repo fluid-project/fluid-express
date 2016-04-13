@@ -10,8 +10,8 @@ be given the chance to process the message via its `middleware` invoker (see bel
 ## 404 Errors
 
 Please note that Express does not send 404 errors to error handling middleware
-[see their FAQ for details](http://expressjs.com/en/starter/faq.html).  Best practice is to place a router whose path
-is `/` as the last component in your `gpii.express` instance, as in the following options snippet:
+[see their FAQ for details](http://expressjs.com/en/starter/faq.html).  Best practice is to place routers and middleware
+whose path is `/` at the end of the chain, as in the following options snippet:
 
 ```
 components: {

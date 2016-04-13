@@ -3,10 +3,10 @@
 An abstract grade for "request handler" modules.  Modules that extend this grade are expected to be created
 dynamically, as outlined in [the Fluid documentation](http://docs.fluidproject.org/infusion/development/SubcomponentDeclaration.html#dynamic-subcomponents-with-a-source-event).
 
-These are used with a `gpii.express.router` module such as the `requestAware` and `contentAware` grades included in
-this package.  The router is expected to construct one of these components per request.  Note that these
+These are used with a `gpii.express.middleware` module such as the `requestAware` and `contentAware` grades included in
+this package.  The middleware is expected to construct one of these components per request.  Note that these
 components are not persisted.  Any data you wish to retain should be stored elsewhere, for example, by relaying it
-to the parent router.
+to the parent middleware.
 
 The simplest implementation uses the built-in `sendResponse` invoker (see below), as in the following example:
 
@@ -26,8 +26,8 @@ For more examples of how this can be used, check out the tests included with thi
 
 | Option     | Type       | Description |
 | ---------- | ---------- | ----------- |
-| `request`  | `{Object}` | The [request object](http://expressjs.com/en/api.html#req) provided by Express, which wraps node's [`http.incomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage). The `requestAware` router grade and its derivatives (such as the `contentAware` router) set this for you. |
-| `response` | `{Object}` | The [response object](http://expressjs.com/en/api.html#res) provided by Express, which wraps node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse). The `requestAware` router grade and its derivatives (such as the `contentAware` router) set this for you. |
+| `request`  | `{Object}` | The [request object](http://expressjs.com/en/api.html#req) provided by Express, which wraps node's [`http.incomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage). The `requestAware` middleware grade and its derivatives (such as the `contentAware` middleware) set this for you. |
+| `response` | `{Object}` | The [response object](http://expressjs.com/en/api.html#res) provided by Express, which wraps node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse). The `requestAware` middleware grade and its derivatives (such as the `contentAware` middleware) set this for you. |
 | `timeout`  | `{Number}` | The handler starts a timer when it is created, and will respond with an error message if the `afterResponseSent` event is not fired in `timeout` milliseconds. The `sendResponse` invoker (see below) takes care of this for you. |
 
 

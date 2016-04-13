@@ -36,9 +36,8 @@ Here's an example of how this component can be used with a `gpii.express.router`
         path: 8081,
         components: {
             staticRouter: {
-                type: "gpii.express.router.static",
+                type: "gpii.express.router",
                 options: {
-                    content: "%my-package/src",
                     components: {
                         headerSetter: {
                             type: "gpii.express.middleware.headerSetter",
@@ -49,6 +48,13 @@ Here's an example of how this component can be used with a `gpii.express.router`
                                         template:  "*"
                                     }
                                 }
+                            }
+                        },
+                        staticMiddleware: {
+                            type: "gpii.express.router.static",
+                            options: {
+                                priority: "last,
+                                content: "%my-package/src"
                             }
                         }
                     }
