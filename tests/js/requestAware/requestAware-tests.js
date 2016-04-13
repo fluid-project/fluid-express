@@ -67,21 +67,21 @@ fluid.defaults("gpii.tests.express.requestAware.testEnvironment", {
             options: {
                 components: {
                     instrumented: {
-                        type: "gpii.express.requestAware.router",
+                        type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/instrumented",
                             handlerGrades: ["gpii.tests.express.requestAware.delayed"]
                         }
                     },
                     delayed: {
-                        type: "gpii.express.requestAware.router",
+                        type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/delayed",
                             handlerGrades: ["gpii.tests.express.requestAware.delayed"]
                         }
                     },
                     timeout: {
-                        type: "gpii.express.requestAware.router",
+                        type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/timeout",
                             handlerGrades: ["gpii.tests.express.requestAware.timeout"],

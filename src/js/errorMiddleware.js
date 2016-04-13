@@ -33,12 +33,7 @@ gpii.express.middleware.error.sendError = function (that, error, request, respon
 // that we are error middleware based on the method signature.
 gpii.express.middleware.error.getWrappedMiddlewareErrorFunction = function (that) {
     return function wrappedErrorMiddleware(error, request, response, next) {
-        if (that.options.method && !gpii.express.middleware.matchesMethod(request, that.options.method)) {
-            next(error);
-        }
-        else {
-            that.middleware(error, request, response, next);
-        }
+        that.middleware(error, request, response, next);
     };
 };
 

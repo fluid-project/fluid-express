@@ -8,5 +8,4 @@ gpii.express.loadTestingSupport();
 var kettle = require("kettle");
 kettle.loadTestingSupport();
 
-require("./lib/test-helpers");
-require("./lib/request");
+require("./lib/");

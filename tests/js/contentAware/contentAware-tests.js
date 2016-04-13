@@ -43,8 +43,8 @@ fluid.defaults("gpii.tests.express.contentAware.textHandler", {
     body:       "This is the text response."
 });
 
-fluid.defaults("gpii.tests.express.contentAware.router", {
-    gradeNames: ["gpii.express.contentAware.router"],
+fluid.defaults("gpii.tests.express.contentAware.middleware", {
+    gradeNames: ["gpii.express.middleware.contentAware"],
     handlers: {
         // Confirm that we support "priorities".  This should not be allowed to handle requests with no `accept` header.
         badDefault: {
@@ -75,8 +75,8 @@ fluid.defaults("gpii.tests.express.contentAware.testEnvironment", {
         express: {
             options: {
                 components: {
-                    router: {
-                        type: "gpii.tests.express.contentAware.router",
+                    middleware: {
+                        type: "gpii.tests.express.contentAware.middleware",
                         options: {
                             path: "/"
                         }

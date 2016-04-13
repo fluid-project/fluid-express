@@ -47,13 +47,10 @@ require("./src/js/static");
 require("./src/js/handler");
 
 // A convenience router that creates a request aware grade for each request
-require("./src/js/requestAwareRouter");
+require("./src/js/requestAwareMiddleware");
 
 // A convenience router to handle multiple content types from the same router.
-require("./src/js/contentAwareRouter");
-
-// An intermediate router that can be used to combine existing middleware and routers.
-require("./src/js/passthroughRouter");
+require("./src/js/contentAwareMiddleware");
 
 // Provide a function to optionally load test support.
 gpii.express.loadTestingSupport = function () {

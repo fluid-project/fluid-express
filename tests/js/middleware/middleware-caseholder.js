@@ -26,7 +26,7 @@ gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation = function (r
 
 // This test does not need to see the request per se, only the test environment after at least one request has gone through.
 gpii.tests.express.middleware.caseHolder.testCounterMiddleware = function (that) {
-    jqUnit.assertTrue("The counter should be greater than one...", that.express.middleware.model.count > 1);
+    jqUnit.assertTrue("The counter should be greater than one...", that.express.counter.model.count > 1);
 };
 
 gpii.tests.express.middleware.caseHolder.testCookieMiddleware = function (response, body) {

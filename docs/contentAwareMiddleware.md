@@ -1,4 +1,4 @@
-# `gpii.express.contentAware.router`
+# `gpii.express.middleware.contentAware`
 
 A router which passes a request to different handlers based on the content type.  The most basic use case is to allow a
 single API endpoint to:

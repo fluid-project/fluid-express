@@ -5,7 +5,6 @@ var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes.js");
-require("./fixtures");
 require("./router-params-caseholder");
 
 fluid.registerNamespace("gpii.tests.express.router.params.deepParamHandler");
@@ -31,17 +30,24 @@ fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
             options: {
                 components: {
                     params: {
-                        type: "gpii.tests.express.router.params",
+                        type: "gpii.express.router",
                         options: {
                             path: "/params/:myVar",
+                            routerOptions: {
+                                mergeParams: true
+                            },
                             components: {
-                                deepRouter: {
-                                    type: "gpii.express.requestAware.router",
+                                deepPathedMiddleware: {
+                                    type: "gpii.express.middleware.requestAware",
                                     options: {
                                         path: "/deep",
-                                        routerOptions: {
-                                            mergeParams: true
-                                        },
+                                        handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
+                                    }
+                                },
+                                deepMiddleware: {
+                                    type: "gpii.express.middleware.requestAware",
+                                    options: {
+                                        priority: "last",
                                         handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
                                     }
                                 }

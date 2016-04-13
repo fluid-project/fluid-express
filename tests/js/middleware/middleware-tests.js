@@ -5,10 +5,7 @@ var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes");
-require("./fixtures/");
-
-// We borrow a router from the router tests to help in testing middleware isolation
-require("../router/fixtures/");
+require("../lib");
 
 require("./middleware-caseholder");
 
@@ -19,75 +16,114 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
         express: {
             options: {
                 components: {
-                    middleware: {
-                        type: "gpii.tests.express.middleware.counter"
+                    counter: {
+                        type: "gpii.tests.express.middleware.counter",
+                        options: {
+                            priority: "first"
+                        }
                     },
-                    cookie: {
-                        type: "gpii.tests.express.router.cookie"
+                    cookieSetter: {
+                        type: "gpii.tests.express.middleware.cookie",
+                        options: {
+                            namespace: "cookieSetter",
+                            priority:  "after:counter"
+                        }
                     },
                     hello: {
-                        type: "gpii.tests.express.router.hello",
+                        type: "gpii.express.router",
                         options: {
+                            namespace: "hello",
+                            path:      "/hello",
+                            priority:  "after:cookieSetter",
                             components: {
-                                reqview: {
-                                    type: "gpii.tests.express.router.reqview",
+                                nestedReqView: {
+                                    type: "gpii.express.router",
                                     options: {
                                         path: "/rv",
                                         components: {
                                             reqviewChild: {
-                                                type: "gpii.tests.express.router.hello",
+                                                type: "gpii.express.router",
                                                 options: {
                                                     path:    "/jailed",
-                                                    message: "This is provided by a module nested four levels deep.",
                                                     components: {
                                                         cookieparser: {
                                                             type: "gpii.express.middleware.cookieparser"
+                                                        },
+                                                        hello: {
+                                                            type: "gpii.tests.express.middleware.hello",
+                                                            options: {
+                                                                message: "This is provided by a module nested four levels deep.",
+                                                                priority: "last"
+                                                            }
                                                         }
                                                     }
+                                                }
+                                            },
+                                            reqView: {
+                                                type: "gpii.tests.express.middleware.reqview",
+                                                options: {
+                                                    priority: "last"
                                                 }
                                             }
                                         }
                                     }
                                 },
                                 world: {
-                                    type: "gpii.tests.express.router.hello",
+                                    type: "gpii.express.router",
                                     options: {
+                                        path: "/world",
                                         components: {
                                             session: {
                                                 type: "gpii.express.middleware.session",
                                                 options: {
+                                                    priority: "first",
                                                     sessionOptions: {
                                                         secret: "Printer, printer take a hint-ter."
                                                     }
                                                 }
+                                            },
+                                            world: {
+                                                type: "gpii.tests.express.middleware.hello",
+                                                options: {
+                                                    message: "Hello, yourself"
+                                                }
                                             }
-                                        },
-                                        path:    "/world",
-                                        message: "Hello, yourself"
+                                        }
                                     }
+                                },
+                                hello: {
+                                    type:     "gpii.tests.express.middleware.hello",
+                                    priority: "last"
                                 }
                             }
                         }
                     },
-                    reqview: {
-                        type: "gpii.tests.express.router.reqview",
+                    reqViewRouter: {
+                        type: "gpii.express.router",
                         options: {
+                            path: "/reqview",
                             components: {
-                                json: {
-                                    type: "gpii.express.middleware.bodyparser.json"
-                                },
-                                urlencoded: {
-                                    type: "gpii.express.middleware.bodyparser.urlencoded"
-                                },
-                                cookieparser: {
-                                    type: "gpii.express.middleware.cookieparser"
-                                },
-                                session: {
-                                    type: "gpii.express.middleware.session",
+                                // json: {
+                                //     type: "gpii.express.middleware.bodyparser.json"
+                                // },
+                                // urlencoded: {
+                                //     type: "gpii.express.middleware.bodyparser.urlencoded"
+                                // },
+                                // cookieparser: {
+                                //     type: "gpii.express.middleware.cookieparser"
+                                // },
+                                // session: {
+                                //     type: "gpii.express.middleware.session",
+                                //     options: {
+                                //         sessionOptions: {
+                                //             secret: "Printer, printer take a hint-ter."
+                                //         }
+                                //     }
+                                // },
+                                reqView: {
+                                    type: "gpii.tests.express.middleware.reqview",
                                     options: {
-                                        sessionOptions: {
-                                            secret: "Printer, printer take a hint-ter."
-                                        }
+                                        priority: "last"
                                     }
                                 }
                             }

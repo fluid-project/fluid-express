@@ -8,18 +8,24 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes");
-require("../middleware/fixtures/");
 
 require("./method-caseholder");
 
 fluid.defaults("gpii.tests.express.method.router", {
-    gradeNames: ["gpii.express.requestAware.router"],
+    gradeNames: ["gpii.express.router"],
     path: "/",
     components: {
         counter: {
             type: "gpii.tests.express.middleware.counter",
             options: {
-                method: "{gpii.tests.express.method.router}.options.method"
+                priority: "first"
+            }
+        },
+        requestAware: {
+            type: "gpii.express.middleware.requestAware",
+            options: {
+                method:        "{gpii.tests.express.method.router}.options.method",
+                handlerGrades: "{gpii.tests.express.method.router}.options.handlerGrades"
             }
         }
     }

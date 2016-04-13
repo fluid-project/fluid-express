@@ -2,7 +2,6 @@
 var fluid  = require("infusion");
 
 require("../includes");
-require("./fixtures");
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.tests.express.router.static.caseHolder", {

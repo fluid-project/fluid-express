@@ -1,17 +1,17 @@
-# The "Request Aware" router.
+# The "Request Aware" middleware.
 
-Some routers (such as the "static" router included in this package) do not keep any kind of state variables that can be
-exposed between requests.  For many use cases, you may want to isolate part of the conversation (such as query
+Some middleware (such as the "static" middleware included in this package) do not keep any kind of state variables that
+can be exposed between requests.  For many use cases, you may want to isolate part of the conversation (such as query
 variables) for each request while using common variables and options between requests.
 
-# `gpii.express.requestAware.router`
+# `gpii.express.middleware.requestAware`
 
-A router that creates a [`gpii.express.handler`](handler.md) instance for each request and allows that to process the
+Middleware that creates a [`gpii.express.handler`](handler.md) instance for each request and allows that to process the
 request.
 
 ## Component Options
 
-In addition to the options allowed for every [`gpii.express.router`](router.md) instance, this component has the
+In addition to the options allowed for every [`gpii.express.middleware`](middleware.md) instance, this component has the
 following unique options:
 
 | Option          | Type      | Description |
@@ -40,6 +40,6 @@ For dynamic values, you will need to use an IoC reference from within your `hand
 ```
 fluid.defaults("my.handler", {
     gradeNames: ["gpii.express.handler"],
-    foo: "{gpii.express.requestAware.router}.foo
+    foo: "{gpii.express.middleware.requestAware}.foo
 }
 ```

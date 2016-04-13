@@ -139,31 +139,23 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     // This component has descendants, wire them in first.
     fluid.each(orderedNicknames, function (childNickname) {
         var childComponent = component[childNickname];
-        if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-            // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path.
-            component.router.use(component.options.path, childComponent.router);
 
+        if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
+            gpii.express.wireMiddlewareToContainer(component.router, childComponent);
+        }
+
+        if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // Recurse from here on down.
             that.connectDirectDescendants(childComponent, path + "." + childNickname);
         }
-        else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-            if (component.router) {
-                // We have to wire our children in with our path to preserve relative pathing, so that their router will begin with our path. ORLY?
-                component.router.use(component.options.path, childComponent.getMiddlewareFn());
-            }
-            else {
-                fluid.fail("A component must expose a router in order to work with child middleware components.");
-            }
-        }
     });
+};
 
-    // After our child components are in place, wire the router to itself.
-    //
-    // This must be done here because we want to give children the chance to own part of the path before we take the rest over.
-    //
-    // The path and method have to be used here so that parameters will be parsed correctly.
-    if (fluid.hasGrade(component.options, "gpii.express.router")) {
-        component.router[component.options.method](component.options.path, component.route);
+gpii.express.wireMiddlewareToContainer = function (container, middlewareComponent) {
+    if (fluid.hasGrade(middlewareComponent.options, "gpii.express.middleware")) {
+        fluid.each(fluid.makeArray(middlewareComponent.options.method), function (methodName) {
+            container[methodName](middlewareComponent.options.path, middlewareComponent.getMiddlewareFn());
+        });
     }
 };
 
@@ -186,15 +178,9 @@ gpii.express.init = function (that) {
         // Wire together all routers and components, beginning with ourselves
         // for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
         fluid.each(orderedNicknames, function (directChildNickname) {
-            var childComponent      = that[directChildNickname];
-            if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
-                // The router has to wire its own paths to preserve methods and path variables.
-                // We just "use" it at the root level, and let it do the rest.
-                that.express.use("/", childComponent.router);
-            }
-            else if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
-                that.express.use(childComponent.getMiddlewareFn());
-            }
+            var childComponent  = that[directChildNickname];
+
+            gpii.express.wireMiddlewareToContainer(that.express, childComponent);
 
             // Recurse from here on down.
             that.connectDirectDescendants(childComponent, directChildNickname);
@@ -251,14 +237,7 @@ fluid.defaults("gpii.express", {
                 "funcName": "gpii.express.registerComponentLineage",
                 "args": ["{arguments}.0", "{gpii.express}"]
             },
-            target: "{that gpii.express.router}.options.listeners.routerLoaded"
-        },
-        {
-            record: {
-                "funcName": "gpii.express.registerComponentLineage",
-                "args": ["{arguments}.0", "{gpii.express}"]
-            },
-            target: "{that gpii.express.middleware}.options.listeners.onCreate"
+            target: "{that gpii.express.middleware}.options.listeners.onReady"
         }
     ],
     invokers: {

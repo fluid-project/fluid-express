@@ -23,18 +23,29 @@ gpii.express.router.createRouter = function (that) {
     that.events.routerLoaded.fire(that);
 };
 
+gpii.express.router.getRouter = function (that) {
+    return that.router;
+};
+
 fluid.defaults("gpii.express.router", {
-    gradeNames: ["fluid.component"],
-    method:     "use",
-    path:       null,
-    router:     null,
+    gradeNames:    ["gpii.express.middleware"],
     routerOptions: {},
     events: {
-        routerLoaded: null
+        routerLoaded: null,
+        onReady: {
+            events: {
+                routerLoaded: "routerLoaded"
+            },
+            args: ["{that}"]
+        }
     },
     invokers: {
-        route: {
-            funcName: "fluid.notImplemented"
+        getMiddlewareFn: {
+            funcName: "gpii.express.router.getRouter",
+            args:     ["{that}"]
+        },
+        middleware: {
+            funcName: "fluid.identity"
         }
     },
     listeners: {

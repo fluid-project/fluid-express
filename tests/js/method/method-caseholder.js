@@ -9,7 +9,7 @@ var gpii  = fluid.registerNamespace("gpii");
 
 var jqUnit = require("node-jqunit");
 
-require("../lib/test-helpers");
+require("../includes");
 
 var kettle = require("kettle");
 kettle.loadTestingSupport();

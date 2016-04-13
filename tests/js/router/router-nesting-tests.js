@@ -9,7 +9,6 @@ var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes.js");
-require("./fixtures");
 require("./router-nesting-caseholder");
 
 fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
@@ -19,15 +18,29 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
         express: {
             options: {
                 components: {
-                    hello: {
-                        type: "gpii.tests.express.router.hello",
+                    helloPathRouter: {
+                        type: "gpii.express.router",
                         options: {
+                            path: "/hello",
                             components: {
-                                world: {
-                                    type: "gpii.tests.express.router.hello",
+                                worldPathRouter: {
+                                    type: "gpii.express.router",
                                     options: {
                                         path:    "/world",
-                                        message: "Hello, yourself"
+                                        components: {
+                                            worldMiddleware: {
+                                                type: "gpii.tests.express.middleware.hello",
+                                                options: {
+                                                    message: "Hello, yourself"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                helloMiddleware: {
+                                    type: "gpii.tests.express.middleware.hello",
+                                    options: {
+                                        priority: "last"
                                     }
                                 }
                             }

@@ -2,7 +2,6 @@
 var fluid  = require("infusion");
 
 require("../includes");
-require("./fixtures");
 
 fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
     gradeNames: ["gpii.tests.express.caseHolder"],

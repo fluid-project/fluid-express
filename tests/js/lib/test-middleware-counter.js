@@ -11,6 +11,7 @@ gpii.tests.express.middleware.counter.middleware = function (that, req, res, nex
 
 fluid.defaults("gpii.tests.express.middleware.counter", {
     gradeNames: ["gpii.express.middleware", "fluid.modelComponent"],
+    namespace:  "counter",
     model: {
         count: 0
     },

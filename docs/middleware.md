@@ -84,11 +84,16 @@ the `middleware` invoker (see below).
 
 ### Component Options
 
-| Option      | Type       | Description |
-| ----------- | ---------- | ----------- |
-| `method`    | `{String}` | This grade provides the ability to limit itself to only operate on requests that match a particular [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).  Support lowercased string values, such as `get`, `post`, `put`, or `delete`. |
-| `namespace` | `{String}` | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
-| `priority`  | `{String}` | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
+| Option      | Type                    | Description |
+| ----------- | ----------------------- | ----------- |
+| `method`    | `{String}`              | This grade provides the ability to limit itself to only operate on requests that match a particular [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).  Support lowercased string values, such as `get`, `post`, `put`, or `delete`. |
+| `namespace` | `{String}`              | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
+| `path`      | `{String}` or `{Array}` | Which part(s) of the relative URL space this router wants to work with.  May contain wildcards and [path variables](http://expressjs.com/en/4x/api.html#req.params).  Set to `/` if you want to work with all paths. |
+| `priority`  | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
+
+Please note that although middleware may also be limited to a particular `method` or `path`, it does not do any
+routing at all to child components.  Only the middleware itself will be given the chance to work with an appropriate
+response.  Routing is only handled by [`gpii.express`](express.md) and [`gpii.express.router`](router.md) components.
 
 ### Component Invokers
 
@@ -159,3 +164,28 @@ See the ["error handler" middleware documentation](errorMiddleware.md).
 ## `gpii.express.middleware.headerSetter`
 
 See the ["header setter" middleware documentation](headerMiddleware.md).
+
+## `gpii.express.middleware.contentAware`
+
+See the [`contentAwareRouter` documentation](contentAwareRouter.md).
+
+## `gpii.express.middleware.requestAware`
+
+See the [`requestAwareRouter` documentation](requestAwareRouter.md).
+
+## `gpii.express.middleware.static`
+
+This is a wrapper for the [static router built into Express](http://expressjs.com/guide/using-middleware.html#middleware.built-in),
+which serves up filesystem content based on one or more content directories and the path used in the request URL.
+Content is matched based on the path of the static router instance and the URL.  For example, if we are enclosed
+in a router whose effective path is `/enclosing` and our `path` is `/static`, then a request for
+`/enclosing/static/path/to/file.html` will result in our searching each of the directories in `options.content` (see
+below) for the file `path/to/file.html`.
+
+### Component Options
+
+In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+
+| Option      | Type       | Description |
+| ----------- | ---------- | ----------- |
+| `content`   | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |

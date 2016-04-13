@@ -10,8 +10,6 @@ var gpii  = fluid.registerNamespace("gpii");
 // Load all of the components to be tested and our test cases
 require("../includes.js");
 
-// We borrow a router from the router tests to help in testing middleware isolation
-require("../router/fixtures");
 require("./headerMiddleware-caseholder");
 
 fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
@@ -50,13 +48,15 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                             }
                         }
                     },
-                    hello: {
-                        type: "gpii.tests.express.router.hello",
+                    helloPathRouter: {
+                        type: "gpii.express.router",
                         options: {
+                            path: "/hello",
                             components: {
                                 deepMiddleware: {
                                     type: "gpii.express.middleware.headerSetter",
                                     options: {
+                                        priority: "first",
                                         headers: {
                                             queryVar: {
                                                 fieldName: "Deep-Query-Variable",
@@ -67,8 +67,12 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                                             }
                                         }
                                     }
+                                },
+                                helloMiddleware: {
+                                    type: "gpii.tests.express.middleware.hello"
                                 }
                             }
+
                         }
                     }
                 }

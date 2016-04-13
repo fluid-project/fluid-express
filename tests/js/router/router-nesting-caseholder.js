@@ -7,7 +7,6 @@
 var fluid  = require("infusion");
 
 require("../includes");
-require("./fixtures");
 
 fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
     gradeNames: ["gpii.tests.express.caseHolder"],

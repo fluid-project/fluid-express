@@ -5,7 +5,6 @@ var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes.js");
-require("./fixtures");
 require("./router-wildcard-caseholder");
 
 fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
@@ -15,12 +14,20 @@ fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
         express: {
             options: {
                 components: {
-                    wildcard: {
-                        type: "gpii.tests.express.router.hello",
+                    wildcardPathRouter: {
+                        type: "gpii.express.router",
                         options: {
                             path:    "/wildcard/*",
-                            message: "Hello, wild world."
+                            components: {
+                                wildcardMiddleware: {
+                                    type: "gpii.tests.express.middleware.hello",
+                                    options: {
+                                        message: "Hello, wild world."
+                                    }
+                                }
+                            }
                         }
+
                     }
                 }
             }

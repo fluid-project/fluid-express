@@ -1,9 +1,9 @@
 /*
 
- An abstract grade for "request handler" modules, which respond to individual requests sent to a `requestAware` or
- `contentAware` router.  See the documentation for more details:
+    An abstract grade for "request handler" modules, which respond to individual requests sent to `requestAware` or
+    `contentAware` middleware.  See the documentation for more details:
 
- https://github.com/GPII/gpii-express/blob/master/docs/handler.md
+    https://github.com/GPII/gpii-express/blob/master/docs/handler.md
 
  */
 "use strict";

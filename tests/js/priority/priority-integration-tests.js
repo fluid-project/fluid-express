@@ -39,10 +39,10 @@ fluid.defaults("gpii.tests.express.priority.oneStringMiddleware", {
 });
 
 // Router that outputs the "work in progress" header (if found) plus its own string.
-fluid.defaults("gpii.tests.express.priority.oneStringRouter", {
-    gradeNames: ["gpii.express.router"],
+fluid.defaults("gpii.tests.express.priority.stringOutputter", {
+    gradeNames: ["gpii.express.middleware"],
     invokers: {
-        route: {
+        middleware: {
             funcName: "gpii.tests.express.priority.sendString",
             args:     ["{arguments}.0", "{arguments}.1", "{that}.options.theString"] // request, response, string
         }
@@ -115,7 +115,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                     // Confirming that the correct router gets the first shot at responding by surrounding it with
                     // wrong numbers.
                     tooSoon: {
-                        type:      "gpii.tests.express.priority.oneStringRouter",
+                        type:      "gpii.tests.express.priority.stringOutputter",
                         options: {
                             priority:  "after:justInTime",
                             namespace: "tooSoon",
@@ -124,7 +124,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                         }
                     },
                     justInTime: {
-                        type:      "gpii.tests.express.priority.oneStringRouter",
+                        type:      "gpii.tests.express.priority.stringOutputter",
                         options: {
                             priority:  "before:tooLate",
                             namespace: "justInTime",
@@ -134,7 +134,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
 
                     },
                     tooLate: {
-                        type:      "gpii.tests.express.priority.oneStringRouter",
+                        type:      "gpii.tests.express.priority.stringOutputter",
                         options: {
                             namespace: "tooLate",
                             path:      "/whoWins",
@@ -143,12 +143,12 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                     },
                     // A combination of middleware and routers that should spit out "Hello, ordered world." when hit in the right order.
                     combined: {
-                        type:      "gpii.express.router.passthrough",
+                        type: "gpii.express.router",
                         options: {
                             path:      "/combined",
                             components: {
                                 lastWord: {
-                                    type:      "gpii.tests.express.priority.oneStringRouter",
+                                    type:      "gpii.tests.express.priority.stringOutputter",
                                     options: {
                                         priority:  "after:ordered",
                                         namespace: "lastWord",

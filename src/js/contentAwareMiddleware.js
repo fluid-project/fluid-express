@@ -10,9 +10,9 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-require("./requestAwareRouter");
+require("./requestAwareMiddleware");
 
-fluid.registerNamespace("gpii.express.contentAware.router");
+fluid.registerNamespace("gpii.express.middleware.contentAware");
 
 /**
  * 
@@ -23,8 +23,8 @@ fluid.registerNamespace("gpii.express.contentAware.router");
  * @param response {Object} The Express {Response} object.
  * 
  */
-gpii.express.contentAware.router.delegateToHandler = function (that, request, response) {
-    var handlerGrades = gpii.express.contentAware.router.getHandlerGradesByContentType(that, request);
+gpii.express.middleware.contentAware.delegateToHandler = function (that, request, response) {
+    var handlerGrades = gpii.express.middleware.contentAware.getHandlerGradesByContentType(that, request);
     if (handlerGrades) {
         that.events.onRequest.fire(request, response, handlerGrades);
     }
@@ -43,7 +43,7 @@ gpii.express.contentAware.router.delegateToHandler = function (that, request, re
  * @returns {Array} An array of handler grades that will be used to create our handler.
  * 
  */
-gpii.express.contentAware.router.getHandlerGradesByContentType = function (that, request) {
+gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (that, request) {
     var orderedHandlers = gpii.express.orderByPriority(that.options.handlers);
     var matchingHandler = fluid.find(orderedHandlers, function (value) {
         return Boolean(value.contentType && request.accepts(value.contentType)) ? value : undefined;
@@ -52,11 +52,8 @@ gpii.express.contentAware.router.getHandlerGradesByContentType = function (that,
     return matchingHandler ? matchingHandler.handlerGrades : undefined;
 };
 
-// A "base" contentAware grade to allow for reuse of the request handling cycle in things other than
-// `gpii.express.router` grades (for example, the `schemaMiddleware` in `gpii-json-schema`).
-//
-fluid.defaults("gpii.express.contentAware.base", {
-    gradeNames: ["fluid.component"],
+fluid.defaults("gpii.express.middleware.contentAware", {
+    gradeNames: ["gpii.express.middleware"],
     timeout: 5000,
     distributeOptions: {
         source: "{that}.options.timeout",
@@ -75,14 +72,10 @@ fluid.defaults("gpii.express.contentAware.base", {
                 response:   "{arguments}.1"
             }
         }
-    }
-});
-
-fluid.defaults("gpii.express.contentAware.router", {
-    gradeNames: ["gpii.express.contentAware.base", "gpii.express.router"],
+    },
     invokers: {
-        route: {
-            funcName: "gpii.express.contentAware.router.delegateToHandler",
+        middleware: {
+            funcName: "gpii.express.middleware.contentAware.delegateToHandler",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     }

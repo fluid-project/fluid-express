@@ -3,7 +3,7 @@ var fluid  = require("infusion");
 var gpii   = fluid.registerNamespace("gpii");
 var jqUnit = require("node-jqunit");
 
-require("../lib/test-helpers");
+require("../includes");
 
 fluid.registerNamespace("gpii.tests.express.requestAware.caseHolder");
 

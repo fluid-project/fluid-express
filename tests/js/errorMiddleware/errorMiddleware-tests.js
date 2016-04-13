@@ -10,8 +10,6 @@ var gpii  = fluid.registerNamespace("gpii");
 // Load all of the components to be tested and our test cases
 require("../includes.js");
 
-// We borrow a router from the router tests to help in testing middleware isolation
-require("../router/fixtures");
 require("./errorMiddleware-caseholder");
 
 fluid.registerNamespace("gpii.tests.express.errorMiddleware.errorPitcher");
@@ -20,11 +18,11 @@ gpii.tests.express.errorMiddleware.errorPitcher.haltAndCatchFire = function (tha
 };
 
 fluid.defaults("gpii.tests.express.errorMiddleware.errorPitcher", {
-    gradeNames: ["gpii.express.router"],
+    gradeNames: ["gpii.express.middleware"],
     invokers: {
-        route: {
+        middleware: {
             funcName: "gpii.tests.express.errorMiddleware.errorPitcher.haltAndCatchFire",
-            args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, response, next
+            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, response, next
         }
     }
 });
@@ -74,7 +72,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                         }
                     },
                     nested: {
-                        type: "gpii.express.router.passthrough",
+                        type: "gpii.express.router",
                         options: {
                             namespace: "nested",
                             path:      "/nested",

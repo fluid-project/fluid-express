@@ -29,7 +29,7 @@ gpii.express.router["static"].init = function (that) {
 };
 
 fluid.defaults("gpii.express.router.static", {
-    gradeNames: ["fluid.modelComponent", "gpii.express.router.passthrough"],
+    gradeNames: ["gpii.express.router"],
     namespace: "static",
     content: null,
     listeners: {
