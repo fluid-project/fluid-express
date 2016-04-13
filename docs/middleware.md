@@ -17,7 +17,7 @@ The `next` function gives your middleware control over whether processing should
 chance to process a `request`, each piece of middleware is aware of the next piece of middleware in the chain.  It can
 do one of three things with this:
 
-1. Not call the `next` function (ending the conversation, presumably after sending something to the user using the `response` object).  This is what routers typically do.
+1. Not call the `next` function (ending the conversation, presumably after sending something to the user using the `response` object).
 2. Call the `next` function with an `error` argument (see "Error Handling Middleware" below), indicating that an error was encountered by this piece of middleware.
 3. Call the `next` function with no arguments, allowing the next piece of middleware to start its work.
 
