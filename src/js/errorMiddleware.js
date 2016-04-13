@@ -24,9 +24,11 @@ gpii.express.middleware.error.sendError = function (that, error, request, respon
     if (response.headersSent) {
         return next(error);
     }
+    
 
     var transformedError = fluid.model.transformWithRules({ that: that, error: error, request: request }, that.options.errorOutputRules);
-    response.status(that.options.statusCode).send(transformedError);
+    var statusCode = error.statusCode || that.options.defaultStatusCode;
+    response.status(statusCode).send(transformedError);
 };
 
 // We must use this construct so that we always expose a function with the right signature, as Express determines
@@ -38,9 +40,9 @@ gpii.express.middleware.error.getWrappedMiddlewareErrorFunction = function (that
 };
 
 fluid.defaults("gpii.express.middleware.error", {
-    gradeNames: ["gpii.express.middleware"],
-    statusCode: 500,
-    method:     "use",
+    gradeNames:        ["gpii.express.middleware"],
+    defaultStatusCode: 500,
+    method:            "use",
     mergePolicy: {
         "errorOutputRules": "nomerge"
     },

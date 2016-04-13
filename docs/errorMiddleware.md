@@ -27,10 +27,10 @@ components: {
 ```
 ## Component Options
 
-| Option             | Type       | Description |
-| ------------------ | ---------- | ----------- |
-| `statusCode`       | `{Number}` | The [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to report to the user. Defaults to `500` |
-| `errorOutputRules` | `{Object}` | The [model transformation rules](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html) that control the final error output.  By default, the whole upstream error is passed through in its entirety.  See below for more details. |
+| Option              | Type       | Description |
+| ------------------- | ---------- | ----------- |
+| `defaultStatusCode` | `{Number}` | The [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to report to the user if the error itself does not contain a `statusCode` (see below). Defaults to `500` |
+| `errorOutputRules`  | `{Object}` | The [model transformation rules](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html) that control the final error output.  By default, the whole upstream error is passed through in its entirety.  See below for more details. |
 
 ## Component Invokers
 
@@ -56,3 +56,6 @@ errorOutputRules: {
     "": "error"
 }
 ```
+
+The transformed error message will be send to the original requester via the `response` object. If `error` has a
+`statusCode` field set, that status code will be used.  Otherwise, `options.defaultStatusCode` will be used.
