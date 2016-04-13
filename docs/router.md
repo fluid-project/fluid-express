@@ -180,3 +180,25 @@ components.
 | `path`          | `{String}` or `{Array}` | Which part(s) of the relative URL space this router wants to work with.  May contain wildcards and [path variables](http://expressjs.com/en/4x/api.html#req.params).  Set to `/` if you want to work with all paths. |
 | `priority`      | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
 | `routerOptions` | `{Object}`              | The router options to use when creating our internal Express router instance.  See [the Express documentation](http://expressjs.com/api.html#router) for details. |
+
+
+## `gpii.express.router.static`
+
+This is a wrapper for the [static middleware built into Express](http://expressjs.com/guide/using-middleware.html#middleware.built-in),
+which serves up filesystem content based on one or more content directories and the path used in the request URL.
+Content is matched based on the path of the static router instance and the URL.  For example, if we are enclosed
+in a router whose effective path is `/enclosing` and our `path` is `/static`, then a request for
+`/enclosing/static/path/to/file.html` will result in our searching each of the directories in `options.content` (see
+below) for the file `path/to/file.html`.
+
+Note that this is a router because we support an array of options for `content` directories (see below).  For each
+directory, a separate instance of the Express `static` middleware is mounted under this one.  The first directory that
+contains matching content will handle the request.
+
+### Component Options
+
+In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+
+| Option      | Type       | Description |
+| ----------- | ---------- | ----------- |
+| `content`   | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |

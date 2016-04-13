@@ -171,20 +171,3 @@ See the [`contentAwareMiddleware` documentation](contentAwareMiddleware.md).
 ## `gpii.express.middleware.requestAware`
 
 See the [`requestAwareMiddleware` documentation](requestAwareMiddleware.md).
-
-## `gpii.express.middleware.static`
-
-This is a wrapper for the [static router built into Express](http://expressjs.com/guide/using-middleware.html#middleware.built-in),
-which serves up filesystem content based on one or more content directories and the path used in the request URL.
-Content is matched based on the path of the static router instance and the URL.  For example, if we are enclosed
-in a router whose effective path is `/enclosing` and our `path` is `/static`, then a request for
-`/enclosing/static/path/to/file.html` will result in our searching each of the directories in `options.content` (see
-below) for the file `path/to/file.html`.
-
-### Component Options
-
-In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
-
-| Option      | Type       | Description |
-| ----------- | ---------- | ----------- |
-| `content`   | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
