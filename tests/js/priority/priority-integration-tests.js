@@ -50,7 +50,7 @@ fluid.defaults("gpii.tests.express.priority.stringOutputter", {
 });
 
 fluid.defaults("gpii.tests.express.priority.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -91,13 +91,13 @@ fluid.defaults("gpii.tests.express.priority.caseHolder", {
     },
     components: {
         whoWinsRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "whoWins"
             }
         },
         combinedRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "combined"
             }
@@ -106,7 +106,7 @@ fluid.defaults("gpii.tests.express.priority.caseHolder", {
 });
 
 fluid.defaults("gpii.tests.express.priority.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7593,
     components: {
         express: {

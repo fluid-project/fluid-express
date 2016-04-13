@@ -4,7 +4,7 @@ var fluid  = require("infusion");
 fluid.registerNamespace("gpii.tests.express.errorMiddleware.caseHolder");
 
 fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
 
     expected: {
         string: "The root error handler responded.",
@@ -94,7 +94,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                             args:    ["The root error handler should have responded...", "{that}.options.expected.string", "{arguments}.0"]
                         },
                         {
-                            func: "gpii.tests.express.checkHeader",
+                            func: "gpii.test.express.checkHeader",
                             args: ["A custom request header should have been set for the error...", "{rootRequest}.nativeResponse", "My-Request-Went-To-Hell", "and all I got was this lousy header..."] // message, response, header, expected
                         }
                     ]
@@ -104,37 +104,37 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
     ],
     components: {
         stringRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "string"
             }
         },
         simpleRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "simple"
             }
         },
         complexRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "complex"
             }
         },
         nestedRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "nested"
             }
         },
         rootHeaderRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: ""
             }
         },
         rootRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: ""
             }

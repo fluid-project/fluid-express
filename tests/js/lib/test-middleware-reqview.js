@@ -2,17 +2,17 @@
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.tests.express.middleware.reqview");
+fluid.registerNamespace("gpii.test.express.middleware.reqview");
 
-gpii.tests.express.middleware.reqview.middleware = function (req, res) {
+gpii.test.express.middleware.reqview.middleware = function (req, res) {
     res.status(200).send(JSON.stringify({"cookies": req.cookies, "params": req.params, "query": req.query, "session": req.session, "body": req.body }));
 };
 
-fluid.defaults("gpii.tests.express.middleware.reqview", {
+fluid.defaults("gpii.test.express.middleware.reqview", {
     gradeNames: ["gpii.express.middleware"],
     invokers: {
         middleware: {
-            funcName: "gpii.tests.express.middleware.reqview.middleware",
+            funcName: "gpii.test.express.middleware.reqview.middleware",
             args:     ["{arguments}.0", "{arguments}.1"] // request, response
         }
     }

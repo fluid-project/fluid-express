@@ -2,13 +2,13 @@
 var fluid  = require("infusion");
 
 fluid.defaults("gpii.tests.express.contentAware.request", {
-    gradeNames: ["gpii.tests.express.request"],
+    gradeNames: ["gpii.test.express.request"],
     endpoint:   ""
 });
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",
@@ -25,7 +25,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{defaultRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event:    "{defaultRequest}.events.onComplete",
                             args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.default"]
                         }
@@ -39,7 +39,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{jsonRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event:    "{jsonRequest}.events.onComplete",
                             args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
                         }
@@ -53,7 +53,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{textRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event:    "{textRequest}.events.onComplete",
                             args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.text"]
                         }

@@ -11,14 +11,14 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./helpers-caseholder");
 
-fluid.defaults("gpii.tests.express.helpers.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+fluid.defaults("gpii.test.express.helpers.testEnvironment", {
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:       7030,
     components: {
         testCaseHolder: {
-            type: "gpii.tests.express.helpers.caseHolder"
+            type: "gpii.test.express.helpers.caseHolder"
         }
     }
 });
 
-gpii.tests.express.helpers.testEnvironment();
+gpii.test.express.helpers.testEnvironment();

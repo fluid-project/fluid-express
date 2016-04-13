@@ -12,7 +12,7 @@ require("../includes.js");
 require("./router-nesting-caseholder");
 
 fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7532,
     components: {
         express: {
@@ -29,7 +29,7 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
                                         path:    "/world",
                                         components: {
                                             worldMiddleware: {
-                                                type: "gpii.tests.express.middleware.hello",
+                                                type: "gpii.test.express.middleware.hello",
                                                 options: {
                                                     message: "Hello, yourself"
                                                 }
@@ -38,7 +38,7 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
                                     }
                                 },
                                 helloMiddleware: {
-                                    type: "gpii.tests.express.middleware.hello",
+                                    type: "gpii.test.express.middleware.hello",
                                     options: {
                                         priority: "last"
                                     }

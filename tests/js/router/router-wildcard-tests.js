@@ -8,7 +8,7 @@ require("../includes.js");
 require("./router-wildcard-caseholder");
 
 fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7522,
     components: {
         express: {
@@ -20,7 +20,7 @@ fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
                             path:    "/wildcard/*",
                             components: {
                                 wildcardMiddleware: {
-                                    type: "gpii.tests.express.middleware.hello",
+                                    type: "gpii.test.express.middleware.hello",
                                     options: {
                                         message: "Hello, wild world."
                                     }

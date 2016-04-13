@@ -10,7 +10,7 @@
 "use strict";
 var fluid = fluid || require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.tests.express.helpers");
+fluid.registerNamespace("gpii.test.express.helpers");
 
 var jqUnit = jqUnit || require("node-jqunit");
 
@@ -22,7 +22,7 @@ var jqUnit = jqUnit || require("node-jqunit");
  * @param body {Object} - The response body.
  * @param status {Number} - The expected status code (defaults to `200`).
  */
-gpii.tests.express.helpers.isSaneResponse = function (response, body, status) {
+gpii.test.express.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;
 
     jqUnit.assertEquals("The response should have a reasonable status code", status, response.statusCode);
@@ -34,22 +34,22 @@ gpii.tests.express.helpers.isSaneResponse = function (response, body, status) {
 };
 
 // Confirm that a response body contains the expected string content.
-gpii.tests.express.helpers.verifyStringContent = function (response, body, expectedString) {
+gpii.test.express.helpers.verifyStringContent = function (response, body, expectedString) {
 
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString) !== -1);
 };
 
 // Confirm that a JSON payload is as expected.
-gpii.tests.express.helpers.verifyJSONContent = function (response, body, expected) {
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+gpii.test.express.helpers.verifyJSONContent = function (response, body, expected) {
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     var payload = JSON.parse(body);
     jqUnit.assertDeepEq("The payload should be as expected...", expected, payload);
 };
 
-gpii.tests.express.helpers.assembleUrl = function () {
+gpii.test.express.helpers.assembleUrl = function () {
     fluid.fail("This function has been removed.  You will need to migrate to using fluid.stringTemplate instead.");
 };
 
@@ -62,7 +62,7 @@ gpii.tests.express.helpers.assembleUrl = function () {
  * @param header {String} - The header to inspect.
  * @param expected {String} - The expected value.
  */
-gpii.tests.express.checkHeader = function (message, response, header, expected) {
+gpii.test.express.checkHeader = function (message, response, header, expected) {
     var headerContent = response.headers[header.toLowerCase()];
     jqUnit.assertEquals(message, expected, headerContent);
 };
@@ -78,7 +78,7 @@ gpii.tests.express.checkHeader = function (message, response, header, expected) 
  * @returns {Object} - The tests with the required start and end steps wired into all test sequences.
  *
  */
-gpii.tests.express.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
+gpii.test.express.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
     var completeTests = fluid.copy(rawTests);
 
     for (var a = 0; a < completeTests.length; a++) {
@@ -100,9 +100,9 @@ gpii.tests.express.helpers.addRequiredSequences = function (rawTests, sequenceSt
 };
 
 // A `caseHolder` that uses `options.rawModules` and the above function to create its modules.  If you want to avoid
-// the default `sequenceStart`, extend this grade rather than `gpii.tests.express.caseHolder`.
+// the default `sequenceStart`, extend this grade rather than `gpii.test.express.caseHolder`.
 //
-fluid.defaults("gpii.tests.express.caseHolder.base", {
+fluid.defaults("gpii.test.express.caseHolder.base", {
     gradeNames: ["fluid.test.testCaseHolder"],
     mergePolicy: {
         rawModules:    "noexpand",
@@ -110,7 +110,7 @@ fluid.defaults("gpii.tests.express.caseHolder.base", {
         sequenceEnd:   "noexpand"
     },
     moduleSource: {
-        funcName: "gpii.tests.express.helpers.addRequiredSequences",
+        funcName: "gpii.test.express.helpers.addRequiredSequences",
         args:     ["{that}.options.rawModules", "{that}.options.sequenceStart", "{that}.options.sequenceEnd"]
     }
 });
@@ -122,8 +122,8 @@ fluid.defaults("gpii.tests.express.caseHolder.base", {
 //
 // A reference `testEnvironment` is included below.
 //
-fluid.defaults("gpii.tests.express.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder.base"],
+fluid.defaults("gpii.test.express.caseHolder", {
+    gradeNames: ["gpii.test.express.caseHolder.base"],
     sequenceStart: [
         { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
             func: "{testEnvironment}.events.constructServer.fire"
@@ -136,15 +136,15 @@ fluid.defaults("gpii.tests.express.caseHolder", {
 });
 
 
-// A test environment with events that match those used in `gpii.tests.express.caseHolder`.
+// A test environment with events that match those used in `gpii.test.express.caseHolder`.
 //
-fluid.defaults("gpii.tests.express.testEnvironment", {
+fluid.defaults("gpii.test.express.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     port:   7777,
     baseUrl: {
         expander: {
             funcName: "fluid.stringTemplate",
-            args: ["http://localhost:%port/", { port: "{gpii.tests.express.testEnvironment}.options.port"}]
+            args: ["http://localhost:%port/", { port: "{gpii.test.express.testEnvironment}.options.port"}]
         }
     },
     events: {

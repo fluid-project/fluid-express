@@ -13,7 +13,7 @@ require("../includes.js");
 require("./headerMiddleware-caseholder");
 
 fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
@@ -69,7 +69,7 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                                     }
                                 },
                                 helloMiddleware: {
-                                    type: "gpii.tests.express.middleware.hello"
+                                    type: "gpii.test.express.middleware.hello"
                                 }
                             }
 

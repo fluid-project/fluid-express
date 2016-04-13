@@ -9,14 +9,14 @@ fluid.registerNamespace("gpii.tests.express.middleware.caseHolder");
 
 gpii.tests.express.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
 gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
 
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     var data = JSON.parse(body);
 
@@ -31,7 +31,7 @@ gpii.tests.express.middleware.caseHolder.testCounterMiddleware = function (that)
 
 gpii.tests.express.middleware.caseHolder.testCookieMiddleware = function (response, body) {
 
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be cookie data...", body.cookies);
     if (body.cookies) {
@@ -41,7 +41,7 @@ gpii.tests.express.middleware.caseHolder.testCookieMiddleware = function (respon
 
 gpii.tests.express.middleware.caseHolder.testSessionMiddleware = function (response, body) {
 
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be session data...", body.session);
     if (body.session) {
@@ -51,7 +51,7 @@ gpii.tests.express.middleware.caseHolder.testSessionMiddleware = function (respo
 
 gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
 
-    gpii.tests.express.helpers.isSaneResponse(response, body);
+    gpii.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be body data...", body.body);
     if (body.body) {
@@ -61,7 +61,7 @@ gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware = function (re
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.tests.express.middleware.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -168,31 +168,31 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
             }
         },
         middlewareIsolationRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "hello/rv"
             }
         },
         cookieSetRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "cookie"
             }
         },
         cookieReadRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         sessionRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         bodyParserRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "reqview"
             }

@@ -6,51 +6,51 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./requestAware-caseholder");
 
-fluid.registerNamespace("gpii.tests.express.requestAware.instrumented");
-gpii.tests.express.requestAware.instrumented.handleRequest = function (that) {
+fluid.registerNamespace("gpii.test.express.requestAware.instrumented");
+gpii.test.express.requestAware.instrumented.handleRequest = function (that) {
     var instrumentedBody = "It's " + new Date() + " and I feel fine...";
     // Send the instrumented response using the standard function
     that.sendResponse(200, instrumentedBody);
 };
 
-fluid.defaults("gpii.tests.express.requestAware.instrumented", {
+fluid.defaults("gpii.test.express.requestAware.instrumented", {
     gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
-            funcName: "gpii.tests.express.requestAware.instrumented.handleRequest",
+            funcName: "gpii.test.express.requestAware.instrumented.handleRequest",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     }
 });
 
 // Grade to simulate a delay in responding
-fluid.registerNamespace("gpii.tests.express.requestAware.delayed");
+fluid.registerNamespace("gpii.test.express.requestAware.delayed");
 
 // Static function to make sure we are called the right `setTimeout`
-gpii.tests.express.requestAware.delayed.pretendToHandleRequest = function (that) {
+gpii.test.express.requestAware.delayed.pretendToHandleRequest = function (that) {
     setTimeout(that.actuallyHandleRequest, 2500);
 };
 
-gpii.tests.express.requestAware.delayed.actuallyHandleRequest = function (that) {
-    gpii.tests.express.requestAware.instrumented.handleRequest(that);
+gpii.test.express.requestAware.delayed.actuallyHandleRequest = function (that) {
+    gpii.test.express.requestAware.instrumented.handleRequest(that);
 };
 
-fluid.defaults("gpii.tests.express.requestAware.delayed", {
-    gradeNames: ["gpii.tests.express.requestAware.instrumented"],
+fluid.defaults("gpii.test.express.requestAware.delayed", {
+    gradeNames: ["gpii.test.express.requestAware.instrumented"],
     invokers: {
         handleRequest: {
-            funcName: "gpii.tests.express.requestAware.delayed.pretendToHandleRequest",
+            funcName: "gpii.test.express.requestAware.delayed.pretendToHandleRequest",
             args:     ["{that}"]
         },
         actuallyHandleRequest: {
-            funcName: "gpii.tests.express.requestAware.delayed.actuallyHandleRequest",
+            funcName: "gpii.test.express.requestAware.delayed.actuallyHandleRequest",
             args:     ["{that}"]
         }
     }
 });
 
 // Grade to simulate a timeout (or the lack of a meaningful response).
-fluid.defaults("gpii.tests.express.requestAware.timeout", {
+fluid.defaults("gpii.test.express.requestAware.timeout", {
     gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
@@ -59,8 +59,8 @@ fluid.defaults("gpii.tests.express.requestAware.timeout", {
     }
 });
 
-fluid.defaults("gpii.tests.express.requestAware.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+fluid.defaults("gpii.test.express.requestAware.testEnvironment", {
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7433,
     components: {
         express: {
@@ -70,21 +70,21 @@ fluid.defaults("gpii.tests.express.requestAware.testEnvironment", {
                         type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/instrumented",
-                            handlerGrades: ["gpii.tests.express.requestAware.delayed"]
+                            handlerGrades: ["gpii.test.express.requestAware.delayed"]
                         }
                     },
                     delayed: {
                         type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/delayed",
-                            handlerGrades: ["gpii.tests.express.requestAware.delayed"]
+                            handlerGrades: ["gpii.test.express.requestAware.delayed"]
                         }
                     },
                     timeout: {
                         type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/timeout",
-                            handlerGrades: ["gpii.tests.express.requestAware.timeout"],
+                            handlerGrades: ["gpii.test.express.requestAware.timeout"],
                             timeout:       2000
                         }
                     }
@@ -92,9 +92,9 @@ fluid.defaults("gpii.tests.express.requestAware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.requestAware.caseHolder"
+            type: "gpii.test.express.requestAware.caseHolder"
         }
     }
 });
 
-gpii.tests.express.requestAware.testEnvironment();
+gpii.test.express.requestAware.testEnvironment();

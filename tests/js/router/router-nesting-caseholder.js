@@ -9,7 +9,7 @@ var fluid  = require("infusion");
 require("../includes");
 
 fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -21,7 +21,7 @@ fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
                             func: "{topLevelRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event: "{topLevelRequest}.events.onComplete",
                             args: ["{topLevelRequest}.nativeResponse", "{arguments}.0", "Hello, World"]
                         }
@@ -35,7 +35,7 @@ fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
                             func: "{deepRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event: "{deepRequest}.events.onComplete",
                             args: ["{deepRequest}.nativeResponse", "{arguments}.0", "Hello, yourself"]
                         }
@@ -46,13 +46,13 @@ fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
     ],
     components: {
         topLevelRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "hello"
             }
         },
         deepRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "hello/world"
             }

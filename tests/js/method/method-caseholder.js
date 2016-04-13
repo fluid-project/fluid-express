@@ -37,7 +37,7 @@ fluid.defaults("gpii.tests.express.method.request", {
 });
 
 fluid.defaults("gpii.tests.express.method.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [

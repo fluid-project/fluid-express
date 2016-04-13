@@ -5,19 +5,19 @@ var jqUnit = require("node-jqunit");
 
 require("../includes");
 
-fluid.registerNamespace("gpii.tests.express.requestAware.caseHolder");
+fluid.registerNamespace("gpii.test.express.requestAware.caseHolder");
 
-gpii.tests.express.requestAware.caseHolder.testRequestAwareDelayedResponse = function (responseObject, response, body) {
-    gpii.tests.express.helpers.isSaneResponse(response, body, 200);
+gpii.test.express.requestAware.caseHolder.testRequestAwareDelayedResponse = function (responseObject, response, body) {
+    gpii.test.express.helpers.isSaneResponse(response, body, 200);
     responseObject.body = body;
 };
 
-gpii.tests.express.requestAware.caseHolder.testRequestAwareTimeoutResponse = function (response, body) {
-    gpii.tests.express.helpers.isSaneResponse(response, body, 500);
+gpii.test.express.requestAware.caseHolder.testRequestAwareTimeoutResponse = function (response, body) {
+    gpii.test.express.helpers.isSaneResponse(response, body, 500);
 };
 
 // Look at two sequential requests and confirm that they are different.
-gpii.tests.express.requestAware.caseHolder.testRequestAwareIntegrity = function (firstResponseString, secondResponseString) {
+gpii.test.express.requestAware.caseHolder.testRequestAwareIntegrity = function (firstResponseString, secondResponseString) {
     // If we can evolve the response into JSON, we do.
     var firstResponseBody  = firstResponseString;
     var secondResponseBody = secondResponseString;
@@ -33,8 +33,8 @@ gpii.tests.express.requestAware.caseHolder.testRequestAwareIntegrity = function 
 };
 
 
-fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+fluid.defaults("gpii.test.express.requestAware.caseHolder", {
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -46,7 +46,7 @@ fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
                             func: "{requestAwareInstrumentedRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.requestAware.caseHolder.testRequestAwareDelayedResponse",
+                            listener: "gpii.test.express.requestAware.caseHolder.testRequestAwareDelayedResponse",
                             event:    "{requestAwareInstrumentedRequest}.events.onComplete",
                             args:     ["{requestAwareInstrumentedRequest}", "{requestAwareInstrumentedRequest}.nativeResponse", "{arguments}.0"]
                         },
@@ -54,7 +54,7 @@ fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
                             func: "{requestAwareSecondInstrumentedRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.requestAware.caseHolder.testRequestAwareIntegrity",
+                            listener: "gpii.test.express.requestAware.caseHolder.testRequestAwareIntegrity",
                             event:    "{requestAwareSecondInstrumentedRequest}.events.onComplete",
                             args:     ["{requestAwareInstrumentedRequest}.body", "{arguments}.0"]
                         }
@@ -68,7 +68,7 @@ fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
                             func: "{requestAwareDelayedRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.requestAware.caseHolder.testRequestAwareDelayedResponse",
+                            listener: "gpii.test.express.requestAware.caseHolder.testRequestAwareDelayedResponse",
                             event:    "{requestAwareDelayedRequest}.events.onComplete",
                             args:     ["{requestAwareDelayedRequest}", "{requestAwareDelayedRequest}.nativeResponse", "{arguments}.0"]
                         },
@@ -76,7 +76,7 @@ fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
                             func: "{requestAwareSecondDelayedRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.requestAware.caseHolder.testRequestAwareIntegrity",
+                            listener: "gpii.test.express.requestAware.caseHolder.testRequestAwareIntegrity",
                             event:    "{requestAwareSecondDelayedRequest}.events.onComplete",
                             args:     ["{requestAwareDelayedRequest}.body", "{arguments}.0"]
                         }
@@ -90,7 +90,7 @@ fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
                             func: "{requestAwareTimeoutRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.requestAware.caseHolder.testRequestAwareTimeoutResponse",
+                            listener: "gpii.test.express.requestAware.caseHolder.testRequestAwareTimeoutResponse",
                             event:    "{requestAwareTimeoutRequest}.events.onComplete",
                             args:     ["{requestAwareTimeoutRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -104,31 +104,31 @@ fluid.defaults("gpii.tests.express.requestAware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         requestAwareInstrumentedRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "instrumented"
             }
         },
         requestAwareSecondInstrumentedRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "instrumented"
             }
         },
         requestAwareDelayedRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "delayed"
             }
         },
         requestAwareSecondDelayedRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "delayed"
             }
         },
         requestAwareTimeoutRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "timeout"
             }

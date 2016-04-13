@@ -28,7 +28,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.errorPitcher", {
 });
 
 fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7551,
     components: {
         express: {

@@ -16,7 +16,7 @@ fluid.defaults("gpii.tests.express.method.router", {
     path: "/",
     components: {
         counter: {
-            type: "gpii.tests.express.middleware.counter",
+            type: "gpii.test.express.middleware.counter",
             options: {
                 priority: "first"
             }
@@ -62,7 +62,7 @@ fluid.defaults("gpii.tests.express.method.deleteHandler", {
 });
 
 fluid.defaults("gpii.tests.express.method.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7521,
     components: {
         express: {

@@ -5,7 +5,7 @@ require("../includes");
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
 fluid.defaults("gpii.tests.express.router.static.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -17,7 +17,7 @@ fluid.defaults("gpii.tests.express.router.static.caseHolder", {
                             func: "{staticRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event: "{staticRequest}.events.onComplete",
                             args: ["{staticRequest}.nativeResponse", "{arguments}.0", "body of the index"]
                         }
@@ -31,7 +31,7 @@ fluid.defaults("gpii.tests.express.router.static.caseHolder", {
                             func: "{staticCustomRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event: "{staticCustomRequest}.events.onComplete",
                             args: ["{staticCustomRequest}.nativeResponse", "{arguments}.0", "custom page"]
                         }
@@ -46,7 +46,7 @@ fluid.defaults("gpii.tests.express.router.static.caseHolder", {
                         },
                         {
                             event:    "{staticMultiballPrimaryRequest}.events.onComplete",
-                            listener: "gpii.tests.express.helpers.verifyJSONContent",
+                            listener: "gpii.test.express.helpers.verifyJSONContent",
                             args: ["{staticMultiballPrimaryRequest}.nativeResponse", "{arguments}.0", { "foo": "primary"}]
                         }
                     ]
@@ -60,7 +60,7 @@ fluid.defaults("gpii.tests.express.router.static.caseHolder", {
                         },
                         {
                             event:    "{staticMultiballSecondaryRequest}.events.onComplete",
-                            listener: "gpii.tests.express.helpers.verifyJSONContent",
+                            listener: "gpii.test.express.helpers.verifyJSONContent",
                             args: ["{staticMultiballSecondaryRequest}.nativeResponse", "{arguments}.0", { "bar": "secondary"}]
                         }
                     ]
@@ -73,26 +73,26 @@ fluid.defaults("gpii.tests.express.router.static.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         staticRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: ""
             }
         },
         staticCustomRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "custom.html"
             }
         },
         staticMultiballPrimaryRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "multiball/primary.json",
                 json: true
             }
         },
         staticMultiballSecondaryRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "multiball/secondary.json",
                 json: true

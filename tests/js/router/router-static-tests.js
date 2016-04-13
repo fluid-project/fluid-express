@@ -11,7 +11,7 @@ require("../includes");
 require("./router-static-caseholder");
 
 fluid.defaults("gpii.tests.express.router.static.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7432,
     components: {
         express: {

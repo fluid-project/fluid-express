@@ -23,7 +23,7 @@ fluid.defaults("gpii.tests.express.router.params.deepParamHandler", {
 });
 
 fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7512,
     components: {
         express: {

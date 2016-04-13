@@ -4,7 +4,7 @@ var fluid  = require("infusion");
 require("../includes");
 
 fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
-    gradeNames: ["gpii.tests.express.caseHolder"],
+    gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
             tests: [
@@ -16,7 +16,7 @@ fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
                             func: "{wildcardRootRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event: "{wildcardRootRequest}.events.onComplete",
                             args: ["{wildcardRootRequest}.nativeResponse", "{arguments}.0", "Hello, wild world."]
                         }
@@ -30,7 +30,7 @@ fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
                             func: "{wildcardDeepRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.helpers.verifyStringContent",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event: "{wildcardDeepRequest}.events.onComplete",
                             args: ["{wildcardDeepRequest}.nativeResponse", "{arguments}.0", "Hello, wild world."]
                         }
@@ -41,13 +41,13 @@ fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
     ],
     components: {
         wildcardRootRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "wildcard/"
             }
         },
         wildcardDeepRequest: {
-            type: "gpii.tests.express.request",
+            type: "gpii.test.express.request",
             options: {
                 endpoint: "wildcard/many/levels/deep"
             }

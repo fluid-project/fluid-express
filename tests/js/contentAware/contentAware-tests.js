@@ -69,7 +69,7 @@ fluid.defaults("gpii.tests.express.contentAware.middleware", {
 });
 
 fluid.defaults("gpii.tests.express.contentAware.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   6533,
     components: {
         express: {

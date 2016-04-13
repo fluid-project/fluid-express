@@ -10,20 +10,20 @@ require("../lib");
 require("./middleware-caseholder");
 
 fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
-    gradeNames: ["gpii.tests.express.testEnvironment"],
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
             options: {
                 components: {
                     counter: {
-                        type: "gpii.tests.express.middleware.counter",
+                        type: "gpii.test.express.middleware.counter",
                         options: {
                             priority: "first"
                         }
                     },
                     cookieSetter: {
-                        type: "gpii.tests.express.middleware.cookie",
+                        type: "gpii.test.express.middleware.cookie",
                         options: {
                             namespace: "cookieSetter",
                             priority:  "after:counter"
@@ -50,7 +50,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                                             type: "gpii.express.middleware.cookieparser"
                                                         },
                                                         hello: {
-                                                            type: "gpii.tests.express.middleware.hello",
+                                                            type: "gpii.test.express.middleware.hello",
                                                             options: {
                                                                 message: "This is provided by a module nested four levels deep.",
                                                                 priority: "last"
@@ -60,7 +60,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                                 }
                                             },
                                             reqView: {
-                                                type: "gpii.tests.express.middleware.reqview",
+                                                type: "gpii.test.express.middleware.reqview",
                                                 options: {
                                                     priority: "last"
                                                 }
@@ -83,7 +83,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                                 }
                                             },
                                             world: {
-                                                type: "gpii.tests.express.middleware.hello",
+                                                type: "gpii.test.express.middleware.hello",
                                                 options: {
                                                     message: "Hello, yourself"
                                                 }
@@ -92,7 +92,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     }
                                 },
                                 hello: {
-                                    type:     "gpii.tests.express.middleware.hello",
+                                    type:     "gpii.test.express.middleware.hello",
                                     priority: "last"
                                 }
                             }
@@ -121,7 +121,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                 //     }
                                 // },
                                 reqView: {
-                                    type: "gpii.tests.express.middleware.reqview",
+                                    type: "gpii.test.express.middleware.reqview",
                                     options: {
                                         priority: "last"
                                     }
