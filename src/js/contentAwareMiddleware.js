@@ -23,13 +23,13 @@ fluid.registerNamespace("gpii.express.middleware.contentAware");
  * @param response {Object} The Express {Response} object.
  * 
  */
-gpii.express.middleware.contentAware.delegateToHandler = function (that, request, response) {
+gpii.express.middleware.contentAware.delegateToHandler = function (that, request, response, next) {
     var handlerGrades = gpii.express.middleware.contentAware.getHandlerGradesByContentType(that, request);
     if (handlerGrades) {
         that.events.onRequest.fire(request, response, handlerGrades);
     }
     else {
-        response.status(500).send({ok: false, message: "Could not find an appropriate handler for the content types you accept."});
+        next({ isError: true, message: that.options.messages.noHandlerFound });
     }
 };
 
@@ -55,6 +55,9 @@ gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (t
 fluid.defaults("gpii.express.middleware.contentAware", {
     gradeNames: ["gpii.express.middleware"],
     timeout: 5000,
+    messages: {
+        noHandlerFound: "Could not find an appropriate handler for the content types you accept."
+    },
     distributeOptions: {
         source: "{that}.options.timeout",
         target: "{that gpii.express.handler}.options.timeout"
