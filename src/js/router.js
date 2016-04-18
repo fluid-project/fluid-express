@@ -43,9 +43,6 @@ fluid.defaults("gpii.express.router", {
         getMiddlewareFn: {
             funcName: "gpii.express.router.getRouter",
             args:     ["{that}"]
-        },
-        middleware: {
-            funcName: "fluid.identity"
         }
     },
     listeners: {
