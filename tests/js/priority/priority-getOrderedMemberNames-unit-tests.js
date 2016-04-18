@@ -6,7 +6,6 @@ require("../../../");
 
 var jqUnit = require("node-jqunit");
 
-
 jqUnit.module("Testing `getOrderedNicknames` function...");
 jqUnit.test("A list of nicknames should be reordered if it has namespaces and priorities...", function () {
     var nicks = ["beta", "alpha", "charlie"];
@@ -19,10 +18,7 @@ jqUnit.test("A list of nicknames should be reordered if it has namespaces and pr
                 }
             },
             beta: {
-                type: "fluid.component",
-                options: {
-                    namespace: "beta"
-                }
+                type: "fluid.component"
             },
             alpha: {
                 type: "fluid.component",
@@ -33,7 +29,7 @@ jqUnit.test("A list of nicknames should be reordered if it has namespaces and pr
         }
     });
 
-    var output = gpii.express.getOrderedNicknames(nicks, component);
+    var output = gpii.express.getOrderedMemberNames(nicks, component);
     jqUnit.assertDeepEq("The nicknames should be in the correct order now...", ["alpha", "beta", "charlie"], output);
 });
 
@@ -53,7 +49,7 @@ jqUnit.test("A list of nicknames should remain in the same order if it has no na
         }
     });
 
-    var output = gpii.express.getOrderedNicknames(nicks, component);
-    jqUnit.assertDeepEq("The nicknames should remain in the original order...", ["whiskey", "tango", "foxtrot"], output);
+    var output = gpii.express.getOrderedMemberNames(nicks, component);
+    jqUnit.assertDeepEq("The nicknames should remain in the original order...", ["foxtrot", "tango", "whiskey"], output);
 });
 

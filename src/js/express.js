@@ -15,27 +15,6 @@ fluid.registerNamespace("gpii.express");
 
 /**
  *
- * @param mapOrArray {Object} - A map or array to be sorted.
- * @returns {Array} - An array of elements, ordered by namespace and priority.
- *
- * Sorts an array or map by `priority`: http://docs.fluidproject.org/infusion/development/Priorities.html
- *
- * As maps do not preserve order, an array is always returned.  When used with a map, the keys will be discarded.
- *
- */
-gpii.express.orderByPriority = function (mapOrArray) {
-    var array = fluid.hashToArray(mapOrArray, "namespace", function (newEl, el) {
-        newEl = fluid.censorKeys(el, ["priority"]);
-        newEl.priority = fluid.parsePriority(el.priority, 0, false);
-        return newEl;
-    });
-
-    fluid.sortByPriority(array);
-    return array;
-};
-
-/**
- *
  * @param that {Object} - The `gpii.express` instance itself.
  *
  * Look up the path (parent, sibling, child) relationships for a node.  Used in constructing the hierarchy we will
@@ -89,19 +68,7 @@ gpii.express.registerComponentLineage = function (childComponent, expressCompone
 
 /**
  *
- * @param entry {Object} - A single entry object, which is expected to contain a `nick` variable.
- * @returns {String} - The contents of the `nick` variable.
- *
- * Static function for use with `Array.prototype.map`.  Extracts just the "nick" variable from the structure we construct in `getOrderedNicknames`.
- *
- */
-gpii.express.extractNicks = function (entry) {
-    return entry.nick;
-};
-
-/**
- *
- * @param nicknames {Object} - An unordered array of "nicknames" representing children of a given component.
+ * @param nicknames {Array} - An unordered array of "nicknames" representing children of a given component.
  * @param component {Object} - The component we will resolve the "nicknames" against.
  * @returns {Array} - An array that contains all of the original "nicknames", but ordered by priority and namespace.
  *
@@ -109,24 +76,14 @@ gpii.express.extractNicks = function (entry) {
  * produce an ordered array.
  *
  */
-gpii.express.getOrderedNicknames = function (nicknames, component) {
-    // Create an array that combines the "nicknames" in `that.childrenByParent[path]` with each component's hints about
-    // `priority` and `namespace`.
-    var nickNamesWithComponentPrioritiesAndNamespaces = [];
-    fluid.each(nicknames, function (childNickname) {
-        var childComponent = component[childNickname];
-        nickNamesWithComponentPrioritiesAndNamespaces.push({ nick: childNickname, namespace: childComponent.options.namespace, priority: childComponent.options.priority });
+gpii.express.getOrderedMemberNames = function (nicknames, component) {
+    var relevantChildComponents = fluid.filterKeys(component, fluid.makeArray(nicknames));
+    var digestedComponentEntries = fluid.transform(relevantChildComponents, function (entry, memberName) {
+        return { priority: entry.options.priority, namespace: entry.options.namespace, memberName: memberName};
     });
 
-    // Order the combined data by priority so that we have predictable control over which is loaded when, then map it
-    // back to a simple ordered array.
-    // return gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
-
-    return fluid.getMembers(gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces), "nick");
-
-    // TODO:  Get the "companion" versions of kettle and jqunit so that we can try the new method below.
-    // var orderedNicks = fluid.parsePriorityRecords(nickNamesWithComponentPrioritiesAndNamespaces, "Express entry", true);
-    // return orderedNicks.map(gpii.express.extractNicks);
+    var orderedDigestedEntries  = fluid.parsePriorityRecords(digestedComponentEntries, "gpii-express middleware component entry");
+    return fluid.getMembers(orderedDigestedEntries, "memberName");
 };
 
 /**
@@ -140,12 +97,11 @@ gpii.express.getOrderedNicknames = function (nicknames, component) {
  *
  */
 gpii.express.connectDirectDescendants = function (that, component, path) {
-    var orderedNicknames = gpii.express.getOrderedNicknames(that.childrenByParent[path], component);
+    var orderedMemberNames = gpii.express.getOrderedMemberNames(that.childrenByParent[path], component);
 
     // This component has descendants, wire them in first.
-    fluid.each(orderedNicknames, function (childNickname) {
-        var childComponent = component[childNickname];
-
+    fluid.each(orderedMemberNames, function (memberName) {
+        var childComponent = component[memberName];
         if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
             gpii.express.wireMiddlewareToContainer(component.router, childComponent);
         }
@@ -153,7 +109,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // Recurse from here on down.
             // TODO: Improve this to account for segments with dots in their name, as this will break in the future.
-            that.connectDirectDescendants(childComponent, path + "." + childNickname);
+            that.connectDirectDescendants(childComponent, path + "." + memberName);
         }
     });
 };
@@ -180,17 +136,16 @@ gpii.express.init = function (that) {
     else {
         that.express = express();
 
-        var orderedNicknames = gpii.express.getOrderedNicknames(that.directChildrenOfInterest, that);
+        var orderedMemberNames = gpii.express.getOrderedMemberNames(that.directChildrenOfInterest, that);
 
         // Wire together all routers and components, beginning with ourselves
         // for (var a = 0; a < that.directChildrenOfInterest.length; a++) {
-        fluid.each(orderedNicknames, function (directChildNickname) {
-            var childComponent  = that[directChildNickname];
-
+        fluid.each(orderedMemberNames, function (memberName) {
+            var childComponent = that[memberName];
             gpii.express.wireMiddlewareToContainer(that.express, childComponent);
 
             // Recurse from here on down.
-            that.connectDirectDescendants(childComponent, directChildNickname);
+            that.connectDirectDescendants(childComponent, memberName);
         });
 
         that.express.set("port", that.options.port);

@@ -16,28 +16,24 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
             options: {
                 components: {
                     counter: {
-                        type: "gpii.test.express.middleware.counter",
-                        options: {
-                            priority: "first"
-                        }
+                        type: "gpii.test.express.middleware.counter"
                     },
                     cookieSetter: {
                         type: "gpii.test.express.middleware.cookie",
                         options: {
-                            namespace: "cookieSetter",
                             priority:  "after:counter"
                         }
                     },
                     hello: {
                         type: "gpii.express.router",
                         options: {
-                            namespace: "hello",
                             path:      "/hello",
                             priority:  "after:cookieSetter",
                             components: {
                                 nestedReqView: {
                                     type: "gpii.express.router",
                                     options: {
+                                        priority: "before:world",
                                         path: "/rv",
                                         components: {
                                             reqviewChild: {
@@ -52,7 +48,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                                             type: "gpii.test.express.middleware.hello",
                                                             options: {
                                                                 message: "This is provided by a module nested four levels deep.",
-                                                                priority: "last"
+                                                                priority: "after:cookieparser"
                                                             }
                                                         }
                                                     }
@@ -61,7 +57,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                             reqView: {
                                                 type: "gpii.test.express.middleware.reqview",
                                                 options: {
-                                                    priority: "last"
+                                                    priority: "after:reqviewChild"
                                                 }
                                             }
                                         }
@@ -75,7 +71,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                             session: {
                                                 type: "gpii.express.middleware.session",
                                                 options: {
-                                                    priority: "first",
+                                                    priority: "before:world",
                                                     sessionOptions: {
                                                         secret: "Printer, printer take a hint-ter."
                                                     }
@@ -92,7 +88,8 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                 },
                                 hello: {
                                     type:     "gpii.test.express.middleware.hello",
-                                    priority: "last"
+                                    // TODO:  Why don't "last", "first" or number values work for priority?
+                                    priority: "after:world"
                                 }
                             }
                         }
@@ -102,27 +99,34 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                         options: {
                             path: "/reqview",
                             components: {
-                                // json: {
-                                //     type: "gpii.express.middleware.bodyparser.json"
-                                // },
-                                // urlencoded: {
-                                //     type: "gpii.express.middleware.bodyparser.urlencoded"
-                                // },
-                                // cookieparser: {
-                                //     type: "gpii.express.middleware.cookieparser"
-                                // },
-                                // session: {
-                                //     type: "gpii.express.middleware.session",
-                                //     options: {
-                                //         sessionOptions: {
-                                //             secret: "Printer, printer take a hint-ter."
-                                //         }
-                                //     }
-                                // },
+                                json: {
+                                    type: "gpii.express.middleware.bodyparser.json"
+                                },
+                                urlencoded: {
+                                    type: "gpii.express.middleware.bodyparser.urlencoded",
+                                    options: {
+                                        priority: "after:json"
+                                    }
+                                },
+                                cookieparser: {
+                                    type: "gpii.express.middleware.cookieparser",
+                                    options: {
+                                        priority: "after:urlencoded"
+                                    }
+                                },
+                                session: {
+                                    type: "gpii.express.middleware.session",
+                                    options: {
+                                        priority: "after:cookieparser",
+                                        sessionOptions: {
+                                            secret: "Printer, printer take a hint-ter."
+                                        }
+                                    }
+                                },
                                 reqView: {
                                     type: "gpii.test.express.middleware.reqview",
                                     options: {
-                                        priority: "last"
+                                        priority: "after:session"
                                     }
                                 }
                             }

@@ -37,15 +37,12 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                     simpleErrorPitcher: {
                         type: "gpii.tests.express.errorMiddleware.errorPitcher",
                         options: {
-                            namespace: "simpleErrorPitcher",
-                            priority: "first",
                             path: "/simple"
                         }
                     },
                     simpleErrorCatcher: {
                         type: "gpii.express.middleware.error",
                         options: {
-                            namespace: "simpleErrorCatcher",
                             priority: "after:simpleErrorPitcher"
                         }
                     },
@@ -53,7 +50,6 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                         type: "gpii.tests.express.errorMiddleware.errorPitcher",
                         options: {
                             path: "/complex",
-                            namespace: "complexErrorPitcher",
                             priority: "after:simpleErrorCatcher"
                         }
                     },
@@ -79,14 +75,13 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                                 deepErrorPitcher: {
                                     type: "gpii.tests.express.errorMiddleware.errorPitcher",
                                     options: {
-                                        path: "/",
-                                        priority: "first"
+                                        path: "/"
                                     }
                                 },
                                 deepErrorCatcher: {
                                     type: "gpii.express.middleware.error",
                                     options: {
-                                        priority: "last",
+                                        priority: "after:deepErrorPitcher",
                                         errorOutputRules: {
                                             "": { literalValue: "The deep error handler responded." }
                                         }

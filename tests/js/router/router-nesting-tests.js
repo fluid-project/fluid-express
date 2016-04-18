@@ -39,7 +39,8 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
                                 helloMiddleware: {
                                     type: "gpii.test.express.middleware.hello",
                                     options: {
-                                        priority: "last"
+                                        // TODO:  Why don't "last", "first" or number values work for priority?
+                                        priority: "after:worldPathRouter"
                                     }
                                 }
                             }

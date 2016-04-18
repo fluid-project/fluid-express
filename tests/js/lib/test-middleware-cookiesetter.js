@@ -11,6 +11,7 @@ gpii.test.express.middleware.cookie.middleware = function (req, res) {
 fluid.defaults("gpii.test.express.middleware.cookie", {
     gradeNames: ["gpii.express.middleware"],
     method:     "get",
+    path:       "/cookie",
     invokers: {
         middleware: {
             funcName: "gpii.test.express.middleware.cookie.middleware",

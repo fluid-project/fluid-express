@@ -44,9 +44,8 @@ gpii.express.middleware.contentAware.delegateToHandler = function (that, request
  * 
  */
 gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (that, request) {
-    // TODO:  Get the "companion" versions of kettle and jqunit so that we can try the new method below.
-    // var orderedHandlers = fluid.parsePriorityRecords(that.options.handlers, "Content aware entry", true);
-    var orderedHandlers = gpii.express.orderByPriority(that.options.handlers);
+    var orderedHandlers = fluid.parsePriorityRecords(that.options.handlers, "Content aware entry");
+    // var orderedHandlers = gpii.express.orderByPriority(that.options.handlers);
     var matchingHandler = fluid.find(orderedHandlers, function (value) {
         return Boolean(value.contentType && request.accepts(value.contentType)) ? value : undefined;
     });

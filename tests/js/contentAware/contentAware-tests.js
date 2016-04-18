@@ -48,12 +48,13 @@ fluid.defaults("gpii.tests.express.contentAware.middleware", {
     handlers: {
         // Confirm that we support "priorities".  This should not be allowed to handle requests with no `accept` header.
         badDefault: {
+            // TODO:  Why don't "last", "first" or number values work for priority?
+            priority:      "after:goodDefault",
             contentType:   "default",
             handlerGrades: ["gpii.tests.express.contentAware.badDefaultHandler"]
         },
         // Confirm that we support "priorities".  This should be allowed to handle request with no `accept` headers.
         goodDefault: {
-            priority:      "first",
             contentType:   "default",
             handlerGrades: ["gpii.tests.express.contentAware.defaultHandler"]
         },
