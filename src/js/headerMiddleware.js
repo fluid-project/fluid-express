@@ -31,12 +31,8 @@ gpii.express.middleware.headerSetter.addHeaders = function (that, err, req, res,
         res.setHeader(headerOptions.fieldName, fieldValue);
     });
 
-    if (err) {
-        next(err);
-    }
-    else {
-        next();
-    }
+    // Ensure that the presence (or absence) of an error is correctly conveyed to the next piece of middleware.
+    next.apply(null, fluid.makeArray(err));
 };
 
 
