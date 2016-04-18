@@ -37,18 +37,17 @@ fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
                                 mergeParams: true
                             },
                             components: {
+                                deepMiddleware: {
+                                    type: "gpii.express.middleware.requestAware",
+                                    options: {
+                                        priority: "last",
+                                        handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
+                                    }
+                                },
                                 deepPathedMiddleware: {
                                     type: "gpii.express.middleware.requestAware",
                                     options: {
                                         path: "/deep",
-                                        handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
-                                    }
-                                },
-                                deepMiddleware: {
-                                    type: "gpii.express.middleware.requestAware",
-                                    options: {
-                                        // TODO:  Why don't "last", "first" or number values work for priority?
-                                        priority: "after:deepPathedMiddleware",
                                         handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
                                     }
                                 }

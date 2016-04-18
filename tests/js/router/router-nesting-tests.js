@@ -22,6 +22,12 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
                         options: {
                             path: "/hello",
                             components: {
+                                helloMiddleware: {
+                                    type: "gpii.test.express.middleware.hello",
+                                    options: {
+                                        priority: "last"
+                                    }
+                                },
                                 worldPathRouter: {
                                     type: "gpii.express.router",
                                     options: {
@@ -34,13 +40,6 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
                                                 }
                                             }
                                         }
-                                    }
-                                },
-                                helloMiddleware: {
-                                    type: "gpii.test.express.middleware.hello",
-                                    options: {
-                                        // TODO:  Why don't "last", "first" or number values work for priority?
-                                        priority: "after:worldPathRouter"
                                     }
                                 }
                             }

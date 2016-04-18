@@ -63,6 +63,10 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                         }
                                     }
                                 },
+                                hello: {
+                                    type:     "gpii.test.express.middleware.hello",
+                                    priority: "last"
+                                },
                                 world: {
                                     type: "gpii.express.router",
                                     options: {
@@ -85,11 +89,6 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                             }
                                         }
                                     }
-                                },
-                                hello: {
-                                    type:     "gpii.test.express.middleware.hello",
-                                    // TODO:  Why don't "last", "first" or number values work for priority?
-                                    priority: "after:world"
                                 }
                             }
                         }
