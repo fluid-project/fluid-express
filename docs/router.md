@@ -35,7 +35,8 @@ middleware will be given the chance to work with the request in the order determ
 Let's say we have an instance of `gpii.express` that is configured as follows:
 
 ```
-gpii.express({
+fluid.defaults("my.namespaced.express.grade", {
+    gradeNames: ["gpii.express"],
     port: 8080,
     components: {
         router1: {
@@ -83,6 +84,7 @@ gpii.express({
         }
     }
 });
+my.namespaced.express.grade();
 ```
 
 Let's assume that `my.package.middlewareThatPassesThingsOn` allows processing to continue past itself, and that
@@ -99,7 +101,8 @@ Now let's look at the same components in a different arrangement, so that we can
 inherited, and how relative paths work.
 
 ```
-gpii.express({
+fluid.defaults("my.other.namespaced.express.grade", {
+    gradeNames: ["gpii.express"],
     port: 8080,
     components: {
         router2: {
@@ -149,6 +152,8 @@ gpii.express({
         }
     }
 });
+
+my.other.namespaced.express.grade();
 ```
 
 Now, if a request for `GET /foo` is received, it will be evaluated against `router2`, which can work with it.  `router2`

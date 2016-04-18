@@ -8,7 +8,8 @@ based on the contents of `options.headers` (see below).
 This grade can only do its job when it is added as a child component of either a `gpii.express` or `gpii.express.router`
 instance.  Here's an example of adding a single header to all responses send from a `gpii.express` instance:
 
-    gpii.express({
+    fluid.defaults("my.express.grade", {
+        gradeNames: ["gpii.express"],
         path: 8080,
         components: {
             headerSetter: {
@@ -24,7 +25,8 @@ instance.  Here's an example of adding a single header to all responses send fro
             }
             // TODO:  add at least one actual router here
         }
-    });
+    }
+    my.express.grade();
 
 Note that as with any other `gpii.express.middleware`, this component will only add headers for conversations it's
 involved in.  When you add an instance of this component as a component of `gpii.express`, it will be allowed to modify
@@ -32,7 +34,8 @@ every response for the whole instance, unless other middleware steps in and inte
 
 Here's an example of how this component can be used with a `gpii.express.router` instance:
 
-    gpii.express({
+    fluid.defaults("my.other.express.grade", {
+        gradeNames: ["gpii.express"],
         path: 8081,
         components: {
             staticRouter: {
@@ -62,6 +65,7 @@ Here's an example of how this component can be used with a `gpii.express.router`
             }
         }
     });
+    my.other.express.grade();
 
 ## Component Options
 
