@@ -63,4 +63,4 @@ fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
     }
 });
 
-gpii.tests.express.router.params.testEnvironment();
+fluid.test.runTests("gpii.tests.express.router.params.testEnvironment");

@@ -5,7 +5,6 @@
 */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes.js");
@@ -55,4 +54,4 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
     }
 });
 
-gpii.tests.express.router.nesting.testEnvironment();
+fluid.test.runTests("gpii.tests.express.router.nesting.testEnvironment");

@@ -5,7 +5,6 @@
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes");
 require("./router-static-caseholder");
@@ -40,4 +39,4 @@ fluid.defaults("gpii.tests.express.router.static.testEnvironment", {
     }
 });
 
-gpii.tests.express.router["static"].testEnvironment();
+fluid.test.runTests("gpii.tests.express.router.static.testEnvironment");

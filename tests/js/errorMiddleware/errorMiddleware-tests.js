@@ -144,4 +144,4 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
     }
 });
 
-gpii.tests.express.errorMiddleware.testEnvironment();
+fluid.test.runTests("gpii.tests.express.errorMiddleware.testEnvironment");

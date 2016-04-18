@@ -1,7 +1,6 @@
 /* Tests for the "middleware" grade and "wrapper" modules for common Express middleware. */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes");
@@ -138,4 +137,4 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
     }
 });
 
-gpii.tests.express.middleware.testEnvironment();
+fluid.test.runTests("gpii.tests.express.middleware.testEnvironment");

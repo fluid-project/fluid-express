@@ -90,4 +90,4 @@ fluid.defaults("gpii.tests.express.contentAware.testEnvironment", {
     }
 });
 
-gpii.tests.express.contentAware.testEnvironment();
+fluid.test.runTests("gpii.tests.express.contentAware.testEnvironment");

@@ -5,7 +5,6 @@
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes");
 
@@ -107,4 +106,4 @@ fluid.defaults("gpii.tests.express.method.testEnvironment", {
     }
 });
 
-gpii.tests.express.method.testEnvironment();
+fluid.test.runTests("gpii.tests.express.method.testEnvironment");

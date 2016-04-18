@@ -184,4 +184,4 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
     }
 });
 
-gpii.tests.express.priority.testEnvironment();
+fluid.test.runTests("gpii.tests.express.priority.testEnvironment");

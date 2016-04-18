@@ -1,7 +1,6 @@
 /* Tests for the "express" and "router" module */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes.js");
 require("./handler-caseholder");
@@ -15,4 +14,4 @@ fluid.defaults("gpii.tests.express.handler.testEnvironment", {
     }
 });
 
-gpii.tests.express.handler.testEnvironment();
+fluid.test.runTests("gpii.tests.express.handler.testEnvironment");

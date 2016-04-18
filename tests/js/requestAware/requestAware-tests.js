@@ -97,4 +97,4 @@ fluid.defaults("gpii.test.express.requestAware.testEnvironment", {
     }
 });
 
-gpii.test.express.requestAware.testEnvironment();
+fluid.test.runTests("gpii.test.express.requestAware.testEnvironment");
