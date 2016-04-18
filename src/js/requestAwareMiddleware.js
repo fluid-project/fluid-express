@@ -22,7 +22,6 @@ fluid.defaults("gpii.express.middleware.requestAware", {
             target: "{that gpii.express.handler}.options.gradeNames"
         }
     ],
-    method:     "get",
     events: {
         "onRequest": null
     },
