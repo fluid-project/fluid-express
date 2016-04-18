@@ -23,7 +23,7 @@ gpii.tests.express.priority.sendString = function (request, response, string, ne
     }
     else {
         var headerValue = response.get("Exquisite-Corpse");
-        response.send((headerValue  || "") + string);
+        response.send((headerValue || "") + string);
     }
 };
 
