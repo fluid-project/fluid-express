@@ -8,6 +8,7 @@ fluid.defaults("gpii.tests.express.router.static.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing 'static' (content handling) router...",
             tests: [
                 {
                     name: "Testing the 'static' router module (index content)...",

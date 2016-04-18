@@ -64,6 +64,7 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing `gpii.express.middleware`...",
             tests: [
                 {
                     name: "Testing middleware isolation...",

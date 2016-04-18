@@ -24,6 +24,7 @@ fluid.defaults("gpii.tests.express.staticRouter.caseHolder", {
     gradeNames: ["fluid.test.testCaseHolder"],
     modules: [
         {
+            name: "Testing startup failures in 'static' router...",
             tests: [
                 {
                     name: "Try to create a static router without a path option...",

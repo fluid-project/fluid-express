@@ -7,6 +7,7 @@ fluid.defaults("gpii.tests.express.router.wildcard.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing wildcard router paths...",
             tests: [
                 {
                     name: "Testing the 'wildcard' router module (index content, top-level request)...",

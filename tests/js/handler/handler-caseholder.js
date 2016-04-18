@@ -31,6 +31,7 @@ fluid.defaults("gpii.tests.express.handler.caseHolder", {
     gradeNames: ["fluid.test.testCaseHolder"],
     modules: [
         {
+            name: "Testing handlers...",
             tests: [
                 {
                     name: "Try to create a handler without a request option...",

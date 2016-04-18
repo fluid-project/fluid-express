@@ -16,6 +16,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
     },
     rawModules: [
         {
+            name: "Testing `content aware` grade...",
             tests: [
                 {
                     name: "Testing with no accepts headers...",

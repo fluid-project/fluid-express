@@ -53,6 +53,7 @@ fluid.defaults("gpii.tests.express.priority.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing router ordering by priority...",
             tests: [
                 {
                     name: "Testing precedence when multiple routers listen for the same path...",

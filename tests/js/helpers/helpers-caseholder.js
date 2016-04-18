@@ -40,6 +40,7 @@ fluid.defaults("gpii.test.express.helpers.caseHolder", {
     ],
     rawModules: [
         {
+            name: "Testing test helpers...",
             tests: [
                 {
                     name: "The test helpers should work end-to-end the first time...",

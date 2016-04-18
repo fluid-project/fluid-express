@@ -37,6 +37,7 @@ fluid.defaults("gpii.test.express.requestAware.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing 'request aware' grade...",
             tests: [
                 {
                     name: "Testing a basic 'request aware' component...",

@@ -40,6 +40,7 @@ fluid.defaults("gpii.tests.express.method.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing method isolation...",
             tests: [
                 {
                     name: "Testing router and middleware isolation with shared paths and different methods...",

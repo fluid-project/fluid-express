@@ -12,6 +12,7 @@ fluid.defaults("gpii.tests.express.router.nesting.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing router nesting...",
             tests: [
                 {
                     name: "Testing router nesting (top level request)...",

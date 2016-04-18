@@ -13,6 +13,7 @@ fluid.defaults("gpii.tests.express.router.params.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing URL parameters in router paths...",
             tests: [
                 {
                     name: "Testing the 'params' router module (top level)...",

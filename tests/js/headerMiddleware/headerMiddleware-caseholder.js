@@ -5,6 +5,7 @@ fluid.defaults("gpii.tests.express.headerMiddleware.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
     rawModules: [
         {
+            name: "Testing header setting middleware...",
             tests: [
                 {
                     name: "Testing `headerSetter` middleware (with query data)...",

@@ -24,6 +24,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
 
     rawModules: [
         {
+            name: "Testing error handling middleware...",
             tests: [
                 {
                     name: "Testing an error handler that returns a string...",
