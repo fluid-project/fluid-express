@@ -120,7 +120,13 @@ gpii.express.getOrderedNicknames = function (nicknames, component) {
 
     // Order the combined data by priority so that we have predictable control over which is loaded when, then map it
     // back to a simple ordered array.
-    return gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
+    // return gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces).map(gpii.express.extractNicks);
+
+    return fluid.getMembers(gpii.express.orderByPriority(nickNamesWithComponentPrioritiesAndNamespaces), "nick");
+
+    // TODO:  Get the "companion" versions of kettle and jqunit so that we can try the new method below.
+    // var orderedNicks = fluid.parsePriorityRecords(nickNamesWithComponentPrioritiesAndNamespaces, "Express entry", true);
+    // return orderedNicks.map(gpii.express.extractNicks);
 };
 
 /**
@@ -205,10 +211,12 @@ gpii.express.init = function (that) {
  *
  */
 gpii.express.stopServer = function (that) {
-    that.server.close(function () {
-        fluid.log("Express stopped...");
-        that.events.onStopped.fire();
-    });
+    if (that.server) {
+        that.server.close(function () {
+            fluid.log("Express stopped...");
+            that.events.onStopped.fire();
+        });
+    }
 };
 
 /**
