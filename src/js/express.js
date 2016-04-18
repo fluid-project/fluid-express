@@ -146,6 +146,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
 
         if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
             // Recurse from here on down.
+            // TODO: Improve this to account for segments with dots in their name, as this will break in the future.
             that.connectDirectDescendants(childComponent, path + "." + childNickname);
         }
     });
