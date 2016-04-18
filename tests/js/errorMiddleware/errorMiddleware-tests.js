@@ -39,9 +39,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                         options: {
                             namespace: "simpleErrorPitcher",
                             priority: "first",
-                            path: "/simple",
-                            components: {
-                            }
+                            path: "/simple"
                         }
                     },
                     simpleErrorCatcher: {
