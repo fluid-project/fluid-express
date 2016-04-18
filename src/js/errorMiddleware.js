@@ -22,13 +22,17 @@ fluid.registerNamespace("gpii.express.middleware.error");
  */
 gpii.express.middleware.error.sendError = function (that, error, request, response, next) {
     if (response.headersSent) {
-        return next(error);
+        // Pass along the raw error so that downstream error-handling middleware that does not need to send a response
+        // (for example, an audit logger) will still have a chance to do its work.
+        next(error);
+        
+        fluid.fail("An error ocurred after the response was already sent!:", error);
     }
-    
-
-    var transformedError = fluid.model.transformWithRules({ that: that, error: error, request: request }, that.options.errorOutputRules);
-    var statusCode = error.statusCode || that.options.defaultStatusCode;
-    response.status(statusCode).send(transformedError);
+    else {
+        var transformedError = fluid.model.transformWithRules({ that: that, error: error, request: request }, that.options.errorOutputRules);
+        var statusCode = error.statusCode || that.options.defaultStatusCode;
+        response.status(statusCode).send(transformedError);
+    }
 };
 
 // We must use this construct so that we always expose a function with the right signature, as Express determines
