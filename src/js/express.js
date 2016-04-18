@@ -127,7 +127,7 @@ gpii.express.getOrderedNicknames = function (nicknames, component) {
  *
  * @param that {Object} - The `gpii.express` instance itself.
  * @param component {Object} - The component we are working with at this level.  As we are treeing down through a hierarchy, this will change depending on the level we're at.
- * @param path {String} - The path segment where we can fine the child components we need to wire in to ourselves.
+ * @param path {String} - The path segment where we can find the child components we need to wire in to ourselves.
  *
  * Wire a child component to its immediate descendants using the `use` method common to both `express` and all
  * middleware.
