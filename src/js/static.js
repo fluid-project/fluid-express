@@ -15,8 +15,8 @@ var express = require("express");
 // The Express module is actually named "static", so for clarity I want to use that name in spite of the warnings in older versions of JSHint
 /* jshint -W024 */
 gpii.express.router["static"].init = function (that) {
-    fluid.each(fluid.makeArray(that.options.content), function (contentDir) {
-        that.router.use(express["static"](fluid.module.resolvePath(contentDir)));
+    fluid.each(gpii.express.expandPaths(that.options.content), function (contentDir) {
+        that.router.use(express["static"](contentDir));
     });
 };
 
