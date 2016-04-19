@@ -21,7 +21,7 @@ gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
             that.middleware(request, response, next);
         }
         else {
-            fluid.fail("Your middleware grade must have a `middleware` invoker or member.");
+            fluid.fail(that.options.messages.noMiddlewareFound);
         }
     };
 };
@@ -30,6 +30,9 @@ fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.component"],
     path:       "/",
     method:     "use",
+    messages: {
+        noMiddlewareFound: "Your middleware grade must have a `middleware` invoker or member."
+    },
     events: {
         onReady: {
             events: {

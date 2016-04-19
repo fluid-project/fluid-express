@@ -131,7 +131,7 @@ gpii.express.wireMiddlewareToContainer = function (container, middlewareComponen
  */
 gpii.express.init = function (that) {
     if (!that.options.port) {
-        fluid.fail("Cannot initialize express because you have not supplied a 'port' option.");
+        fluid.fail(that.options.messages.missingPort);
     }
     else {
         that.express = express();
@@ -192,6 +192,9 @@ fluid.defaults("gpii.express", {
     members: {
         directChildrenOfInterest: [],
         childrenByParent:         {}
+    },
+    messages: {
+        missingPort: "Cannot initialize express because you have not supplied a 'port' option."
     },
     path: "/",
     express: null,
