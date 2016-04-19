@@ -185,13 +185,13 @@ child [middleware](middleware.md) or router components.
 
 ## Component Options
 
-| Option          | Type                    | Description |
-| --------------- | ----------------------- | ----------- |
-| `method`        | `{String}`              | This grade provides the ability to limit itself to only operate on requests that match a particular [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).  Support lowercased string values, such as `get`, `post`, `put`, or `delete`. |
-| `namespace`     | `{String}`              | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
-| `path`          | `{String}` or `{Array}` | Which part(s) of the relative URL space this router wants to work with.  May contain wildcards and [path variables](http://expressjs.com/en/4x/api.html#req.params).  Set to `/` if you want to work with all paths. |
-| `priority`      | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
-| `routerOptions` | `{Object}`              | The router options to use when creating our internal Express router instance.  See [the Express documentation](http://expressjs.com/api.html#router) for details. |
+| Option                     | Type                    | Description |
+| -------------------------- | ----------------------- | ----------- |
+| `method`                   | `{String}`              | This grade provides the ability to limit itself to only operate on requests that match a particular [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).  Support lowercased string values, such as `get`, `post`, `put`, or `delete`.  Defaults to `use` or "any method". |
+| `path`                     | `{String}` or `{Array}` | Which part(s) of the relative URL space this router wants to work with.  May contain wildcards and [path variables](http://expressjs.com/en/4x/api.html#req.params).  Defaults to `/`, or "any path". |
+| `namespace` (optional)     | `{String}`              | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
+| `priority` (optional)      | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
+| `routerOptions` (optional) | `{Object}`              | The router options to use when creating our internal Express router instance.  See [the Express documentation](http://expressjs.com/api.html#router) for details. |
 
 
 ## `gpii.express.router.static`

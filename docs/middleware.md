@@ -83,12 +83,12 @@ the `middleware` invoker (see below).
 
 ### Component Options
 
-| Option      | Type                    | Description |
-| ----------- | ----------------------- | ----------- |
-| `method`    | `{String}`              | This grade provides the ability to limit itself to only operate on requests that match a particular [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).  Support lowercased string values, such as `get`, `post`, `put`, or `delete`. |
-| `namespace` | `{String}`              | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
-| `path`      | `{String}` or `{Array}` | Which part(s) of the relative URL space this router wants to work with.  May contain wildcards and [path variables](http://expressjs.com/en/4x/api.html#req.params).  Set to `/` if you want to work with all paths. |
-| `priority`  | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
+| Option                 | Type                    | Description |
+| ---------------------- | ----------------------- | ----------- |
+| `method`               | `{String}`              | This grade provides the ability to limit itself to only operate on requests that match a particular [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).  Support lowercased string values, such as `get`, `post`, `put`, or `delete`.   Defaults to `use`, or "any method". |
+| `path`                 | `{String}` or `{Array}` | Which part(s) of the relative URL space this router wants to work with.  May contain wildcards and [path variables](http://expressjs.com/en/4x/api.html#req.params).  Defaults to `/`, or "any path". |
+| `namespace` (optional) | `{String}`              | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
+| `priority` (optional)  | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
 
 Please note that although middleware may also be limited to a particular `method` or `path`, it does not do any
 routing at all to child components.  Only the middleware itself will be given the chance to work with an appropriate

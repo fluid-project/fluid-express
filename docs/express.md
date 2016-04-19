@@ -31,4 +31,4 @@ You may also need one or more [`gpii.express.middleware`](middleware.md) instanc
 
 | Option | Type       | Description |
 | ------ | ---------- | ----------- |
-| `port` | `{Number}` | The port `express` should listen on. |
+| `port` | `{Number}` | The port `express` should listen on.  An error will be thrown unless you set this. |

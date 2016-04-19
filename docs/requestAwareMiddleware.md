@@ -16,7 +16,7 @@ following unique options:
 
 | Option          | Type      | Description |
 | --------------- | --------- | ----------- |
-| `handlerGrades` | `{Array}` | An array of grades that will be used to create our handler. |
+| `handlerGrades` | `{Array}` | An array of grades that will be used to create our handler. An error will be thrown if there are no handlers, matching a request, so you must at least supply a default handler. |
 
 ## Passing Options to the Dynamic Handler Component
 

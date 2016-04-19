@@ -53,7 +53,7 @@ which can make use of it internally.
 
 | Option     | Type       | Description |
 | ---------- | ---------- | ----------- |
-| `timeout`  | `{Number}` | The timeout option (see above) to be distributed to the handler.|
+| `timeout`  | `{Number}` | The timeout option (see above) to be distributed to the handler. Set to `5000` (5 seconds) by default. |
 
 
 ## `gpii.express.handler`
