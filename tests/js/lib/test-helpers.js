@@ -35,16 +35,11 @@ gpii.test.express.helpers.isSaneResponse = function (response, body, status) {
 
 // Confirm that a response body contains the expected string content.
 gpii.test.express.helpers.verifyStringContent = function (response, body, expectedString) {
-
-    gpii.test.express.helpers.isSaneResponse(response, body);
-
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString) !== -1);
 };
 
 // Confirm that a JSON payload is as expected.
 gpii.test.express.helpers.verifyJSONContent = function (response, body, expected) {
-    gpii.test.express.helpers.isSaneResponse(response, body);
-
     var payload = JSON.parse(body);
     jqUnit.assertDeepEq("The payload should be as expected...", expected, payload);
 };
