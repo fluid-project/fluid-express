@@ -7,6 +7,9 @@ fluid.registerNamespace("gpii.tests.express.handler.caseHolder");
 
 fluid.defaults("gpii.tests.express.handler.testHandler", {
     gradeNames: ["gpii.express.handler"],
+    // We are not creating these dynamically, so we need to redefine these two options for our tests to run.
+    request:    false,
+    response:   false,
     invokers: {
         handleRequest: {
             funcName: "fluid.identity"

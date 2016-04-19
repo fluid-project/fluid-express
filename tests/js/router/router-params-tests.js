@@ -9,7 +9,7 @@ require("./router-params-caseholder");
 
 fluid.registerNamespace("gpii.tests.express.router.params.deepParamHandler");
 gpii.tests.express.router.params.deepParamHandler.handleRequest = function (that) {
-    that.sendResponse(200, { ok: true, params: that.request.params});
+    that.sendResponse(200, { ok: true, params: that.options.request.params});
 };
 
 fluid.defaults("gpii.tests.express.router.params.deepParamHandler", {

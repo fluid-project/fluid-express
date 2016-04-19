@@ -2,20 +2,27 @@
 
 `gpii.express.router` is a subclass of [`gpii.express.middleware`](middleware.md) that wraps
 [the  Express `router` object](http://expressjs.com/en/4x/api.html#router), which is simply a container for a collection
-of middleware.  In our case, these are usually our child components that have the [`gpii.express.middleware`](middleware.md)
-grade.
+of [middleware](middleware.md).
 
-Routers can be nested, and you can even nest an instance of a router within itself.  The `path` variable for a given
-router module is combined with the paths of its parents, and that ultimately determines which URLs a given router will
-be given the chance to handle (see example below).  A `path` of `/` indicates that a router is dealing with the entire
-path.
+Both Express and the Express `router` object have the concept of a "stack" of middleware.  A `gpii.express.router`
+instance's "stack" generally consists of its immediate child components that have the [`gpii.express.middleware`](middleware.md)
+grade.  This may include other `gpii.express.router` instances as well.
 
-If multiple routers are registered for the same path, the first one to receive the request "wins".  As with middleware,
-you can control the order in which routers are added to the "chain" using
-[namespaces and priorities](http://docs.fluidproject.org/infusion/development/Priorities.html).
-The `path` option is one of two means by which a router can indicate that its scope is limited.  A router may also
-indicate that it only wishes to respond to particular [HTTP request methods](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).
+If a `gpii.express.router` instance is given the chance to handle a request, it evaluates its "stack" in order,
+to find a piece of middleware whose path, [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html), and
+signature all match the current `request`.  See the [middleware](middleware.md) docs for details on the method signature
+and HTTP method.  The effective path for a given router module is determined by appending its path to that of its
+immediate parent.  A `path` of `/` indicates that a router accepts all requests that its parent does.
 
+If a match is found, the middleware is given the chance to work with a given request.  If a match is not found, the
+next piece of middleware in the "stack" is evaluated.  If the end of the "stack" is reached without finding any matching
+middleware, the parent container (either `gpii.express` or another `gpii.express.router` instance) will continue
+evaluating its own "stack".  If the "stack of stacks" has been exhausted and no middleware is found to match a given
+request method and path, Express itself will report a 404 error.
+
+You can control the order in which middleware is added to its enclosing "stack" using
+[namespaces and priorities](http://docs.fluidproject.org/infusion/development/Priorities.html).  See "A Few Practical
+Examples" below.
 
 # Middleware Isolation
 
@@ -172,9 +179,9 @@ be routed to `middlewareTwoB`.
 
 # `gpii.express.router`
 
-An instance of [`gpii.express`](express.md) will automatically attempt to wire in anything with this gradeName into its
-routing table.  To be meaningfully useful, a router must have one or more child [middleware](middleware.md) or router
-components.
+The base grade for all routers.  An instance of [`gpii.express`](express.md) will automatically attempt to wire in
+anything with this gradeName into its routing stack.  To be meaningfully useful, a router must have one or more
+child [middleware](middleware.md) or router components.
 
 ## Component Options
 

@@ -97,8 +97,8 @@ response.  Routing is only handled by [`gpii.express`](express.md) and [`gpii.ex
 ### Component Invokers
 
 #### `{that}.middleware(request, response, next)`
-* `request`: The [request object](http://expressjs.com/en/api.html#req) provided by Express, which wraps node's [`http.incomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage).
-* `response`: The [response object](http://expressjs.com/en/api.html#res) provided by Express, which wraps node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse).
+* `request {Object}` An Express Request object (see [the docs](request.md) for details.
+* `response {Object}` An Express Response object (see [the docs](response.md) for details.
 * `next`: The next Express middleware or router function in the chain.
 * Returns: Nothing.
 

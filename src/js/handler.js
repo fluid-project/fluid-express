@@ -13,10 +13,6 @@ fluid.registerNamespace("gpii.express.handler");
 
 // TODO:  Convert this to use JSON Schema validation when available: https://issues.gpii.net/browse/CTR-161
 gpii.express.handler.checkRequirements = function (that) {
-    if (!that.options) {
-        fluid.fail("Cannot instantiate a 'handler' component without the required options...");
-    }
-
     if (!that.options.request) {
         fluid.fail("Cannot instantiate a 'handler' component without a request object...");
     }
@@ -61,10 +57,10 @@ fluid.defaults("gpii.express.handler", {
         "request":  "nomerge",
         "response": "nomerge"
     },
+    request:  "{arguments}.1",
+    response: "{arguments}.2",
     members: {
-        "request":  "{that}.options.request",
-        "response": "{that}.options.response",
-        "timeout":  null
+        timeout:  null
     },
     listeners: {
         "onCreate.checkRequirements": {
@@ -89,7 +85,7 @@ fluid.defaults("gpii.express.handler", {
     invokers: {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
-            args:     ["{that}", "{that}.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
+            args:     ["{that}", "{that}.options.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
             funcName: "gpii.express.handler.sendTimeoutResponse",
@@ -97,6 +93,31 @@ fluid.defaults("gpii.express.handler", {
         },
         handleRequest: {
             funcName: "fluid.notImplemented"
+        }
+    }
+});
+
+// The base grade for things like the "request aware" and "content aware" grades that dispatch individual requests to 
+// a `gpii.express.handler`.
+fluid.defaults("gpii.express.handlerDispatcher", {
+    gradeNames: ["fluid.component"],
+    timeout: 5000, // The default timeout we will pass to whatever grade we instantiate.
+    events: {
+        onRequest: null
+    },
+    distributeOptions: [{
+        source: "{that}.options.timeout",
+        target: "{that > gpii.express.handler}.options.timeout"
+    }],
+    dynamicComponents: {
+        requestHandler: {
+            createOnEvent: "onRequest",
+            type:          "gpii.express.handler",
+            // TODO: Review with Antranig.  Cannot mix in a grade properly if I use options as a whole.  The check for the required invoker fails.
+            // options:       "{arguments}.0"
+            options:       {
+                gradeNames: "{arguments}.0.gradeNames"
+            }
         }
     }
 });
