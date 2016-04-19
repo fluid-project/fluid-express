@@ -102,11 +102,12 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
     // This component has descendants, wire them in first.
     fluid.each(orderedMemberNames, function (memberName) {
         var childComponent = component[memberName];
-        if (fluid.hasGrade(childComponent.options, "gpii.express.middleware")) {
+        // fluid.componentHasGrade(component, gradeName)
+        if (fluid.componentHasGrade(childComponent, "gpii.express.middleware")) {
             gpii.express.wireMiddlewareToContainer(component.router, childComponent);
         }
 
-        if (fluid.hasGrade(childComponent.options, "gpii.express.router")) {
+        if (fluid.componentHasGrade(childComponent, "gpii.express.router")) {
             // Recurse from here on down.
             // TODO: Improve this to account for segments with dots in their name, as this will break in the future.
             that.connectDirectDescendants(childComponent, path + "." + memberName);
@@ -115,7 +116,7 @@ gpii.express.connectDirectDescendants = function (that, component, path) {
 };
 
 gpii.express.wireMiddlewareToContainer = function (container, middlewareComponent) {
-    if (fluid.hasGrade(middlewareComponent.options, "gpii.express.middleware")) {
+    if (fluid.componentHasGrade(middlewareComponent, "gpii.express.middleware")) {
         fluid.each(fluid.makeArray(middlewareComponent.options.method), function (methodName) {
             container[methodName](middlewareComponent.options.path, middlewareComponent.getMiddlewareFn());
         });
