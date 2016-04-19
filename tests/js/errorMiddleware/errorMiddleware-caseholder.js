@@ -1,7 +1,17 @@
 "use strict";
 var fluid  = require("infusion");
+var gpii   = fluid.registerNamespace("gpii");
+
+var jqUnit = require("node-jqunit");
 
 fluid.registerNamespace("gpii.tests.express.errorMiddleware.caseHolder");
+
+// kettle.requestUncaughtExceptionHandler = function (err) {
+gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError = function (err) {
+    if (err) {
+        jqUnit.assert("There was an error, as expected...");
+    }
+};
 
 fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
@@ -84,7 +94,16 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                 {
                     name: "Test error handling after a response has been sent...",
                     type: "test",
+                    // expect: 2,
                     sequence: [
+                        {
+                            funcName: "kettle.test.pushInstrumentedErrors",
+                            args:  "gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError"
+                            // TODO:  The handler is never called.  Review with Antranig.
+                            // args: "fluid.fail"
+                            // args:     gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError
+                            // args:     [{ funcName: "gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError" }]
+                        },
                         {
                             func: "{overlyOptimisticRequest}.send"
                         },
@@ -92,6 +111,9 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                             listener: "jqUnit.assertDeepEq",
                             event:    "{overlyOptimisticRequest}.events.onComplete",
                             args:     ["The optimistic middleware response should have been preserved...", "{that}.options.expected.overlyOptimistic", "@expand:JSON.parse({arguments}.0)"]
+                        },
+                        {
+                            func: "kettle.test.popInstrumentedErrors"
                         }
                     ]
                 },
