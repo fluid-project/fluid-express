@@ -25,8 +25,8 @@ gpii.express.middleware.error.sendError = function (that, error, request, respon
         // Pass along the raw error so that downstream error-handling middleware that does not need to send a response
         // (for example, an audit logger) will still have a chance to do its work.
         next(error);
-        
-        fluid.fail("An error ocurred after the response was already sent!:", error);
+
+        fluid.log("An error ocurred after the response was already sent!:", error);
     }
     else {
         var transformedError = fluid.model.transformWithRules({ that: that, error: error, request: request }, that.options.errorOutputRules);

@@ -16,6 +16,7 @@ fluid.defaults("gpii.express.middleware.requestAware", {
     invokers: {
         middleware: {
             func: "{that}.events.onRequest.fire",
+            // args: [{ options: { gradeNames: "{that}.options.handlerGrades" } }, "{arguments}.0", "{arguments}.1"] // options, request, response
             args: [{ gradeNames: "{that}.options.handlerGrades" }, "{arguments}.0", "{arguments}.1"] // options, request, response
         }
     }

@@ -12,7 +12,8 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",
-        json:      "This is a JSON response." // Our dummy handler isn't actually sending JSON.
+        json:      "This is a JSON response.", // Our dummy handler isn't actually sending JSON.
+        unhandled: {isError: true, message: "Could not find an appropriate handler for the content types you accept." }
     },
     rawModules: [
         {
@@ -59,6 +60,20 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.text"]
                         }
                     ]
+                },
+                {
+                    name: "Confirming that an error is thrown if no handler is found...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{unhandledRequest}.send"
+                        },
+                        {
+                            listener: "gpii.test.express.helpers.verifyJSONContent",
+                            event:    "{unhandledRequest}.events.onComplete",
+                            args:     ["{unhandledRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
+                        }
+                    ]
                 }
             ]
         }
@@ -85,6 +100,13 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                     accept: "text/html"
                 }
             }
+        },
+        unhandledRequest: {
+            type: "gpii.tests.express.contentAware.request",
+            options: {
+                endpoint: "hcf"
+            }
         }
+
     }
 });

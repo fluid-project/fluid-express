@@ -69,6 +69,12 @@ fluid.defaults("gpii.tests.express.contentAware.middleware", {
     }
 });
 
+fluid.defaults("gpii.tests.express.contentAware.failureWare", {
+    gradeNames: ["gpii.express.middleware.contentAware"],
+    handlers: {
+    }
+});
+
 fluid.defaults("gpii.tests.express.contentAware.testEnvironment", {
     gradeNames: ["gpii.test.express.testEnvironment"],
     port:   6533,
@@ -76,10 +82,23 @@ fluid.defaults("gpii.tests.express.contentAware.testEnvironment", {
         express: {
             options: {
                 components: {
-                    middleware: {
+                    failureware: {
+                        type: "gpii.tests.express.contentAware.failureWare",
+                        options: {
+                            priority: "first",
+                            path:     "/hcf"
+                        }
+                    },
+                    successWare: {
                         type: "gpii.tests.express.contentAware.middleware",
                         options: {
                             path: "/"
+                        }
+                    },
+                    rootErrorCatcher: {
+                        type: "gpii.express.middleware.error",
+                        options: {
+                            priority: "after:successWare"
                         }
                     }
                 }

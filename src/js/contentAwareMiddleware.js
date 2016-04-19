@@ -28,6 +28,7 @@ gpii.express.middleware.contentAware.delegateToHandler = function (that, request
     if (handlerGrades) {
         var options = { gradeNames: handlerGrades };
         that.events.onRequest.fire(options, request, response); // options, request, response
+        // that.events.onRequest.fire({ options: options}, request, response); // options, request, response
     }
     else {
         next({ isError: true, message: that.options.messages.noHandlerFound });
@@ -62,7 +63,7 @@ fluid.defaults("gpii.express.middleware.contentAware", {
     invokers: {
         middleware: {
             funcName: "gpii.express.middleware.contentAware.delegateToHandler",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1"] // request, response
+            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, response, next
         }
     }
 });

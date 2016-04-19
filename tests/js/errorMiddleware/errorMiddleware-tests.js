@@ -27,6 +27,23 @@ fluid.defaults("gpii.tests.express.errorMiddleware.errorPitcher", {
     }
 });
 
+// Send a response, and then throw an error.
+fluid.registerNamespace("gpii.tests.express.errorMiddleware.optimisticResponder");
+gpii.tests.express.errorMiddleware.optimisticResponder.respondThenThrowError = function (that, request, response, next) {
+    response.send({ message: "Seems like everything is fine."});
+    next({ isError: true, message: "Oops. Everything is NOT fine."});
+};
+
+fluid.defaults("gpii.tests.express.errorMiddleware.optimisticResponder", {
+    gradeNames: ["gpii.express.middleware"],
+    invokers: {
+        middleware: {
+            funcName: "gpii.tests.express.errorMiddleware.optimisticResponder.respondThenThrowError",
+            args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, response, next
+        }
+    }
+});
+
 fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
     gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7551,
@@ -95,15 +112,20 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                         type: "gpii.tests.express.errorMiddleware.errorPitcher",
                         options: {
                             path: "/string",
-                            namespace: "stringErrorPitcher",
                             priority: "after:nested"
+                        }
+                    },
+                    respondAndError: {
+                        type: "gpii.tests.express.errorMiddleware.optimisticResponder",
+                        options: {
+                            path: "/overlyOptimistic",
+                            priority: "before:rootErrorPitcher"
                         }
                     },
                     rootErrorPitcher: {
                         type: "gpii.tests.express.errorMiddleware.errorPitcher",
                         options: {
                             path: "/",
-                            namespace: "rootErrorPitcher",
                             priority: "after:stringErrorPitcher"
                         }
                     },

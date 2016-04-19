@@ -5,7 +5,6 @@ fluid.registerNamespace("gpii.tests.express.errorMiddleware.caseHolder");
 
 fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder"],
-
     expected: {
         string: "The root error handler responded.",
         simple: {
@@ -19,9 +18,9 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
             errorWrapper:     { isError: true, message: "Pray, Mr. Babbage, if you put into the machine wrong figures, will the right answers come out?"},
             requestMethod:    "GET"
         },
+        overlyOptimistic: { message: "Seems like everything is fine." },
         nested: "The deep error handler responded."
     },
-
     rawModules: [
         {
             name: "Testing error handling middleware...",
@@ -83,6 +82,20 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                     ]
                 },
                 {
+                    name: "Test error handling after a response has been sent...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{overlyOptimisticRequest}.send"
+                        },
+                        {
+                            listener: "jqUnit.assertDeepEq",
+                            event:    "{overlyOptimisticRequest}.events.onComplete",
+                            args:     ["The optimistic middleware response should have been preserved...", "{that}.options.expected.overlyOptimistic", "@expand:JSON.parse({arguments}.0)"]
+                        }
+                    ]
+                },
+                {
                     name: "Testing the root error handler payload...",
                     type: "test",
                     sequence: [
@@ -126,6 +139,12 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
             type: "gpii.test.express.request",
             options: {
                 endpoint: "nested"
+            }
+        },
+        overlyOptimisticRequest: {
+            type: "gpii.test.express.request",
+            options: {
+                endpoint: "overlyOptimistic"
             }
         },
         rootHeaderRequest: {
