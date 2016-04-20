@@ -98,7 +98,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                     sequence: [
                         {
                             funcName: "fluid.failureEvent.addListener",
-                            args:  [gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError, "jqUnit", "before:fail"]
+                            args:     [gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError, "jqUnit", "before:fail"]
                         },
                         {
                             func: "{overlyOptimisticRequest}.send"
