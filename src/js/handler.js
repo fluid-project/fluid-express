@@ -113,12 +113,11 @@ fluid.defaults("gpii.express.handlerDispatcher", {
         requestHandler: {
             createOnEvent: "onRequest",
             type:          "gpii.express.handler",
-            // TODO: Review with Antranig.  Cannot mix in a grade properly if I use options as a whole.  The check for the required invoker fails.
+            // TODO:  Update this and test once https://issues.fluidproject.org/browse/FLUID-5893 is resolved
             // options:       "{arguments}.0"
             options:       {
                 gradeNames: "{arguments}.0.gradeNames"
             }
-            // options: "{arguments}.0.options"
         }
     }
 });
