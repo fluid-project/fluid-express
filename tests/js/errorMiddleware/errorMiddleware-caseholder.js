@@ -94,15 +94,11 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                 {
                     name: "Test error handling after a response has been sent...",
                     type: "test",
-                    // expect: 2,
+                    expect: 2,
                     sequence: [
                         {
-                            funcName: "kettle.test.pushInstrumentedErrors",
-                            args:  "gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError"
-                            // TODO:  The handler is never called.  Review with Antranig.
-                            // args: "fluid.fail"
-                            // args:     gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError
-                            // args:     [{ funcName: "gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError" }]
+                            funcName: "fluid.failureEvent.addListener",
+                            args:  [gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError, "jqUnit", "before:fail"]
                         },
                         {
                             func: "{overlyOptimisticRequest}.send"
@@ -113,7 +109,8 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                             args:     ["The optimistic middleware response should have been preserved...", "{that}.options.expected.overlyOptimistic", "@expand:JSON.parse({arguments}.0)"]
                         },
                         {
-                            func: "kettle.test.popInstrumentedErrors"
+                            func: "fluid.failureEvent.removeListener",
+                            args: ["jqUnit"]
                         }
                     ]
                 },
