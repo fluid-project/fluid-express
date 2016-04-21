@@ -13,9 +13,9 @@ fluid.registerNamespace("gpii.express.container");
 
 /**
  *
- * @param that {Object} - The `gpii.express` instance itself.
+ * @param that {Object} - The `gpii.express.container` instance itself.
  *
- * Wire our child middleware into our container.
+ * Wire our immediate child middleware into our container.
  *
  */
 gpii.express.container.connectDirectDescendants = function (that) {
