@@ -43,10 +43,8 @@ components: {
 * Returns: Nothing.
 
 This invoker fulfills the standard contract for a `gpii.express.middleware` component, with the signature expected for
-an error handler.  Note that although our implementation does not make use of the `next` argument, we include it in our
-invoker signature to ensure that express correctly considers us as error handling middleware.
-
-The invoker makes use of [`fluid.model.transformWithRules`](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html),
+an error handler.   The invoker makes use of
+[`fluid.model.transformWithRules`](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html),
 meaning that you can modify the upstream error format using `options.errorOutputRules` (see above).  The rules can make
 use of the component itself (`that`), the `request`, and the original `error`.  Here are the default rules, which simply
 pass through the `error` in its entirety:
