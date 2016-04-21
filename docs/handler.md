@@ -24,7 +24,8 @@ individual results.
 
 The approach used in this package is to dynamically create a "handler" component for each request.  Because a handler
 is only ever used for a single request, it can safely work with its own model and/or member data, including making use
-of  [change appliers and model listeners](http://docs.fluidproject.org/infusion/development/ChangeApplierAPI.html).
+of [events](http://docs.fluidproject.org/infusion/development/InfusionEventSystem.html) as well as
+[change appliers and model listeners](http://docs.fluidproject.org/infusion/development/ChangeApplierAPI.html).
 
 This mechanism consists of two pieces: A `handlerDispatcher` (see below) that creates a dynamic component for each
 request, and a `handler` (see below) that handles the individual request.
