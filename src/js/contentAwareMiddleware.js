@@ -48,7 +48,7 @@ gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (t
     var orderedHandlers = fluid.parsePriorityRecords(that.options.handlers, "Content aware entry");
     // var orderedHandlers = gpii.express.orderByPriority(that.options.handlers);
     var matchingHandler = fluid.find(orderedHandlers, function (value) {
-        return Boolean(value.contentType && request.accepts(value.contentType)) ? value : undefined;
+        return (value.contentType && request.accepts(value.contentType)) ? value : undefined;
     });
 
     return matchingHandler ? matchingHandler.handlerGrades : undefined;
