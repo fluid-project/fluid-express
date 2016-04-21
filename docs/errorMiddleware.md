@@ -39,7 +39,7 @@ components: {
 * `error`: The raw error reported by the middleware itself.
 * `request {Object}` An Express Request object (see [the docs](request.md) for details.
 * `response {Object}` An Express Response object (see [the docs](response.md) for details.
-* `next`: The next piece of middleware in the error reporting chain. Unused in this implementation.
+* `next`: The next piece of middleware in the error reporting chain.
 * Returns: Nothing.
 
 This invoker fulfills the standard contract for a `gpii.express.middleware` component, with the signature expected for
