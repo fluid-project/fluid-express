@@ -16,7 +16,7 @@ var express = require("express");
 /* jshint -W024 */
 gpii.express.router["static"].init = function (that) {
     fluid.each(gpii.express.expandPaths(that.options.content), function (contentDir) {
-        that.router.use(express["static"](contentDir));
+        that.container.use(express["static"](contentDir));
     });
 };
 

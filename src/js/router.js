@@ -19,22 +19,23 @@ fluid.registerNamespace("gpii.express.router");
  */
 gpii.express.router.createRouter = function (that) {
     var express = require("express");
-    that.router = express.Router(that.options.routerOptions);
-    that.events.routerLoaded.fire(that);
+    that.container = express.Router(that.options.routerOptions);
+
+    // Tell the `gpii.express.container` bits we use to wire in our children.
+    that.events.onReadyToWireChildren.fire(that);
 };
 
 gpii.express.router.getRouter = function (that) {
-    return that.router;
+    return that.container;
 };
 
 fluid.defaults("gpii.express.router", {
-    gradeNames:    ["gpii.express.middleware"],
+    gradeNames:    ["gpii.express.container", "gpii.express.middleware"],
     routerOptions: {},
     events: {
-        routerLoaded: null,
         onReady: {
             events: {
-                routerLoaded: "routerLoaded"
+                onChildrenWired: "onChildrenWired"
             },
             args: ["{that}"]
         }
