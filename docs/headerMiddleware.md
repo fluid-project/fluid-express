@@ -164,10 +164,10 @@ can also set static values in the `template` value itself, as illustrated in the
 
 ## Invokers
 
-### `{middleware}.middleware(req, res, next)`
+### `{middleware}.middleware(request, response, next)`
 
-* `req`: The [request object](http://expressjs.com/en/api.html#req) provided by Express, which wraps node's [`http.incomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage).
-* `res`: The [response object](http://expressjs.com/en/api.html#res) provided by Express, which wraps node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse).
+* `request {Object}` An Express Request object (see [the docs](request.md) for details.
+* `response {Object}` An Express Response object (see [the docs](response.md) for details.
 * `next`: The next Express middleware or router function in the chain.
 * Returns: Nothing.
 
