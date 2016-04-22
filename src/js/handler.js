@@ -113,11 +113,7 @@ fluid.defaults("gpii.express.handlerDispatcher", {
         requestHandler: {
             createOnEvent: "onRequest",
             type:          "gpii.express.handler",
-            // TODO:  Update this and test once https://issues.fluidproject.org/browse/FLUID-5893 is resolved
-            // options:       "{arguments}.0"
-            options:       {
-                gradeNames: "{arguments}.0.gradeNames"
-            }
+            options:       "{arguments}.0"
         }
     }
 });
