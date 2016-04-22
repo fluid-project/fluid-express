@@ -38,9 +38,13 @@ gpii.express.middleware.error.sendError = function (that, error, request, respon
 // We must use this construct so that we always expose a function with the right signature, as Express determines
 // that we are error middleware based on the method signature.
 gpii.express.middleware.error.getWrappedMiddlewareErrorFunction = function (that) {
-    return function wrappedErrorMiddleware(error, request, response, next) {
+    var wrappedFunction = function wrappedErrorMiddleware(error, request, response, next) {
         that.middleware(error, request, response, next);
     };
+
+    wrappedFunction.that = that;
+    wrappedFunction.path = gpii.express.pathForComponent(that);
+    return wrappedFunction;
 };
 
 fluid.defaults("gpii.express.middleware.error", {
