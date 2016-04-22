@@ -46,15 +46,8 @@ fluid.defaults("gpii.tests.express.contentAware.textHandler", {
 fluid.defaults("gpii.tests.express.contentAware.middleware", {
     gradeNames: ["gpii.express.middleware.contentAware"],
     handlers: {
-        // Confirm that we support "priorities".  This should not be allowed to handle requests with no `accept` header.
-        badDefault: {
-            // TODO:  Why don't "last", "first" or number values work for priority?
-            priority:      "after:goodDefault",
-            contentType:   "default",
-            handlerGrades: ["gpii.tests.express.contentAware.badDefaultHandler"]
-        },
-        // Confirm that we support "priorities".  This should be allowed to handle request with no `accept` headers.
-        goodDefault: {
+        noHeaders: {
+            priority:      "first",
             contentType:   "default",
             handlerGrades: ["gpii.tests.express.contentAware.defaultHandler"]
         },
@@ -65,6 +58,16 @@ fluid.defaults("gpii.tests.express.contentAware.middleware", {
         json: {
             contentType:  "application/json",
             handlerGrades: ["gpii.tests.express.contentAware.jsonHandler"]
+        },
+        // Confirm that we support "priorities".  This should not be allowed to handle requests with no `accept` header.
+        badDefault: {
+            // TODO:  Why don't "last", "first" or number values work for priority?
+            priority:      "after:goodDefault",
+            handlerGrades: ["gpii.tests.express.contentAware.badDefaultHandler"]
+        },
+        // Confirm that we support "priorities".  This should be allowed to handle request with no `accept` headers.
+        goodDefault: {
+            handlerGrades: ["gpii.tests.express.contentAware.defaultHandler"]
         }
     }
 });
