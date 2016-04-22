@@ -20,9 +20,93 @@ middleware, the parent container (either `gpii.express` or another `gpii.express
 evaluating its own "stack".  If the "stack of stacks" has been exhausted and no middleware is found to match a given
 request method and path, Express itself will report a 404 error.
 
+# Ordering Middleware and Routers
+
+When you are working only with `gpii.express` itself and `gpii.express.middleware`, there is only one "stack", that of
+`gpii.express` itself, which is in effect a "chain" of middleware in order.  When you start working with one or more
+`gpii.express.router` instances, you have a "stack of stacks", or something that is more of a "tree".  The "tree" is
+[traversed in "pre-order" fashion](https://en.wikipedia.org/wiki/Tree_traversal#Pre-order), as illustrated here:
+
+![A diagram demonstrating the order in which routing occurs within `gpii.express`.]( https://upload.wikimedia.org/wikipedia/commons/d/d4/Sorted_binary_tree_preorder.svg "Tree traversal diagram.")
+
+This image and the explanation are taken from the [Wikipedia article on "tree traversal"](https://en.wikipedia.org/wiki/Tree_traversal).
+The order in which these elements are given the chance to work with a request is F, B, A, D, C, E, G, I, and finally H.
 You can control the order in which middleware is added to its enclosing "stack" using
-[namespaces and priorities](http://docs.fluidproject.org/infusion/development/Priorities.html).  See "A Few Practical
-Examples" below.
+[namespaces and priorities](http://docs.fluidproject.org/infusion/development/Priorities.html).
+
+The above diagram can be modeled using the following component options:
+
+```
+fluid.defaults("my.enclosing.component", {
+    gradeNames: ["fluid.component"],
+    components: {
+        f: {
+            type: "gpii.express",
+            options: {
+                port: 9090,
+                components: {
+                    b: {
+                        type: "gpii.express.router",
+                        options: {
+                            priority: "before:g",
+                            components: {
+                                a: {
+                                    type: "my.namespaced.middleware"
+                                },
+                                b: {
+                                    type: "gpii.express.router",
+                                    options: {
+                                        priority: "after:a",
+                                        components: {
+                                            d: {
+                                                type: "gpii.express.router",
+                                                options: {
+                                                    components: {
+                                                        c: {
+                                                            type: "my.namespaced.middleware"
+                                                        },
+                                                        e: {
+                                                            type: "my.namespaced.middleware",
+                                                            options: {
+                                                                priority: "last"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    g: {
+                        type: "gpii.express.router",
+                        options: {
+                            components: {
+                                i: {
+                                    type: "gpii.express.router",
+                                    options: {
+                                        components: {
+                                            h: {
+                                                type: "my.namespaced.middleware"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
+```
+
+See "A Few Practical Examples" below for more a more detailed walkthrough of the order in which middleware is given
+the chance to work with an individual request.
 
 # Middleware Isolation
 
