@@ -16,7 +16,7 @@ fluid.registerNamespace("gpii.express.middleware");
 // 
 // It incorporates the previous mechanism for gating requests by method (get, post, put, use, etc.).
 gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
-    return function wrappedStandardMiddleware(request, response, next) {
+    var wrappedFunction = function wrappedStandardMiddleware(request, response, next) {
         if (that.middleware) {
             that.middleware(request, response, next);
         }
@@ -24,6 +24,10 @@ gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
             fluid.fail(that.options.messages.noMiddlewareFound);
         }
     };
+
+    wrappedFunction.that = that;
+    wrappedFunction.path = gpii.express.pathForComponent(that);
+    return wrappedFunction;
 };
 
 fluid.defaults("gpii.express.middleware", {

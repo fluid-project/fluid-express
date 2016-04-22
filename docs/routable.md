@@ -1,4 +1,4 @@
-# `gpii.express.container`
+# `gpii.express.routable`
 
 This is the base grade that both [`gpii.express.router`](router.md) and [`gpii.express`](express.md) use to add their
 immediate children to  their [routing "stack"].  This process happens "bottom up", as in the following example:
@@ -34,16 +34,16 @@ fluid.defaults("my.express.grade", {
 });
 ```
 
-Both the `gpii.express` instance itself and each `gpii.express.router` instance extend the `gpii.express.container`
+Both the `gpii.express` instance itself and each `gpii.express.router` instance extend the `gpii.express.routable`
 grade.  As they are created, they are given the chance to wire up their immediate children, so, in order:
 
 1. The "middle" router will be given the chance to wire the "bottom" middleware in.
 2. The "top" router will be given the chance to wire the "middle" router in.
 3. The `gpii.express` component itself will be given the chance to wire the "top" router in.
 
-Grades that extend `gpii.express.container` are expected to create a member variable `that.container` which is either
+Grades that extend `gpii.express.routable` are expected to create a member variable `that.container` which is either
 an Express router, or an instance of express itself.  `that.container` must expose the "method" functions, such as
-`use`, `get`, and `post`.  Once they have initialized `that.container`, grades that extend `gpii.express.container`
+`use`, `get`, and `post`.  Once they have initialized `that.container`, grades that extend `gpii.express.routable`
 should fire `onReadyToWireChildren` to indicate that this grade can perform its work.
 
 Once all children have been wired up, the `onChildrenWired` event is fired.  `gpii.express` waits until this has

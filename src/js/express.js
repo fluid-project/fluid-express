@@ -13,6 +13,13 @@ var express  = require("express");
 
 fluid.registerNamespace("gpii.express");
 
+gpii.express.pathForComponent = function (that) {
+    var instantiator  = fluid.getInstantiator(that);
+    var path          = instantiator.idToPath(that.id);
+
+    return fluid.model.parseEL(path);
+};
+
 /**
  *
  * @param that {Object} - The `gpii.express` component itself.
@@ -27,9 +34,9 @@ gpii.express.init = function (that) {
     else {
         that.express = express();
         that.express.set("port", that.options.port);
-        that.container = that.express;
+        that.router = that.express;
 
-        // Tell the `gpii.express.container` bits we use to wire in our children.
+        // Tell the `gpii.express.routable` bits we use to wire in our children.
         that.events.onReadyToWireChildren.fire(that);
     }
 };
@@ -73,7 +80,7 @@ gpii.express.expandPaths = function (array) {
 };
 
 fluid.defaults("gpii.express", {
-    gradeNames: ["gpii.express.container", "gpii.express.expressConfigHolder"],
+    gradeNames: ["gpii.express.routable", "gpii.express.expressConfigHolder"],
     messages: {
         missingPort: "Cannot initialize express because you have not supplied a 'port' option."
     },

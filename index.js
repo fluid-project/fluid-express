@@ -14,7 +14,7 @@ fluid.registerNamespace("gpii.express");
 fluid.module.register("gpii-express", __dirname, require);
 
 // The base grade used by `gpii.express` and `gpii.express.router`
-require("./src/js/container");
+require("./src/js/routable");
 
 // `gpii.express`, a component for express itself
 require("./src/js/express");
