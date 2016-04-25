@@ -26,7 +26,14 @@ gpii.express.router.createRouter = function (that) {
 };
 
 gpii.express.router.getRouter = function (that) {
-    return that.router;
+    var wrappedRouterFn = function wrappedRouter(request, response, next) {
+        that.router(request, response, next);
+    };
+
+    wrappedRouterFn.that = that;
+    wrappedRouterFn.path = gpii.express.pathForComponent(that);
+
+    return wrappedRouterFn;
 };
 
 fluid.defaults("gpii.express.router", {
