@@ -10,14 +10,51 @@ var fluid = require("infusion");
 require("../includes.js");
 require("./helpers-caseholder");
 
-fluid.defaults("gpii.test.express.helpers.testEnvironment", {
+fluid.defaults("gpii.tests.express.helpers.testEnvironment", {
     gradeNames: ["gpii.test.express.testEnvironment"],
     port:       7030,
     components: {
+        express: {
+            options: {
+                components: {
+                    topLevelRouter: {
+                        type: "gpii.express.router",
+                        options: {
+                            path: "/deep",
+                            components: {
+                                deepRouter: {
+                                    type: "gpii.express.router",
+                                    options: {
+                                        path: "/deeper",
+                                        components: {
+                                            veryDeepMiddleware: {
+                                                type: "gpii.test.express.middleware.hello"
+                                            }
+                                        }
+                                    }
+                                },
+                                deepMiddleware: {
+                                    type: "gpii.test.express.middleware.hello",
+                                    options: {
+                                        priority: "after:deepRouter"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    topLevelMiddleware: {
+                        type: "gpii.test.express.middleware.hello",
+                        options: {
+                            priority: "after:topLevelRouter"
+                        }
+                    }
+                }
+            }
+        },
         testCaseHolder: {
-            type: "gpii.test.express.helpers.caseHolder"
+            type: "gpii.tests.express.helpers.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.test.express.helpers.testEnvironment");
+fluid.test.runTests("gpii.tests.express.helpers.testEnvironment");
