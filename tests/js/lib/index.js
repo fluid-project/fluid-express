@@ -1,4 +1,5 @@
 "use strict";
+require("./diagramAllRoutes");
 require("./request");
 require("./test-helpers");
 require("./test-middleware-cookiesetter");
