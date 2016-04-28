@@ -1,7 +1,7 @@
 # `gpii.express.routable`
 
 This is the base grade that both [`gpii.express.router`](router.md) and [`gpii.express`](express.md) use to add their
-immediate children to  their [routing "stack"].  This process happens "bottom up", as in the following example:
+immediate children to  their [routing "stack"](router.md).  This process happens "bottom up", as in the following example:
 
 ```
 fluid.defaults("my.express.grade", {
