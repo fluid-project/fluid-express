@@ -166,8 +166,8 @@ can also set static values in the `template` value itself, as illustrated in the
 
 ### `{middleware}.middleware(request, response, next)`
 
-* `request {Object}` An Express Request object (see [the docs](request.md) for details.
-* `response {Object}` An Express Response object (see [the docs](response.md) for details.
+* `request {Object}` An Express Request object (see [the docs](request.md) for details).
+* `response {Object}` An Express Response object (see [the docs](response.md) for details).
 * `next`: The next Express middleware or router function in the chain.
 * Returns: Nothing.
 

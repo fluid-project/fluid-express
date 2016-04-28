@@ -56,7 +56,7 @@ gpii.express({
 As you can see, you are expected to have a `config.express` option that includes at least a `port` and `baseUrl`
 setting.  See the [documentation for the `gpii.express` grade](./docs/express.md) for a full list of configuration
 options.  This example configures a "static" router that is designed to serve up filesystem content (see
-["Static Router Module"](#static-router-module) for more details).
+[the middleware documentation](#middleware.md) for more details).
 
 For more information about the grades included in this package and how to use them together, take a look at
 the [documentation](./docs/express.md) in this package.

@@ -53,25 +53,17 @@ fluid.defaults("my.enclosing.component", {
                                 a: {
                                     type: "my.namespaced.middleware"
                                 },
-                                b: {
+                                d: {
                                     type: "gpii.express.router",
                                     options: {
-                                        priority: "after:a",
                                         components: {
-                                            d: {
-                                                type: "gpii.express.router",
+                                            c: {
+                                                type: "my.namespaced.middleware"
+                                            },
+                                            e: {
+                                                type: "my.namespaced.middleware",
                                                 options: {
-                                                    components: {
-                                                        c: {
-                                                            type: "my.namespaced.middleware"
-                                                        },
-                                                        e: {
-                                                            type: "my.namespaced.middleware",
-                                                            options: {
-                                                                priority: "last"
-                                                            }
-                                                        }
-                                                    }
+                                                    priority: "last"
                                                 }
                                             }
                                         }
