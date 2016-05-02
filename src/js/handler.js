@@ -1,38 +1,11 @@
-// An abstract grade for "request handler" modules.  Modules that extend this grade are expected to be created
-// dynamically, as outlined here:
-//
-// http://docs.fluidproject.org/infusion/development/SubcomponentDeclaration.html#dynamic-subcomponents-with-a-source-event
-//
-// Typically, a gpii.express.router module constructs one of these components per request.  Note that these
-// components are not persisted.  Any data you wish to retain should be stored in variables retained by a parent
-// component.
-//
-// This grade expects to be passed two things when it is constructed:
-//
-//  1. The express `request` object.
-//  2. The express `response` object.
-//
-// The `handler.router` grade and its derivatives take care of this for you.
-//
-// By default this object is created with a built-in timeout, and will respond with a timeout if nothing else occurs.
-// To prevent this (and to actually provide a meaningful response to the user), you are expected to define a
-// `handleRequest` invoker that does the following:
-//
-//  1. Sends the user a response.
-//  2. Fires an `afterResponseSent` event.  This prevents the timeout and destroys the component.
-//
-// The `sendResponse` function included with this grade takes care of both, so the simplest `handleRequest` invoker
-// can be defined like this:
-//
-// invokers: {
-//   handleRequest: {
-//     func: "{that}.sendResponse",
-//     args: [ 200, "I am happy to hear from you whatever you have to say." ]
-//   }
-// }
-//
-// For an example of how this can be used, check out the tests included with this package.
+/*
 
+    An abstract grade for "request handler" modules, which respond to individual requests sent to `requestAware` or
+    `contentAware` middleware.  See the documentation for more details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/handler.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -40,10 +13,6 @@ fluid.registerNamespace("gpii.express.handler");
 
 // TODO:  Convert this to use JSON Schema validation when available: https://issues.gpii.net/browse/CTR-161
 gpii.express.handler.checkRequirements = function (that) {
-    if (!that.options) {
-        fluid.fail("Cannot instantiate a 'handler' component without the required options...");
-    }
-
     if (!that.options.request) {
         fluid.fail("Cannot instantiate a 'handler' component without a request object...");
     }
@@ -69,29 +38,29 @@ gpii.express.handler.sendTimeoutResponse = function (that) {
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
-gpii.express.handler.sendResponse = function (that, statusCode, body) {
-    if (!that.response) {
+gpii.express.handler.sendResponse = function (that, response, statusCode, body) {
+    if (!response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
 
-    that.response.status(statusCode).send(body);
+    response.status(statusCode).send(body);
     that.events.afterResponseSent.fire(that);
 };
 
 fluid.defaults("gpii.express.handler", {
     gradeNames: ["fluid.component"],
     timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
+    events: {
+        afterResponseSent: null
+    },
     mergePolicy: {
         "request":  "nomerge",
         "response": "nomerge"
     },
+    request:  "{arguments}.1",
+    response: "{arguments}.2",
     members: {
-        "request":  "{that}.options.request",
-        "response": "{that}.options.response",
-        "timeout":  null
-    },
-    events: {
-        afterResponseSent: null
+        timeout:  null
     },
     listeners: {
         "onCreate.checkRequirements": {
@@ -116,7 +85,7 @@ fluid.defaults("gpii.express.handler", {
     invokers: {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
-            args:     ["{that}", "{arguments}.0", "{arguments}.1"]
+            args:     ["{that}", "{that}.options.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
             funcName: "gpii.express.handler.sendTimeoutResponse",
@@ -124,6 +93,27 @@ fluid.defaults("gpii.express.handler", {
         },
         handleRequest: {
             funcName: "fluid.notImplemented"
+        }
+    }
+});
+
+// The base grade for things like the "request aware" and "content aware" grades that dispatch individual requests to 
+// a `gpii.express.handler`.
+fluid.defaults("gpii.express.handlerDispatcher", {
+    gradeNames: ["fluid.component"],
+    timeout: 5000, // The default timeout we will pass to whatever grade we instantiate.
+    events: {
+        onRequest: null
+    },
+    distributeOptions: [{
+        source: "{that}.options.timeout",
+        target: "{that > gpii.express.handler}.options.timeout"
+    }],
+    dynamicComponents: {
+        requestHandler: {
+            createOnEvent: "onRequest",
+            type:          "gpii.express.handler",
+            options:       "{arguments}.0"
         }
     }
 });

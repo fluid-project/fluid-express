@@ -1,109 +1,58 @@
 # What is this?
 
-This package provides a series of a [Fluid components](https://github.com/fluid-project/infusion-docs/blob/master/src/documents/UnderstandingInfusionComponents.md) that encapsulates the main features of [Express](http://expressjs.com/).  Express is a node-based server framework written in Javascript.
+This package provides a series of [Fluid components](https://github.com/fluid-project/infusion-docs/blob/master/src/documents/UnderstandingInfusionComponents.md)
+that encapsulate the main features of [Express](http://expressjs.com/).  Express is a node-based server framework
+written in Javascript.
 
-In addition to Express itself, this package provides components that act as:
+In addition to Express itself, this package provides:
 
- 1. Routers (things that respond to requests for a given path).
- 2. Middleware (things that manipulate the request or response, such as parsing cookie headers)
-
-## About routers
-
-Routers are designed to work with an Express `request` object, and eventually return a `response` object to the client.  Only one router will ever respond to a single request.  To determine which router to use, each router registers itself for a particular `path`.
-
-Routers can be nested, and you can even nest an instance of a module within itself.  The `path` variable for a given router module is combined with the paths of its parents, and that ultimately determines which URLs a given router will be asked to handle.  For complex examples, see the tests included with this package.
-
-One of the key strengths of Express 4.x and higher is that routers are self-contained bubbles that can use different middleware than any other router, or Express itself.  This is incredibly important when working with even the most common third-party modules for Express.  There are often modules that must have a particular piece of middleware, and other modules that do not work at all if that middleware is available.  Routers can either inherit middleware from their parent, or can have their own middleware as needed.
-
-
-## About middleware
-
-Middleware is given access to the same `request` and `response` objects by Express.  Middleware can both read and update the request object.
-
-Middleware is called before any router is allowed to respond.  Many middleware modules may be in use at the same time, and they are called in the order in which they are added to their parent object (Express itself or a router).  The order in which they are called can be significant.  As an example, the session middleware provided by Express will only work if the cookie parsing middleware provided by Express has already been loaded.
-
-Middleware is visible to its container (`gpii.express` or a `gpii.express.router` module) and any of its container's child `gpii.express.router` modules.
-
+1. Wrappers for common routers and middleware provided with Express.
+2. Base grades that can be used in writing your own routers and middleware.
 
 # Why would I need it?
 
-This module allows you to wire together fluid components to serve up APIs and static content.  Simple server-side use cases can be implemented purely by configuring the components provided here.
+This module allows you to wire together fluid components to serve up APIs and static content.  Simple server-side use
+cases can be implemented purely by configuring the components provided here.
 
 # How is this different from Kettle?
 
-[Kettle](https://github.com/GPII/kettle) is a server side framework written entirely as a series of Fluid components, and used extensively within the GPII.  Kettle serves a wider range of use cases, and provides deeper options for replacing the internals of the server.
+In the long term, the two modules will likely evolve closer to each other, but in the short term, there are few key
+differences.
 
-This module, by comparison, works very much in the way that Express works.  It uses the native request and response objects provided by that framework.  In other words, this module is completely dependent on Express and is only ever likely to work like Express does.
+[Kettle](https://github.com/GPII/kettle) is a server side framework written entirely as a series of Fluid components,
+and used extensively within the GPII.  Kettle better serves use cases that don't involve a markup-based UI, and provides deeper options for
+replacing the internals of the server.  It also provides support for WebSockets.
+
+The `gpii.express` module is a wrapper for Express, and only for Express.  It does not do anything that Express cannot,
+such as communicating using WebSockets.  However, as it is based on the idiom of a newer version of express, it provides the
+[router](router.md) concept introduced in Express 4.x, which Kettle does not have.  It is better suited for use cases
+where support for complex routing and rendering of complex markup-based interfaces (as provided via [gpii-handlebars](https://github.com/GPII/gpii-handlebars)) is required.
 
 # How do I use it?
 
-To use this module, you will need to instantiate an instance of `gpii.express` itself (or something that extends it), and wire in at least one `gpii.express.router` module.  The most basic example (serving static content) should look something like:
+To use this module, you will need to instantiate an instance of `gpii.express` itself (or something that extends it),
+and wire in at least one `gpii.express.middleware` module.  The most basic example (serving static content) should look
+something like:
 
 ```
-var path = require("path");
-var contentDir = path.resolve(__dirname, "./content");
-gpii.express(
-{       // instance of component under test
-            createOnEvent: "constructServer",
-            type: "gpii.express",
+fluid.defaults("my.namespaced.grade", {
+    gradeNames: ["gpii.express"],
+    port:    8080,
+    components: {
+        staticRouter: {
+            type: "gpii.express.router.static",
             options: {
-                events: {
-                    started: "{testEnvironment}.events.started"
-                },
-                config: {
-                    express: {
-                        port: 80808,
-                        baseUrl: "http://localhost:80808"
-                    }
-                },
-                components: {
-                    staticRouter: {
-                        type: "gpii.express.router.static",
-                        options: {
-                            path:    "/",
-                            content: contentDir
-                        }
-                    }
-                }
+                path:    "/",
+                content: "%gpii-express/tests/html"
             }
         }
-)
+    }
+});
 ```
 
-As you can see, you are expected to have a `config.express` option that includes at least a `port` and `baseUrl` setting.
+See the [documentation for the `gpii.express` grade](./docs/express.md) for a full list of configuration
+options.  This example configures a "static" router that is designed to serve up filesystem content (see
+[the middleware documentation](#middleware.md) for more details).
 
-In this case, we also configure a "static" router that is designed to serve up filesystem content (see ["Static Router Module"](#static-router-module) for more details).
-
-## Common Middleware
-
-This package provides predefined wrappers for common Express middleware, including:
-
-1. `gpii.express.middleware.cookieparser`: Parses client cookie headers and makes them available as part of the `request` object, via the `request.cookies` object.
-2. `gpii.express.middleware.session`: Parses client session cookies makes server-side session data associated with the cookie available as part of the `request` object, via the `request.sesssion` object.
-3. `gpii.express.middleware.urlencoded`: Parses URL encoded data passed by the client and makes it available as part of the `request` object, via the `request.query` object.
-4. `gpii.express.middleware.json`: Parses JSON data passed by the client and makes it available as part of the `request` object, via the `request.body` object.
-
-For more information on any of these, look at their corresponding modules documentation in the [Express API Documentation](http://expressjs.com/4x/api.html#request).  For examples of their usage, check out the tests included with this package.
-
-## Writing your own middleware component
-
-This package provides the abstract `gpii.express.middleware` gradeName that all middleware should extend.  At a minimum, a valid implementation must override the default `middleware` invoker.
-
-For examples, check out the middleware modules included in the tests for this package.
-
-## Static Router Module
-
-This package provides the `gpii.express.router.static` module, a wrapper for the [static router built into Express](http://expressjs.com/guide/using-middleware.html#middleware.built-in).
-
-All router modules are expected to provide a `path` option that will be used to configure which URLs they will listen to.  This path follows the same conventions as the [`app.use`](http://expressjs.com/4x/api.html#app.use) method provided by the Express framework.  Notably:
-
-1.  Paths are relative to their container.
-2.  Paths can contain wildcards, as in
-
-As demonstrated in the example above, this module expects to work with a full filesystem path containing content.  You can use an expander, injection, string templates, or any other means to provide this information as long as a full path is eventually available.
-
-## Writing your own router component
-
-This package provides the abstract `gpii.express.router` gradeName that all routers should extend.  At a minimum, a valid implementation must override the default `handler` invoker.
-
-For examples, check out the router modules included in the tests for this package.
+For more information about the grades included in this package and how to use them together, take a look at
+the [documentation](./docs/express.md) in this package.

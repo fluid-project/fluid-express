@@ -6,51 +6,51 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes.js");
 require("./requestAware-caseholder");
 
-fluid.registerNamespace("gpii.express.tests.requestAware.instrumented");
-gpii.express.tests.requestAware.instrumented.handleRequest = function (that) {
+fluid.registerNamespace("gpii.test.express.requestAware.instrumented");
+gpii.test.express.requestAware.instrumented.handleRequest = function (that) {
     var instrumentedBody = "It's " + new Date() + " and I feel fine...";
     // Send the instrumented response using the standard function
     that.sendResponse(200, instrumentedBody);
 };
 
-fluid.defaults("gpii.express.tests.requestAware.instrumented", {
+fluid.defaults("gpii.test.express.requestAware.instrumented", {
     gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
-            funcName: "gpii.express.tests.requestAware.instrumented.handleRequest",
+            funcName: "gpii.test.express.requestAware.instrumented.handleRequest",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     }
 });
 
 // Grade to simulate a delay in responding
-fluid.registerNamespace("gpii.express.tests.requestAware.delayed");
+fluid.registerNamespace("gpii.test.express.requestAware.delayed");
 
 // Static function to make sure we are called the right `setTimeout`
-gpii.express.tests.requestAware.delayed.pretendToHandleRequest = function (that) {
+gpii.test.express.requestAware.delayed.pretendToHandleRequest = function (that) {
     setTimeout(that.actuallyHandleRequest, 2500);
 };
 
-gpii.express.tests.requestAware.delayed.actuallyHandleRequest = function (that) {
-    gpii.express.tests.requestAware.instrumented.handleRequest(that);
+gpii.test.express.requestAware.delayed.actuallyHandleRequest = function (that) {
+    gpii.test.express.requestAware.instrumented.handleRequest(that);
 };
 
-fluid.defaults("gpii.express.tests.requestAware.delayed", {
-    gradeNames: ["gpii.express.tests.requestAware.instrumented"],
+fluid.defaults("gpii.test.express.requestAware.delayed", {
+    gradeNames: ["gpii.test.express.requestAware.instrumented"],
     invokers: {
         handleRequest: {
-            funcName: "gpii.express.tests.requestAware.delayed.pretendToHandleRequest",
+            funcName: "gpii.test.express.requestAware.delayed.pretendToHandleRequest",
             args:     ["{that}"]
         },
         actuallyHandleRequest: {
-            funcName: "gpii.express.tests.requestAware.delayed.actuallyHandleRequest",
+            funcName: "gpii.test.express.requestAware.delayed.actuallyHandleRequest",
             args:     ["{that}"]
         }
     }
 });
 
 // Grade to simulate a timeout (or the lack of a meaningful response).
-fluid.defaults("gpii.express.tests.requestAware.timeout", {
+fluid.defaults("gpii.test.express.requestAware.timeout", {
     gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
@@ -59,52 +59,32 @@ fluid.defaults("gpii.express.tests.requestAware.timeout", {
     }
 });
 
-fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+fluid.defaults("gpii.test.express.requestAware.testEnvironment", {
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7433,
-    baseUrl: "http://localhost:7433/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
-        express: {       // instance of component under test
-            createOnEvent: "constructServer",
-            type: "gpii.express",
+        express: {
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
-                config: {
-                    express: {
-                        port: "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   "%gpii-express/tests/views",
-                        session: {
-                            secret: "Printer, printer take a hint-ter."
-                        }
-                    }
-                },
                 components: {
                     instrumented: {
-                        type: "gpii.express.requestAware.router",
+                        type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/instrumented",
-                            handlerGrades: ["gpii.express.tests.requestAware.delayed"]
+                            handlerGrades: ["gpii.test.express.requestAware.delayed"]
                         }
                     },
                     delayed: {
-                        type: "gpii.express.requestAware.router",
+                        type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/delayed",
-                            handlerGrades: ["gpii.express.tests.requestAware.delayed"]
+                            handlerGrades: ["gpii.test.express.requestAware.delayed"]
                         }
                     },
                     timeout: {
-                        type: "gpii.express.requestAware.router",
+                        type: "gpii.express.middleware.requestAware",
                         options: {
                             path:          "/timeout",
-                            handlerGrades: ["gpii.express.tests.requestAware.timeout"],
+                            handlerGrades: ["gpii.test.express.requestAware.timeout"],
                             timeout:       2000
                         }
                     }
@@ -112,9 +92,9 @@ fluid.defaults("gpii.express.tests.requestAware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.requestAware.caseHolder"
+            type: "gpii.test.express.requestAware.caseHolder"
         }
     }
 });
 
-gpii.express.tests.requestAware.testEnvironment();
+fluid.test.runTests("gpii.test.express.requestAware.testEnvironment");

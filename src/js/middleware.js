@@ -1,56 +1,54 @@
+/*
+
+    The base grade for express middleware modules represented as Fluid components. See the documentation for details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+
+*/
 "use strict";
-// This is the base grade for express middleware modules represented as Fluid components.
-//
-// An instance of `gpii.express` or `gpii.express.router` will automatically attempt to wire in anything with this
-// grade name into itself.
-//
-// You are expected to define a `middleware` invoker.  That function is passed an express `request` object, a
-// `response` object, and the `next` function in the chain of middlware and routers.
-//
-// An invoker definition might look something like:
-//
-// invokers: {
-//   middleware: {
-//     funcName: "your.namespaced.function",
-//     args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"] // request, response, next
-//   }
-// }
-//
-// Note that express itself does not limit the operation of middleware to a particular method. So, all middleware that
-// matches the supplied path will be executed.  See https://github.com/strongloop/express/issues/2760 for details.
-//
-// To avoid this behavior, set `options.method` to the method (string) or methods (array of strings) you're working
-// with.  Before passing on the request to your middleware implementation, the request method will be checked.  If the
-// method matches `options.method`, the `middleware` invoker will be executed.  If not, the supplied `next` method will
-// be executed and your middleware's logic will be bypassed.
-//
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.middleware");
 
-gpii.express.middleware.checkMethod = function (that, req, res, next) {
-    if (that.options.method && !gpii.express.middleware.matchesMethod(req, that.options.method)) {
-        next();
-    }
-    else {
-        that.middleware(req, res, next);
-    }
-};
 
-gpii.express.middleware.matchesMethod = function (req, methods) {
-    return fluid.contains(fluid.makeArray(methods), req.method.toLowerCase());
+// We must use this construct so that we always expose a function with the right signature, as Express determines
+// that we are a standard piece of middleware based on the method signature.
+// 
+// It incorporates the previous mechanism for gating requests by method (get, post, put, use, etc.).
+gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
+    var wrappedFunction = function wrappedStandardMiddleware(request, response, next) {
+        if (that.middleware) {
+            that.middleware(request, response, next);
+        }
+        else {
+            fluid.fail(that.options.messages.noMiddlewareFound);
+        }
+    };
+
+    wrappedFunction.that = that;
+    wrappedFunction.path = gpii.express.pathForComponent(that);
+    return wrappedFunction;
 };
 
 fluid.defaults("gpii.express.middleware", {
     gradeNames: ["fluid.component"],
+    path:       "/",
+    method:     "use",
+    messages: {
+        noMiddlewareFound: "Your middleware grade must have a `middleware` invoker or member."
+    },
+    events: {
+        onReady: {
+            events: {
+                onCreate: "onCreate"
+            },
+            args: ["{that}"]
+        }
+    },
     invokers: {
-        "middleware": {
-            funcName: "fluid.notImplemented"
-        },
-        "checkMethod": {
-            funcName: "gpii.express.middleware.checkMethod",
-            args:       ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
-
+        "getMiddlewareFn": {
+            funcName: "gpii.express.middleware.getWrappedMiddlewareFunction",
+            args: ["{that}"]
         }
     }
 });

@@ -1,32 +1,23 @@
-/* Tests for the "express" and "router" module */
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
-var jqUnit = require("node-jqunit");
 
-fluid.registerNamespace("gpii.express.tests.contentAware.caseHolder");
-
-gpii.express.tests.contentAware.caseHolder.verifyResponse = function (response, body, expected) {
-    gpii.express.tests.helpers.isSaneResponse(response, body, 200);
-    jqUnit.assertEquals("The body should be as expected...", expected, body);
-};
-
-fluid.defaults("gpii.express.tests.contentAware.request", {
-    gradeNames: ["kettle.test.request.http"],
-    path:       "{testEnvironment}.options.baseUrl",
-    port:       "{testEnvironment}.options.port"
+fluid.defaults("gpii.tests.express.contentAware.request", {
+    gradeNames: ["gpii.test.express.request"],
+    endpoint:   ""
 });
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
-    gradeNames: ["gpii.express.tests.caseHolder"],
+fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
+    gradeNames: ["gpii.test.express.caseHolder"],
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",
-        json:      "This is a JSON response." // Our dummy handler isn't actually sending JSON.
+        json:      "This is a JSON response.", // Our dummy handler isn't actually sending JSON.
+        unhandled: {isError: true, message: "Could not find an appropriate handler for the content types you accept." }
     },
     rawModules: [
         {
+            name: "Testing `content aware` grade...",
             tests: [
                 {
                     name: "Testing with no accepts headers...",
@@ -36,9 +27,9 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{defaultRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event:    "{defaultRequest}.events.onComplete",
-                            args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.default"]
+                            args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.default"]
                         }
                     ]
                 },
@@ -50,9 +41,9 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{jsonRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event:    "{jsonRequest}.events.onComplete",
-                            args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.json"]
+                            args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
                         }
                     ]
                 },
@@ -64,9 +55,23 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
                             func: "{textRequest}.send"
                         },
                         {
-                            listener: "gpii.express.tests.contentAware.caseHolder.verifyResponse",
+                            listener: "gpii.test.express.helpers.verifyStringContent",
                             event:    "{textRequest}.events.onComplete",
-                            args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{testCaseHolder}.options.expected.text"]
+                            args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.text"]
+                        }
+                    ]
+                },
+                {
+                    name: "Confirming that an error is thrown if no handler is found...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{unhandledRequest}.send"
+                        },
+                        {
+                            listener: "gpii.test.express.helpers.verifyJSONContent",
+                            event:    "{unhandledRequest}.events.onComplete",
+                            args:     ["{unhandledRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
                         }
                     ]
                 }
@@ -78,10 +83,10 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         defaultRequest: {
-            type: "gpii.express.tests.contentAware.request"
+            type: "gpii.tests.express.contentAware.request"
         },
         jsonRequest: {
-            type: "gpii.express.tests.contentAware.request",
+            type: "gpii.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "application/json"
@@ -89,12 +94,19 @@ fluid.defaults("gpii.express.tests.contentAware.caseHolder", {
             }
         },
         textRequest: {
-            type: "gpii.express.tests.contentAware.request",
+            type: "gpii.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "text/html"
                 }
             }
+        },
+        unhandledRequest: {
+            type: "gpii.tests.express.contentAware.request",
+            options: {
+                endpoint: "hcf"
+            }
         }
+
     }
 });

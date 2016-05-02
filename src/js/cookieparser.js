@@ -1,4 +1,10 @@
-// Module to add body parsing to express.
+/*
+
+    Module to add body parsing to express.  See the documentation for more details:
+    
+    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -16,6 +22,7 @@ gpii.express.middleware.cookieparser.middleware = function (that, req, res, next
 
 fluid.defaults("gpii.express.middleware.cookieparser", {
     gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
+    namespace:  "cookieparser",
     invokers: {
         "middleware": {
             funcName: "gpii.express.middleware.cookieparser.middleware",

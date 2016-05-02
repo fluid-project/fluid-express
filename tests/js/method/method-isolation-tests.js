@@ -5,27 +5,32 @@
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes");
-require("../middleware/test-middleware-counter");
 
 require("./method-caseholder");
 
-fluid.defaults("gpii.express.tests.method.router", {
-    gradeNames: ["gpii.express.requestAware.router"],
+fluid.defaults("gpii.tests.express.method.router", {
+    gradeNames: ["gpii.express.router"],
     path: "/",
     components: {
         counter: {
-            type: "gpii.express.tests.middleware.counter",
+            type: "gpii.test.express.middleware.counter",
             options: {
-                method: "{gpii.express.tests.method.router}.options.method"
+                priority: "before:requestAware"
+            }
+        },
+        requestAware: {
+            type: "gpii.express.middleware.requestAware",
+            options: {
+                method:        "{gpii.tests.express.method.router}.options.method",
+                handlerGrades: "{gpii.tests.express.method.router}.options.handlerGrades"
             }
         }
     }
 });
 
-fluid.defaults("gpii.express.tests.method.handler", {
+fluid.defaults("gpii.tests.express.method.handler", {
     gradeNames: ["gpii.express.handler"],
     invokers: {
         handleRequest: {
@@ -35,87 +40,70 @@ fluid.defaults("gpii.express.tests.method.handler", {
     }
 });
 
-fluid.defaults("gpii.express.tests.method.getHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.getHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the GET endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.postHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.postHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the POST endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.putHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.putHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the PUT endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.deleteHandler", {
-    gradeNames: ["gpii.express.tests.method.handler"],
+fluid.defaults("gpii.tests.express.method.deleteHandler", {
+    gradeNames: ["gpii.tests.express.method.handler"],
     message:    "This is a response from the DELETE endpoint."
 });
 
-fluid.defaults("gpii.express.tests.method.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+fluid.defaults("gpii.tests.express.method.testEnvironment", {
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   7521,
-    baseUrl: "http://localhost:7521/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
         express: {
-            createOnEvent: "constructServer",
-            type: "gpii.express",
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
-                config: {
-                    express: {
-                        port: "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        session: {
-                            secret: "Printer, printer take a hint-ter."
-                        }
-                    }
-                },
+                port: "{testEnvironment}.options.port",
+                baseUrl: "{testEnvironment}.options.baseUrl",
                 components: {
                     get: {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "get",
-                            handlerGrades: ["gpii.express.tests.method.getHandler"]
+                            handlerGrades: ["gpii.tests.express.method.getHandler"]
                         }
                     },
                     post: {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "post",
-                            handlerGrades: ["gpii.express.tests.method.postHandler"]
+                            handlerGrades: ["gpii.tests.express.method.postHandler"]
                         }
                     },
                     put: {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "put",
-                            handlerGrades: ["gpii.express.tests.method.putHandler"]
+                            handlerGrades: ["gpii.tests.express.method.putHandler"]
                         }
                     },
                     "delete": {
-                        type: "gpii.express.tests.method.router",
+                        type: "gpii.tests.express.method.router",
                         options: {
                             method:        "delete",
-                            handlerGrades: ["gpii.express.tests.method.deleteHandler"]
+                            handlerGrades: ["gpii.tests.express.method.deleteHandler"]
                         }
                     }
                 }
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.method.caseHolder"
+            type: "gpii.tests.express.method.caseHolder"
         }
     }
 });
 
-gpii.express.tests.method.testEnvironment();
+fluid.test.runTests("gpii.tests.express.method.testEnvironment");

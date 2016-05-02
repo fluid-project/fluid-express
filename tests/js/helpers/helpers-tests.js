@@ -6,45 +6,55 @@
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("../includes.js");
 require("./helpers-caseholder");
 
-fluid.defaults("gpii.express.tests.helpers.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+fluid.defaults("gpii.tests.express.helpers.testEnvironment", {
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:       7030,
-    baseUrl:    "http://localhost:7030/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
         express: {
-            createOnEvent: "constructServer",
-            type: "gpii.express",
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
-                config: {
-                    express: {
-                        port: "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   "%gpii-express/views",
-                        session: {
-                            secret: "Printer, printer take a hint-ter."
+                components: {
+                    topLevelRouter: {
+                        type: "gpii.express.router",
+                        options: {
+                            path: "/deep",
+                            components: {
+                                deepRouter: {
+                                    type: "gpii.express.router",
+                                    options: {
+                                        path: "/deeper",
+                                        components: {
+                                            veryDeepMiddleware: {
+                                                type: "gpii.test.express.middleware.hello"
+                                            }
+                                        }
+                                    }
+                                },
+                                deepMiddleware: {
+                                    type: "gpii.test.express.middleware.hello",
+                                    options: {
+                                        priority: "after:deepRouter"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    topLevelMiddleware: {
+                        type: "gpii.test.express.middleware.hello",
+                        options: {
+                            priority: "after:topLevelRouter"
                         }
                     }
-                },
-                components: {
                 }
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.helpers.caseHolder"
+            type: "gpii.tests.express.helpers.caseHolder"
         }
     }
 });
 
-gpii.express.tests.helpers.testEnvironment();
+fluid.test.runTests("gpii.tests.express.helpers.testEnvironment");

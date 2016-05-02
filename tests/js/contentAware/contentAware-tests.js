@@ -6,95 +6,111 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../includes");
 require("./contentAware-caseholder");
 
-fluid.registerNamespace("gpii.express.tests.contentAware.handler");
-gpii.express.tests.contentAware.handler.handleRequest = function (that) {
+fluid.registerNamespace("gpii.tests.express.contentAware.handler");
+gpii.tests.express.contentAware.handler.handleRequest = function (that) {
     that.sendResponse(that.options.statusCode, that.options.body);
 };
 
-fluid.defaults("gpii.express.tests.contentAware.handler", {
+fluid.defaults("gpii.tests.express.contentAware.handler", {
     gradeNames: ["gpii.express.handler"],
     statusCode: 200,
     invokers: {
         handleRequest: {
-            funcName: "gpii.express.tests.contentAware.handler.handleRequest",
+            funcName: "gpii.tests.express.contentAware.handler.handleRequest",
             args:     ["{that}"]
         }
     }
 });
 
-fluid.defaults("gpii.express.tests.contentAware.defaultHandler", {
-    gradeNames: ["gpii.express.tests.contentAware.handler"],
+fluid.defaults("gpii.tests.express.contentAware.defaultHandler", {
+    gradeNames: ["gpii.tests.express.contentAware.handler"],
     body:       "This is the default response."
 });
 
-fluid.defaults("gpii.express.tests.contentAware.jsonHandler", {
-    gradeNames: ["gpii.express.tests.contentAware.handler"],
+fluid.defaults("gpii.tests.express.contentAware.badDefaultHandler", {
+    gradeNames: ["gpii.tests.express.contentAware.handler"],
+    body:       "You should never see this."
+});
+
+
+fluid.defaults("gpii.tests.express.contentAware.jsonHandler", {
+    gradeNames: ["gpii.tests.express.contentAware.handler"],
     body:       "This is a JSON response."
 });
 
-fluid.defaults("gpii.express.tests.contentAware.textHandler", {
-    gradeNames: ["gpii.express.tests.contentAware.handler"],
+fluid.defaults("gpii.tests.express.contentAware.textHandler", {
+    gradeNames: ["gpii.tests.express.contentAware.handler"],
     body:       "This is the text response."
 });
 
-fluid.defaults("gpii.express.tests.contentAware.router", {
-    gradeNames: ["gpii.express.contentAware.router"],
+fluid.defaults("gpii.tests.express.contentAware.middleware", {
+    gradeNames: ["gpii.express.middleware.contentAware"],
     handlers: {
-        "default": {
+        noHeaders: {
+            priority:      "first",
             contentType:   "default",
-            handlerGrades: ["gpii.express.tests.contentAware.defaultHandler"]
-        },
-        json: {
-            contentType:  "application/json",
-            handlerGrades: ["gpii.express.tests.contentAware.jsonHandler"]
+            handlerGrades: ["gpii.tests.express.contentAware.defaultHandler"]
         },
         text: {
             contentType:   "text/html",
-            handlerGrades: ["gpii.express.tests.contentAware.textHandler"]
+            handlerGrades: ["gpii.tests.express.contentAware.textHandler"]
+        },
+        json: {
+            contentType:  "application/json",
+            handlerGrades: ["gpii.tests.express.contentAware.jsonHandler"]
+        },
+        // Confirm that we support "priorities".  This should not be allowed to handle requests with no `accept` header.
+        badDefault: {
+            // TODO:  Why don't "last", "first" or number values work for priority?
+            priority:      "after:goodDefault",
+            handlerGrades: ["gpii.tests.express.contentAware.badDefaultHandler"]
+        },
+        // Confirm that we support "priorities".  This should be allowed to handle request with no `accept` headers.
+        goodDefault: {
+            handlerGrades: ["gpii.tests.express.contentAware.defaultHandler"]
         }
     }
 });
 
-fluid.defaults("gpii.express.tests.contentAware.testEnvironment", {
-    gradeNames: ["fluid.test.testEnvironment"],
+fluid.defaults("gpii.tests.express.contentAware.failureWare", {
+    gradeNames: ["gpii.express.middleware.contentAware"],
+    handlers: {
+    }
+});
+
+fluid.defaults("gpii.tests.express.contentAware.testEnvironment", {
+    gradeNames: ["gpii.test.express.testEnvironment"],
     port:   6533,
-    baseUrl: "http://localhost:6533/",
-    events: {
-        constructServer: null,
-        onStarted: null
-    },
     components: {
-        express: {       // instance of component under test
-            createOnEvent: "constructServer",
-            type: "gpii.express",
+        express: {
             options: {
-                events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
-                },
-                config: {
-                    express: {
-                        port:    "{testEnvironment}.options.port",
-                        baseUrl: "{testEnvironment}.options.baseUrl",
-                        views:   "%gpii-express/tests/views",
-                        session: {
-                            secret: "Printer, printer take a hint-ter."
-                        }
-                    }
-                },
                 components: {
-                    router: {
-                        type: "gpii.express.tests.contentAware.router",
+                    failureware: {
+                        type: "gpii.tests.express.contentAware.failureWare",
+                        options: {
+                            priority: "first",
+                            path:     "/hcf"
+                        }
+                    },
+                    successWare: {
+                        type: "gpii.tests.express.contentAware.middleware",
                         options: {
                             path: "/"
+                        }
+                    },
+                    rootErrorCatcher: {
+                        type: "gpii.express.middleware.error",
+                        options: {
+                            priority: "after:successWare"
                         }
                     }
                 }
             }
         },
         testCaseHolder: {
-            type: "gpii.express.tests.contentAware.caseHolder"
+            type: "gpii.tests.express.contentAware.caseHolder"
         }
     }
 });
 
-gpii.express.tests.contentAware.testEnvironment();
+fluid.test.runTests("gpii.tests.express.contentAware.testEnvironment");

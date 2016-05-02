@@ -1,4 +1,10 @@
-// Module to help express understand URL-encoded data.
+/*
+
+    Router module to parse URL-encoded data in requests.  See the documentation for more details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+
+ */
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
@@ -16,6 +22,7 @@ gpii.express.middleware.bodyparser.urlencoded.middleware = function (that, req, 
 
 fluid.defaults("gpii.express.middleware.bodyparser.urlencoded", {
     gradeNames: ["fluid.modelComponent", "gpii.express.middleware"],
+    namespace: "urlencoded",
     invokers: {
         "middleware": {
             funcName: "gpii.express.middleware.bodyparser.urlencoded.middleware",

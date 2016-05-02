@@ -1,39 +1,56 @@
+/*
+
+    The base grade for express router modules.  See the documentation for details:
+
+    https://github.com/GPII/gpii-express/blob/master/docs/router.md
+
+ */
 "use strict";
-// Base grade for express router modules...
-//
-// The express module will automatically attempt to wire in anything with this gradeName into its routing table.
-//
-// When the underlying router is created, its constructor will be passed `options.routerOptions`.  For a list of the
-// supported options, check out [the Express documentation](http://expressjs.com/api.html#router).
-//
-// This implementation is not meant to be used directly.  When wrapping most existing Express routers, you will want
-// to implement your own `router` method and (typically) point your `router` invoker at that.
-//
-// For all other use cases, you should likely start with `requestAwareRouter` and implement your own handler.
-//
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.router");
 
-// Instantiate our router object.  The root gpii.express object will wire everything together
+/**
+ *
+ * @param that {Object} - The router object itself.
+ *
+ * Instantiate our router object.  The root `gpii.express` instance will wire everything together.
+ * 
+ */
 gpii.express.router.createRouter = function (that) {
     var express = require("express");
     that.router = express.Router(that.options.routerOptions);
-    that.events.routerLoaded.fire(that);
+
+    // Tell the `gpii.express.routable` bits we use to wire in our children.
+    that.events.onReadyToWireChildren.fire(that);
+};
+
+gpii.express.router.getRouter = function (that) {
+    var wrappedRouterFn = function wrappedRouter(request, response, next) {
+        that.router(request, response, next);
+    };
+
+    wrappedRouterFn.that = that;
+    wrappedRouterFn.path = gpii.express.pathForComponent(that);
+
+    return wrappedRouterFn;
 };
 
 fluid.defaults("gpii.express.router", {
-    gradeNames: ["fluid.component"],
-    method:     "use",
-    path:       null,
-    router:     null,
+    gradeNames:    ["gpii.express.routable", "gpii.express.middleware"],
     routerOptions: {},
     events: {
-        routerLoaded: null
+        onReady: {
+            events: {
+                onChildrenWired: "onChildrenWired"
+            },
+            args: ["{that}"]
+        }
     },
     invokers: {
-        route: {
-            funcName: "fluid.notImplemented"
+        getMiddlewareFn: {
+            funcName: "gpii.express.router.getRouter",
+            args:     ["{that}"]
         }
     },
     listeners: {

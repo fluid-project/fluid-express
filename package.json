@@ -1,32 +1,28 @@
 {
   "name":        "gpii-express",
-  "version":     "0.0.0",
+  "version":     "1.0.0",
   "description": "Fluid components to model an express server and associated router modules.",
-  "main":        "",
+  "main":        "index.js",
   "scripts": {
     "test":        "node tests/all-tests.js"
-  },
-  "repository": {
-    "type": "git",
-    "url":  "https://github.com/the-t-in-rtf/gpii-express"
   },
   "author":     "Tony Atkins <tony@raisingthefloor.org>",
   "license":    "BSD-3-Clause",
   "repository": "https://github.com/GPII/gpii-express",
   "dependencies": {
-    "body-parser":             "1.10.2",
-    "cookie-parser":           "1.3.3",
-    "express-session":         "1.10.1",
-    "express":                 "4.13.3",
-    "infusion":                "2.0.0-dev.20151211T025229Z.eabb4fc"
+    "body-parser": "1.10.2",
+    "cookie-parser": "1.3.3",
+    "express-session": "1.10.1",
+    "express": "4.13.3",
+    "infusion": "git://github.com/amb26/infusion.git#81ef49cdc0e78a96549c5195d9ffd42604087096"
   },
     "devDependencies": {
-      "kettle": "git://github.com/amb26/kettle.git#2517cc1d9d047d58aef70db48d1580da718ffc16",
+      "kettle": "git://github.com/amb26/kettle.git#994e3dfd97e4951441a6588ade76a5289c2a8072",
       "grunt": "~0.4.4",
       "grunt-shell": "0.6.4",
       "grunt-contrib-jshint": "~0.9.0",
       "grunt-jsonlint": "1.0.4",
-      "node-jqunit": "~1.1.3",
+      "node-jqunit": "1.1.4",
       "request": "2.51.0"
   }
 }

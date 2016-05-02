@@ -13,14 +13,17 @@ var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express");
 fluid.module.register("gpii-express", __dirname, require);
 
+// The base grade used by `gpii.express` and `gpii.express.router`
+require("./src/js/routable");
+
 // `gpii.express`, a component for express itself
 require("./src/js/express");
 
-// A configuration holder to allow express-like things to work without express itself (for example, in unit tests).
-require("./src/js/configholder");
-
 // `gpii.express.middleware`, the base grade for all middleware components
 require("./src/js/middleware");
+
+// `gpii.express.middleware.headerSetter`, middleware to set HTTP response headers
+require("./src/js/headerMiddleware");
 
 // A middleware component to add support for cookies
 require("./src/js/cookieparser");
@@ -34,6 +37,9 @@ require("./src/js/json");
 // A middleware component to add support for URL encoding of variables
 require("./src/js/urlencoded");
 
+// A middleware component to handle errors
+require("./src/js/errorMiddleware");
+
 // `gpii.express.router`, the base grade for all router components
 require("./src/js/router");
 
@@ -44,17 +50,14 @@ require("./src/js/static");
 require("./src/js/handler");
 
 // A convenience router that creates a request aware grade for each request
-require("./src/js/requestAwareRouter");
+require("./src/js/requestAwareMiddleware");
 
 // A convenience router to handle multiple content types from the same router.
-require("./src/js/contentAwareRouter");
-
-// An intermediate router that can be used to combine existing middleware and routers.
-require("./src/js/passthroughRouter");
+require("./src/js/contentAwareMiddleware");
 
 // Provide a function to optionally load test support.
 gpii.express.loadTestingSupport = function () {
-    require("./tests/js/lib/test-helpers");
+    require("./tests/js/lib/");
 };
 
 module.exports = gpii.express;
