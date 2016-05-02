@@ -13,13 +13,11 @@ fluid.registerNamespace("gpii.express.handler");
 
 // TODO:  Convert this to use JSON Schema validation when available: https://issues.gpii.net/browse/CTR-161
 gpii.express.handler.checkRequirements = function (that) {
-    if (!that.options.request) {
-        fluid.fail("Cannot instantiate a 'handler' component without a request object...");
-    }
-
-    if (!that.options.response) {
-        fluid.fail("Cannot instantiate a 'handler' component without a response object...");
-    }
+    fluid.each(["request", "response", "next"], function (requiredField) {
+        if (!that.options[requiredField]) {
+            fluid.fail("Cannot instantiate a 'handler' component without a '" + requiredField + "' object...");
+        }
+    });
 };
 
 gpii.express.handler.setTimeout = function (that) {
@@ -34,7 +32,7 @@ gpii.express.handler.clearTimeout = function (that) {
 };
 
 gpii.express.handler.sendTimeoutResponse = function (that) {
-    that.sendResponse("500", { ok: false, message: "Request aware component timed out before it could respond sensibly." });
+    that.options.next({ isError: true, statusCode: 500, message: "Request aware component timed out before it could respond sensibly." });
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
@@ -59,6 +57,7 @@ fluid.defaults("gpii.express.handler", {
     },
     request:  "{arguments}.1",
     response: "{arguments}.2",
+    next:     "{arguments}.3",
     members: {
         timeout:  null
     },

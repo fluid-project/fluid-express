@@ -40,8 +40,9 @@ A grade which creates a handler (see below) when its `onRequest` event is trigge
 `onRequest` event with the following arguments:
 
 * `options {Object}` The component options (including mix-in grades) for the handler component.  See below for example.
-* `request {Object}` An Express Request object (see [the docs](request.md) for details).
+* `request {Object}` An Express Request object (see [the docs](express.md) for details).
 * `response{Object}` An Express Response object (see [the docs](response.md) for details).
+* `next{Function}` the next piece of middleware in the chain.
 
 At a minimum, `options` must include `gradeNames`, which must contain a grade that implements the required
 `{handler}.handleRequest` invoker (see below).
@@ -85,6 +86,7 @@ For more examples of how this can be used, check out the tests included with thi
 
 | Option     | Type       | Description |
 | ---------- | ---------- | ----------- |
+| `next`     | `{Object}` | The next piece of middleware in the chain.  Among other things, this allows handlers to cleanly report errors. |
 | `request`  | `{Object}` | An Express Request object (see [the docs](request.md) for details). |
 | `response` | `{Object}` | An Express Response object (see [the docs](response.md) for details). |
 | `timeout`  | `{Number}` | The handler starts a timer when it is created, and will respond with an error message if the `afterResponseSent` event is not fired in `timeout` milliseconds. The `sendResponse` invoker (see below) takes care of this for you. |
