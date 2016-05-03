@@ -32,7 +32,7 @@ gpii.express.handler.clearTimeout = function (that) {
 };
 
 gpii.express.handler.sendTimeoutResponse = function (that) {
-    that.options.next({ isError: true, statusCode: 500, message: "Request aware component timed out before it could respond sensibly." });
+    that.sendError(500, { message: "Request aware component timed out before it could respond sensibly." });
 };
 
 // Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
@@ -42,7 +42,19 @@ gpii.express.handler.sendResponse = function (that, response, statusCode, body) 
     }
 
     response.status(statusCode).send(body);
-    that.events.afterResponseSent.fire(that);
+    // that.events.afterResponseSent.fire(that);
+};
+
+// Transform a raw `statusCode` and `body` using `that.options.rules.sendError` and pass it along the error-handling
+// middleware chain.
+//
+gpii.express.handler.sendError = function (that, statusCode, body) {
+    var transformedError = fluid.model.transformWithRules({ statusCode: statusCode, body: body}, that.options.rules.sendError);
+    that.options.next(transformedError);
+};
+
+gpii.express.handler.addResponseListener = function (that) {
+    that.options.response.once("finish", that.events.afterResponseSent.fire);
 };
 
 fluid.defaults("gpii.express.handler", {
@@ -61,9 +73,20 @@ fluid.defaults("gpii.express.handler", {
     members: {
         timeout:  null
     },
+    rules: {
+        sendError: {
+            isError:    { literalValue: true},
+            statusCode: "statusCode",
+            "":         "body"
+        }
+    },
     listeners: {
         "onCreate.checkRequirements": {
             funcName: "gpii.express.handler.checkRequirements",
+            args:     ["{that}"]
+        },
+        "onCreate.addResponseListener": {
+            funcName: "gpii.express.handler.addResponseListener",
             args:     ["{that}"]
         },
         "onCreate.setTimeout": {
@@ -85,6 +108,10 @@ fluid.defaults("gpii.express.handler", {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
             args:     ["{that}", "{that}.options.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
+        },
+        sendError: {
+            funcName: "gpii.express.handler.sendError",
+            args:     ["{that}", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
             funcName: "gpii.express.handler.sendTimeoutResponse",

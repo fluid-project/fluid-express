@@ -89,7 +89,7 @@ For more examples of how this can be used, check out the tests included with thi
 | `next`     | `{Object}` | The next piece of middleware in the chain.  Among other things, this allows handlers to cleanly report errors. |
 | `request`  | `{Object}` | An Express Request object (see [the docs](request.md) for details). |
 | `response` | `{Object}` | An Express Response object (see [the docs](response.md) for details). |
-| `timeout`  | `{Number}` | The handler starts a timer when it is created, and will respond with an error message if the `afterResponseSent` event is not fired in `timeout` milliseconds. The `sendResponse` invoker (see below) takes care of this for you. |
+| `timeout`  | `{Number}` | The handler starts a timer when it is created, and will respond with an error message if no response is send in `timeout` milliseconds. |
 
 
 ### Component Invokers
@@ -104,16 +104,17 @@ to implement this and ensure that a response is eventually sent (for example, by
 * `body`: The body (JSON, text, or otherwise) to be sent via `that.response.send`.
 * Returns: Nothing.
 
-Sends a response and fires the `afterResponseSent` event.  There is a default listener for this event that clears the
-timeout that would otherwise send an error message after `options.timeout` seconds.
-
+Sends a response to the user.
 
 #### `{that}.sendTimeoutResponse()`
 * Returns: Nothing.
 
 This invoker sends an error message if an `afterResponseSent` event has not been fired within `options.timeout` seconds.
-Override this invoker if you want to send your own timeout error.  If you want to disable the timeout,
-override this with `fluid.identity`, as in:
+There is a default listener for the [`response` object's finish event](https://nodejs.org/api/http.html#http_event_finish)
+that fires `afterResponseSent`, so any piece of middleware that sends a response should clear the timeout.
+
+You can override this invoker if you want to send your own timeout error.  If you want to disable the timeout,
+override the invoker with a call to `fluid.identity`, as in:
 
 ```
 invokers: {
