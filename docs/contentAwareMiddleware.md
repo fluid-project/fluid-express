@@ -104,7 +104,7 @@ This invoker fulfills the standard contract for a `gpii.express.middleware` comp
 if possible, and allows that to handle the original request.  If no handler can be found, `next(err)` is called and
 downstream [error handling middleware](middleware.md) is expected to handle things from there.
 
-* `request {Object}` An Express Request object (see [the docs](request.md) for details).
+* `request {Object}` An Express Request object (see [the docs](express.md) for details).
 * `response{Object}` An Express Response object (see [the docs](response.md) for details).
 * `next`: The next middleware function in the chain.
 * Returns: Nothing.

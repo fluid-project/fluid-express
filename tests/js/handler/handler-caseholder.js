@@ -7,9 +7,6 @@ fluid.registerNamespace("gpii.tests.express.handler.caseHolder");
 
 fluid.defaults("gpii.tests.express.handler.testHandler", {
     gradeNames: ["gpii.express.handler"],
-    // We are not creating these dynamically, so we need to redefine these two options for our tests to run.
-    request:    false,
-    response:   false,
     invokers: {
         handleRequest: {
             funcName: "fluid.identity"
@@ -17,9 +14,9 @@ fluid.defaults("gpii.tests.express.handler.testHandler", {
     }
 });
 
-gpii.tests.express.handler.caseHolder.createWithOptions = function (options, errorTexts) {
+gpii.tests.express.handler.caseHolder.createWithOptions = function (dispatcher, request, response, next, errorTexts) {
     jqUnit.expectFrameworkDiagnostic("Creating component with bogus options...", function () {
-        gpii.tests.express.handler.testHandler(options);
+        dispatcher.events.onRequest.fire({ gradeNames: ["gpii.tests.express.handler.testHandler"] }, request, response, next);
     }, errorTexts);
 };
 
@@ -42,7 +39,7 @@ fluid.defaults("gpii.tests.express.handler.caseHolder", {
                     sequence: [
                         {
                             funcName: "gpii.tests.express.handler.caseHolder.createWithOptions",
-                            args:     [{ response: true }, ["without a request object"]] // options, errorTexts
+                            args:     ["{caseHolder}.dispatcher", null, true, fluid.identity, ["without a 'request' object"]] // request, response, next, errorTexts
                         }
                     ]
                 },
@@ -52,7 +49,17 @@ fluid.defaults("gpii.tests.express.handler.caseHolder", {
                     sequence: [
                         {
                             funcName: "gpii.tests.express.handler.caseHolder.createWithOptions",
-                            args:     [{ request: true }, ["without a response object"]] // options, errorTexts
+                            args:     ["{caseHolder}.dispatcher", true, null, fluid.identity, ["without a 'response' object"]] // request, response, next, errorTexts
+                        }
+                    ]
+                },
+                {
+                    name: "Try to create a handler without a response option...",
+                    type: "test",
+                    sequence: [
+                        {
+                            funcName: "gpii.tests.express.handler.caseHolder.createWithOptions",
+                            args:     ["{caseHolder}.dispatcher", true, true, null, ["without a 'next' object"]] // options, request, response, next, errorTexts
                         }
                     ]
                 },
@@ -68,5 +75,10 @@ fluid.defaults("gpii.tests.express.handler.caseHolder", {
                 }
             ]
         }
-    ]
+    ],
+    components: {
+        dispatcher: {
+            type: "gpii.express.handlerDispatcher"
+        }
+    }
 });

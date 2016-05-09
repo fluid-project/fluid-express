@@ -11,40 +11,97 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.registerNamespace("gpii.express.handler");
 
-// TODO:  Convert this to use JSON Schema validation when available: https://issues.gpii.net/browse/CTR-161
+/**
+ *
+ * Check that all our requirements are met before doing any actual work.
+ *
+ * @param that {Object} the handler component itself.
+ *
+ */
 gpii.express.handler.checkRequirements = function (that) {
-    if (!that.options.request) {
-        fluid.fail("Cannot instantiate a 'handler' component without a request object...");
-    }
-
-    if (!that.options.response) {
-        fluid.fail("Cannot instantiate a 'handler' component without a response object...");
-    }
+    fluid.each(["request", "response", "next"], function (requiredField) {
+        if (!that.options[requiredField]) {
+            fluid.fail("Cannot instantiate a 'handler' component without a '" + requiredField + "' object...");
+        }
+    });
 };
 
+/**
+ *
+ * Put a timeout mechanism in place that will send a stock response if the handler does not complete its work in time.
+ *
+ * @param that {Object} the handler component itself.
+ *
+ */
 gpii.express.handler.setTimeout = function (that) {
     that.timeout = setTimeout(that.sendTimeoutResponse, that.options.timeout);
 };
 
-// When we are destroyed, we need to clear our timeout to avoid trying to perform an action on a destroyed component.
+/**
+ *
+ * Clear the timeout mechanism once a response has been sent.
+ *
+ * @param that {Object} the handler component itself.
+ *
+ */
 gpii.express.handler.clearTimeout = function (that) {
     if (that.timeout) {
         clearTimeout(that.timeout);
     }
 };
 
+/**
+ *
+ * Send a canned response if no one else has responded in `options.timeout` milliseconds.
+ *
+ * @param that {Object} the handler component itself.
+ *
+ */
 gpii.express.handler.sendTimeoutResponse = function (that) {
-    that.sendResponse("500", { ok: false, message: "Request aware component timed out before it could respond sensibly." });
+    that.sendError(500, { message: that.options.messages.timedOut });
 };
 
-// Convenience function (with accompanying invoker) to ensure that the `afterResponseSent` event is fired.
+/**
+ *
+ * Send a response using `that.options.response`.  Commonly accessed using `{that}.sendResponse`.
+ *
+ * @param that {Object} the handler component itself.
+ * @param response {Object} The Express `request` object.
+ * @param statusCode {Number} The status code for the response.
+ * @param body {Object} The payload to send.
+ */
 gpii.express.handler.sendResponse = function (that, response, statusCode, body) {
     if (!response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
 
     response.status(statusCode).send(body);
-    that.events.afterResponseSent.fire(that);
+};
+
+
+/**
+ *
+ * Wrap a raw error based on the rules found in `that.options.rules.sendError` and pass it along to downstream
+ * middleware using `that.options.next`.
+ *
+ * @param that {Object} the handler component itself.
+ * @param statusCode {Number} The status code for the response.
+ * @param body {Object} The payload to send.
+ */
+gpii.express.handler.sendError = function (that, statusCode, body) {
+    var transformedError = fluid.model.transformWithRules({ statusCode: statusCode, body: body}, that.options.rules.sendError);
+    that.options.next(transformedError);
+};
+
+/**
+ *
+ * Add a listener to the native response object's `finish` listener that triggers our own `afterResponseSent` event.
+ *
+ * @param that {Object} the handler component itself.
+ *
+ */
+gpii.express.handler.addResponseListener = function (that) {
+    that.options.response.once("finish", that.events.afterResponseSent.fire);
 };
 
 fluid.defaults("gpii.express.handler", {
@@ -59,12 +116,27 @@ fluid.defaults("gpii.express.handler", {
     },
     request:  "{arguments}.1",
     response: "{arguments}.2",
+    next:     "{arguments}.3",
+    messages: {
+        timedOut: "Request aware component timed out before it could respond sensibly."
+    },
     members: {
         timeout:  null
+    },
+    rules: {
+        sendError: {
+            isError:    { literalValue: true},
+            statusCode: "statusCode",
+            "":         "body"
+        }
     },
     listeners: {
         "onCreate.checkRequirements": {
             funcName: "gpii.express.handler.checkRequirements",
+            args:     ["{that}"]
+        },
+        "onCreate.addResponseListener": {
+            funcName: "gpii.express.handler.addResponseListener",
             args:     ["{that}"]
         },
         "onCreate.setTimeout": {
@@ -86,6 +158,10 @@ fluid.defaults("gpii.express.handler", {
         sendResponse: {
             funcName: "gpii.express.handler.sendResponse",
             args:     ["{that}", "{that}.options.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
+        },
+        sendError: {
+            funcName: "gpii.express.handler.sendError",
+            args:     ["{that}", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
             funcName: "gpii.express.handler.sendTimeoutResponse",

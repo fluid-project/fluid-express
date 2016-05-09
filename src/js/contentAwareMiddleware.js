@@ -27,7 +27,7 @@ gpii.express.middleware.contentAware.delegateToHandler = function (that, request
     var handlerGrades = gpii.express.middleware.contentAware.getHandlerGradesByContentType(that, request);
     if (handlerGrades) {
         var options = { gradeNames: handlerGrades };
-        that.events.onRequest.fire(options, request, response); // options, request, response
+        that.events.onRequest.fire(options, request, response, next); // options, request, response, next
     }
     else {
         next({ isError: true, message: that.options.messages.noHandlerFound });
