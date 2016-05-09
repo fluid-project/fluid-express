@@ -20,13 +20,13 @@ In the long term, the two modules will likely evolve closer to each other, but i
 differences.
 
 [Kettle](https://github.com/GPII/kettle) is a server side framework written entirely as a series of Fluid components,
-and used extensively within the GPII.  Kettle serves a wider range of use cases, and provides deeper options for
+and used extensively within the GPII.  Kettle better serves use cases that don't involve a markup-based UI, and provides deeper options for
 replacing the internals of the server.  It also provides support for WebSockets.
 
 The `gpii.express` module is a wrapper for Express, and only for Express.  It does not do anything that Express cannot,
-such as communicating using WebSockets.  However, as it is based on a newer version of express, it provides the
-[router](router.md) concept introduced in Express 4.x, which Kettle does not have.  It is uniquely suited for use cases
-in which [middleware isolation](middleware.md) and complex routing are required.
+such as communicating using WebSockets.  However, as it is based on the idiom of a newer version of express, it provides the
+[router](router.md) concept introduced in Express 4.x, which Kettle does not have.  It is better suited for use cases
+where support for complex routing and rendering of complex markup-based interfaces (as provided via [gpii-handlebars](https://github.com/GPII/gpii-handlebars)) is required.
 
 # How do I use it?
 
