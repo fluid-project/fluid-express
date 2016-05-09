@@ -46,55 +46,24 @@ handlers: {
     },
     json: {
         contentType:   "application/json",
+        priority:      "after:html",
         handlerGrades: ["my.json.handler.grade"]
     },
     "default": {
       priority:      "last",
+      contentType:    "*/*",
       handlerGrades: "my.default.handler.grade"
     }
 }
 ```
 
-Note that omitting the `contentType` value indicates that a handler should be given the chance to handle any request
-regardless of its `Accept` headers.  You should reserve this for your default handler, and should explicitly put it at
-the end of your list of handlers, as in the above example.
-
-Note also that `request.accepts()` will match the first handler if the request has no `Accept` header.   Thus, in the
+Note that `request.accepts()` will match the first handler if the request has no `Accept` header.   Thus, in the
 above example:
 
 1. A request with no `Accept` header will be handled by `my.html.handler.grade` (because it's first in the list by priority).
 2. A request with `Accept: text/html`, `Accept: text/plain`, or `Accept: text/*` will be handled by `my.html.handler.grade`.
 3. A request with `Accept: application/json` or `Accept: application/*` will be handled by `my.json.handler.grade`.
 4. A request with any other `Accept` header will be handled by `my.default.handler.grade`
-
-If you would like to use the same "default" handler if there is no `Accept` header, you would use a `handlers` block like:
-
-```
-handlers: {
-    noHeaders: {
-      priority:      "first",
-      contentType:   "default",
-      handlerGrades: "my.default.handler.grade"
-    }
-    html: {
-        priority: "after:noHeaders",
-        contentType: ["text/html", "text/plain"],
-        handlerGrades: "my.html.handler.grade"
-    },
-    json: {
-        priority: "after:html",
-        contentType:   "application/json",
-        handlerGrades: ["my.json.handler.grade"]
-    },
-    "default": {
-      priority:      "last",
-      handlerGrades: "my.default.handler.grade"
-    }
-}
-```
-
-The nonsensical `contentType` value is used in the first entry to prevent it from matching all requests.  Only
-requests with no `Accept` header can possibly match it.
 
 # Component Invokers
 
