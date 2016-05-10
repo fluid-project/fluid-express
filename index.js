@@ -42,22 +42,11 @@ else {
     fluid.registerNamespace("gpii.express");
     fluid.module.register("gpii-express", __dirname, require);
 
-    // `fluid.loadIncludes` seems to force paths relative to infusion.  TODO:  Discuss with Antranig.
-    gpii.express.loadIncludes = function (includeFilePaths) {
-        var includeFilePathsArray = fluid.makeArray(includeFilePaths);
-        fluid.each(includeFilePathsArray, function (includeFilePath) {
-            var filesToInclude = require(includeFilePath);
-            fluid.each(filesToInclude, function (fileToInclude) {
-                require(fileToInclude);
-            });
-        });
-    };
-
-    gpii.express.loadIncludes("./mainIncludes.json");
+    require("./mainIncludes.js");
 
     // Provide a function to optionally load test support.
     gpii.express.loadTestingSupport = function () {
-        gpii.express.loadIncludes("./testIncludes.json");
+        require("./testIncludes.js");
     };
 
     gpii.express.baseDir = __dirname;
