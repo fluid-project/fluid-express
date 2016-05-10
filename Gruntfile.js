@@ -2,15 +2,18 @@
 
 module.exports = function (grunt) {
     grunt.initConfig({
+        eslint: {
+            src: ["./src/**/*.js", "./tests/**/*.js", "./*.js"]
+        },
         jshint: {
-            src: ["./src/**/*.js", "./tests/**/*.js"],
+            src: ["./src/**/*.js", "./tests/**/*.js", "./*.js"],
             buildScripts: ["Gruntfile.js"],
             options: {
                 jshintrc: true
             }
         },
         jsonlint: {
-            src: ["src/**/*.json", "tests/**/*.json"]
+            src: ["src/**/*.json", "tests/**/*.json", "./*.json"]
         }
     });
 
@@ -18,5 +21,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsonlint");
     grunt.loadNpmTasks("grunt-shell");
 
-    grunt.registerTask("lint", "Apply jshint and jsonlint", ["jshint", "jsonlint"]);
+    grunt.loadNpmTasks("gruntify-eslint");
+
+    grunt.registerTask("lint", "Apply jshint and jsonlint", ["jshint", "jsonlint", "eslint"]);
 };
