@@ -34,7 +34,7 @@ try {
 }
 
 if (parentExpress) {
-    parentExpress.log("Resolved gpii-express from path " + __dirname + " to " + parentExpress.baseDir);
+    fluid.log("Resolved gpii-express from path " + __dirname + " to " + parentExpress.baseDir);
     module.exports = parentExpress;
     return;
 }
@@ -64,6 +64,6 @@ else {
 
     module.exports = gpii.express;
 
-    console.log("Express at path " + gpii.express.baseDir + " is at top level ");
+    fluid.log("Express at path " + gpii.express.baseDir + " is at top level ");
 }
 
