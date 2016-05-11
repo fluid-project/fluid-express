@@ -28,11 +28,15 @@ try {
     var parentExpressPath = resolve.sync("gpii-express", {
         basedir: upPath
     });
+    // Per discussions with Antranig, we agreed this is not practical to test.  Exclude it from the test coverage reports.
+    /* istanbul ignore next */
     parentExpress = require(parentExpressPath);
 } catch (e) {
     // There will always be an exception if we are at the top level.  We choose to ignore it.
 }
 
+// Per discussions with Antranig, we agreed this is not practical to test.  Exclude it from the test coverage reports.
+/* istanbul ignore if */
 if (parentExpress) {
     fluid.log("Resolved gpii-express from path " + __dirname + " to " + parentExpress.baseDir);
     module.exports = parentExpress;

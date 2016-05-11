@@ -62,16 +62,30 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                     ]
                 },
                 {
-                    name: "Confirming that an error is thrown if no handler is found...",
+                    name: "Confirming that an error is thrown if no handler is found (because there are no handlers)...",
                     type: "test",
                     sequence: [
                         {
-                            func: "{unhandledRequest}.send"
+                            func: "{noHandlerRequest}.send"
                         },
                         {
                             listener: "gpii.test.express.helpers.verifyJSONContent",
-                            event:    "{unhandledRequest}.events.onComplete",
-                            args:     ["{unhandledRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
+                            event:    "{noHandlerRequest}.events.onComplete",
+                            args:     ["{noHandlerRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
+                        }
+                    ]
+                },
+                {
+                    name: "Confirming that an error is thrown if no handler is found (because the request is too picky)...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{pickyRequest}.send"
+                        },
+                        {
+                            listener: "gpii.test.express.helpers.verifyJSONContent",
+                            event:    "{pickyRequest}.events.onComplete",
+                            args:     ["{pickyRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
                         }
                     ]
                 }
@@ -101,10 +115,18 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                 }
             }
         },
-        unhandledRequest: {
+        noHandlerRequest: {
             type: "gpii.tests.express.contentAware.request",
             options: {
                 endpoint: "hcf"
+            }
+        },
+        pickyRequest: {
+            type: "gpii.tests.express.contentAware.request",
+            options: {
+                headers: {
+                    accept: "candy/floss"
+                }
             }
         }
 
