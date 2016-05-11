@@ -19,7 +19,7 @@ fluid.registerNamespace("gpii.express.router");
  */
 gpii.express.router.createRouter = function (that) {
     var express = require("express");
-    that.router = express.Router(that.options.routerOptions);
+    that.router = express.Router(that.options.routerOptions); // eslint-disable-line new-cap
 
     // Tell the `gpii.express.routable` bits we use to wire in our children.
     that.events.onReadyToWireChildren.fire(that);

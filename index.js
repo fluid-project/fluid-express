@@ -10,54 +10,53 @@
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 
-fluid.registerNamespace("gpii.express");
-fluid.module.register("gpii-express", __dirname, require);
+var path = require("path");
+var resolve = require("resolve");
 
-// The base grade used by `gpii.express` and `gpii.express.router`
-require("./src/js/routable");
+/*
+    Assuming we are starting in `sub-module/node_modules/gpii-express`, check for the existence of `gpii-express`
+    in the directory that contains `sub-module`, i.e. `../../..`.
 
-// `gpii.express`, a component for express itself
-require("./src/js/express");
+    Adapted from the new "dedupe" handling in infusion:
 
-// `gpii.express.middleware`, the base grade for all middleware components
-require("./src/js/middleware");
+    https://github.com/fluid-project/infusion/blob/master/src/module/fluid.js
+ */
 
-// `gpii.express.middleware.headerSetter`, middleware to set HTTP response headers
-require("./src/js/headerMiddleware");
+var parentExpress;
+try {
+    var upPath = path.resolve(__dirname, "../../..");
+    var parentExpressPath = resolve.sync("gpii-express", {
+        basedir: upPath
+    });
+    // Per discussions with Antranig, we agreed this is not practical to test.  Exclude it from the test coverage reports.
+    /* istanbul ignore next */
+    parentExpress = require(parentExpressPath);
+} catch (e) {
+    // There will always be an exception if we are at the top level.  We choose to ignore it.
+}
 
-// A middleware component to add support for cookies
-require("./src/js/cookieparser");
+// Per discussions with Antranig, we agreed this is not practical to test.  Exclude it from the test coverage reports.
+/* istanbul ignore if */
+if (parentExpress) {
+    fluid.log("Resolved gpii-express from path " + __dirname + " to " + parentExpress.baseDir);
+    module.exports = parentExpress;
+    return;
+}
+else {
+    fluid.registerNamespace("gpii.express");
+    fluid.module.register("gpii-express", __dirname, require);
 
-// A middleware component to add support for sessions (requires cookie support)
-require("./src/js/session");
+    require("./mainIncludes.js");
 
-// A middleware component to add support for handling JSON data in POST requests, etc.
-require("./src/js/json");
+    // Provide a function to optionally load test support.
+    gpii.express.loadTestingSupport = function () {
+        require("./testIncludes.js");
+    };
 
-// A middleware component to add support for URL encoding of variables
-require("./src/js/urlencoded");
+    gpii.express.baseDir = __dirname;
 
-// A middleware component to handle errors
-require("./src/js/errorMiddleware");
+    module.exports = gpii.express;
 
-// `gpii.express.router`, the base grade for all router components
-require("./src/js/router");
+    fluid.log("Express at path " + gpii.express.baseDir + " is at top level ");
+}
 
-// A router module to handle static content.  Wraps the built-in `express.static()` module.
-require("./src/js/static");
-
-// A convenience grade on which "request handler" components are based
-require("./src/js/handler");
-
-// A convenience router that creates a request aware grade for each request
-require("./src/js/requestAwareMiddleware");
-
-// A convenience router to handle multiple content types from the same router.
-require("./src/js/contentAwareMiddleware");
-
-// Provide a function to optionally load test support.
-gpii.express.loadTestingSupport = function () {
-    require("./tests/js/lib/");
-};
-
-module.exports = gpii.express;

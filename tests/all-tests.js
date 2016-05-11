@@ -1,3 +1,5 @@
+"use strict";
+
 require("./js/contentAware/contentAware-tests");
 require("./js/errorMiddleware/errorMiddleware-tests");
 require("./js/express/express-failure-tests");
