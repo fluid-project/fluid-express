@@ -83,7 +83,7 @@ fluid.defaults("gpii.tests.express.helpers.caseHolder", {
         },
         {
             listener: "fluid.identity",
-            event: "{testEnvironment}.events.onStarted"
+            event: "{testEnvironment}.events.onAllReady"
         },
         {
             func: "jqUnit.assert",
