@@ -179,14 +179,14 @@ gpii.test.express.standardSequenceStart = [
     },
     {
         listener: "fluid.identity",
-        event: "{testEnvironment}.events.onAllReady"
+        event: "{testEnvironment}.events.onFixturesConstructed"
     }
 ];
 
 // A caseholder for use in testing `gpii-express` or its child components.  Your test environment should:
 //
 //   1. Have a `constructFixtures` event and wait to construct its test components until `constructFixtures` is fired.
-//   2. Have an `onAllReady` event which waits for all of the startup events for its child components.
+//   2. Have an `onFixturesConstructed` event which waits for all of the startup events for its child components.
 //
 // A reference `testEnvironment` is included below.
 //
@@ -210,7 +210,7 @@ fluid.defaults("gpii.test.express.testEnvironment", {
     events: {
         constructFixtures: null,
         onExpressReady: null,
-        onAllReady: {
+        onFixturesConstructed: {
             events: {
                 onExpressReady: "onExpressReady"
             }
