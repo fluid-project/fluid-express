@@ -61,7 +61,7 @@ gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (t
     if (bestMatch) {
         // Filter to handlers that either have no contentType ("all content types") or that match the request.
         var matchingHandler = fluid.find(orderedHandlers, function (value) {
-            return (value.contentType === bestMatch) ? value : undefined;
+            return (fluid.makeArray(value.contentType).indexOf(bestMatch) !== -1) ? value : undefined;
         });
 
         return matchingHandler ? matchingHandler.handlerGrades : undefined;

@@ -59,11 +59,11 @@ fluid.defaults("gpii.tests.express.contentAware.middleware", {
             handlerGrades: ["gpii.tests.express.contentAware.defaultHandler"]
         },
         text: {
-            contentType:   "text/html",
+            contentType:   "text/html", // An example with one request type
             handlerGrades: ["gpii.tests.express.contentAware.textHandler"]
         },
         json: {
-            contentType:  "application/json",
+            contentType:   ["application/json", "application/secondary"],  // An example with multiple request types
             handlerGrades: ["gpii.tests.express.contentAware.jsonHandler"]
         }
     }
