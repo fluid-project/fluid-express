@@ -79,7 +79,7 @@ fluid.defaults("gpii.tests.express.helpers.caseHolder", {
     sequenceStart: [
         // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
         {
-            func: "{testEnvironment}.events.constructServer.fire"
+            func: "{testEnvironment}.events.constructFixtures.fire"
         },
         {
             listener: "fluid.identity",
