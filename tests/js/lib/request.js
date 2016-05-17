@@ -1,7 +1,7 @@
 "use strict";
 var fluid = require("infusion");
 
-var kettle = fluid.require("kettle");
+var kettle = fluid.require("%kettle");
 kettle.loadTestingSupport();
 
 fluid.defaults("gpii.test.express.request", {
