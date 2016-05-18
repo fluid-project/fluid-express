@@ -11,9 +11,6 @@ var jqUnit = require("node-jqunit");
 
 require("../includes");
 
-var kettle = require("kettle");
-kettle.loadTestingSupport();
-
 fluid.registerNamespace("gpii.tests.express.method.caseHolder");
 
 /*

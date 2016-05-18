@@ -88,6 +88,20 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             args:     ["{pickyRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
                         }
                     ]
+                },
+                {
+                    name: "Testing with a secondary request type (array of content types)...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{secondaryContentTypeRequest}.send"
+                        },
+                        {
+                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            event:    "{secondaryContentTypeRequest}.events.onComplete",
+                            args:     ["{secondaryContentTypeRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
+                        }
+                    ]
                 }
             ]
         }
@@ -128,7 +142,14 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                     accept: "candy/floss"
                 }
             }
+        },
+        secondaryContentTypeRequest: {
+            type: "gpii.tests.express.contentAware.request",
+            options: {
+                headers: {
+                    accept: "application/secondary"
+                }
+            }
         }
-
     }
 });

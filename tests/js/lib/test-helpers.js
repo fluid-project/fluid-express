@@ -172,24 +172,27 @@ fluid.defaults("gpii.test.express.caseHolder.base", {
     }
 });
 
+// Standard initial test sequence steps.
+gpii.test.express.standardSequenceStart = [
+    { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
+        func: "{testEnvironment}.events.constructFixtures.fire"
+    },
+    {
+        listener: "fluid.identity",
+        event: "{testEnvironment}.events.onFixturesConstructed"
+    }
+];
+
 // A caseholder for use in testing `gpii-express` or its child components.  Your test environment should:
 //
-//   1. Have a `constructServer` event and wait to construct its test components until `constructServer` is fired.
-//   2. Have an `onStarted` event which waits for all of the startup events for its child components.
+//   1. Have a `constructFixtures` event and wait to construct its test components until `constructFixtures` is fired.
+//   2. Have an `onFixturesConstructed` event which waits for all of the startup events for its child components.
 //
 // A reference `testEnvironment` is included below.
 //
 fluid.defaults("gpii.test.express.caseHolder", {
     gradeNames: ["gpii.test.express.caseHolder.base"],
-    sequenceStart: [
-        { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
-            func: "{testEnvironment}.events.constructServer.fire"
-        },
-        {
-            listener: "fluid.identity",
-            event: "{testEnvironment}.events.onStarted"
-        }
-    ]
+    sequenceStart: gpii.test.express.standardSequenceStart
 });
 
 
@@ -205,18 +208,23 @@ fluid.defaults("gpii.test.express.testEnvironment", {
         }
     },
     events: {
-        constructServer: null,
-        onStarted: null
+        constructFixtures: null,
+        onExpressReady: null,
+        onFixturesConstructed: {
+            events: {
+                onExpressReady: "onExpressReady"
+            }
+        }
     },
     components: {
         express: {
-            createOnEvent: "constructServer",
+            createOnEvent: "constructFixtures",
             type: "gpii.express",
             options: {
                 port: "{testEnvironment}.options.port",
                 baseUrl: "{testEnvironment}.options.baseUrl",
                 events: {
-                    onStarted: "{testEnvironment}.events.onStarted"
+                    onStarted: "{testEnvironment}.events.onExpressReady"
                 }
             }
         }
