@@ -29,6 +29,7 @@ You may also need one or more [`gpii.express.middleware`](middleware.md) instanc
 
 ## Component Options
 
-| Option | Type       | Description |
-| ------ | ---------- | ----------- |
-| `port` | `{Number}` | The port `express` should listen on.  An error will be thrown unless you set this. |
+| Option              | Type       | Description                          |
+| ------------------- | ---------- | ------------------------------------ |
+| `port` (required)   | `{Number}` | The port `express` should listen on. |
+| `expressAppOptions` | `{Object}` | Configuration options to be passed on to express via `app.set`. See [the Express documentation](http://expressjs.com/en/4x/api.html#app) for supported options. By default, the port is set to `port` (see above), and the default options for `JSON.stringify` as used within express itself are set to `null` and `2`. |

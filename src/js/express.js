@@ -33,7 +33,11 @@ gpii.express.init = function (that) {
     }
     else {
         that.express = express();
-        that.express.set("port", that.options.port);
+
+        fluid.each(that.options.expressAppOptions, function (value, key) {
+            that.express.set(key, value);
+        });
+
         that.router = that.express;
 
         // Tell the `gpii.express.routable` bits we use to wire in our children.
@@ -86,6 +90,11 @@ fluid.defaults("gpii.express", {
     },
     path: "/",
     express: null,
+    expressAppOptions: {
+        "port": "{that}.options.port",
+        "json replacer": null,
+        "json spaces":   2
+    },
     events: {
         onStarted:  null,
         onStopped:  null
@@ -105,4 +114,3 @@ fluid.defaults("gpii.express", {
         }
     }
 });
-

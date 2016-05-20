@@ -6,6 +6,7 @@
   "rules": {
     "block-scoped-var": 2,
     "camelcase": 2,
+    "comma-dangle": [2, "never"],
     "comma-style": [
       2,
       "last"
@@ -25,6 +26,7 @@
       "allow-null"
     ],
     "guard-for-in": 2,
+    "indent": [2, 4],
     "new-cap": 2,
     "no-bitwise": 2,
     "no-caller": 2,
@@ -55,9 +57,10 @@
       "double"
     ],
     "semi": [
-      0,
+      2,
       "always"
     ],
+    "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
     "strict": [2, "global"],
     "valid-typeof": 2,
     "wrap-iife": [

@@ -24,7 +24,7 @@
     "grunt-jsonlint": "1.0.4",
     "grunt-shell": "0.6.4",
     "gruntify-eslint": "2.0.0",
-    "kettle": "git://github.com/amb26/kettle.git#994e3dfd97e4951441a6588ade76a5289c2a8072",
+    "kettle": "git://github.com/amb26/kettle.git#d808f3d5e326265aab9aaa1014703d75fa8ef0d0",
     "node-jqunit": "1.1.4",
     "request": "2.51.0"
   }
