@@ -2,7 +2,7 @@
 
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
+var gpii = fluid.registerNamespace("gpii");
 
 require("../../../");
 gpii.express.loadTestingSupport();
@@ -17,7 +17,10 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.dataSource", {
     url: {
         expander: {
             funcName: "fluid.stringTemplate",
-            args: ["%baseUrl%endpoint", { baseUrl: "{testEnvironment}.options.baseUrl", endpoint: "{that}.options.endpoint"}]
+            args: ["%baseUrl%endpoint", {
+                baseUrl: "{testEnvironment}.options.baseUrl",
+                endpoint: "{that}.options.endpoint"
+            }]
         }
     }
 });
@@ -38,8 +41,8 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                     },
                     {
                         listener: "jqUnit.assertDeepEq",
-                        event:    "{testEnvironment}.express.loopback.events.onRequestReceived",
-                        args:     ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.success", "{arguments}.0"]
+                        event: "{testEnvironment}.express.loopback.events.onRequestReceived",
+                        args: ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.success", "{arguments}.0"]
                     }
                 ]
             },
@@ -53,8 +56,8 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                     },
                     {
                         listener: "jqUnit.assertDeepEq",
-                        event:    "{testEnvironment}.express.loopback.events.onRequestReceived",
-                        args:     ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.empty", "{arguments}.0"]
+                        event: "{testEnvironment}.express.loopback.events.onRequestReceived",
+                        args: ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.empty", "{arguments}.0"]
                     }
                 ]
             },
@@ -68,8 +71,8 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                     },
                     {
                         listener: "jqUnit.assertDeepEq",
-                        event:    "{testEnvironment}.express.loopback.events.onRequestReceived",
-                        args:     ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.empty", "{arguments}.0"]
+                        event: "{testEnvironment}.express.loopback.events.onRequestReceived",
+                        args: ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.empty", "{arguments}.0"]
                     }
                 ]
             },
@@ -79,14 +82,14 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                 sequence: [
                     {
                         funcName: "kettle.test.pushInstrumentedErrors",
-                        args:     ["gpii.test.notifyGlobalError"]
+                        args: ["gpii.test.notifyGlobalError"]
                     },
                     {
                         func: "{existingQueryDataDatasource}.get",
                         args: []
                     },
                     {
-                        event:    "{globalErrorHandler}.events.onError",
+                        event: "{globalErrorHandler}.events.onError",
                         listener: "gpii.test.awaitGlobalError"
                     },
                     {
@@ -128,7 +131,7 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
                     deeplyUndefined: undefined
                 }
             },
-            topLevelArray: [ 0, 1, 2]
+            topLevelArray: [0, 1, 2]
 
         }
     },
@@ -145,7 +148,7 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
                     deeplyNull: null
                 }
             },
-            topLevelArray: [ 0, 1, 2]
+            topLevelArray: [0, 1, 2]
         }
     },
     components: {

@@ -4,88 +4,69 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 fluid.loadTestingSupport();
 
+var jqUnit = require("node-jqunit");
+
 require("../../../");
 gpii.express.loadTestingSupport();
 
 var kettle = require("kettle");
 kettle.loadTestingSupport();
 
-fluid.defaults("gpii.tests.express.withJsonQueryParser.request", {
-    gradeNames: ["kettle.test.request.httpCookie"],
+require("./caseHolder");
+require("./payloadTests");
+
+fluid.registerNamespace("gpii.tests.express.querystring.withJsonQueryParser.caseHolder");
+
+fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.request", {
+    gradeNames: ["kettle.test.request.http"],
     path: {
         expander: {
             funcName: "fluid.stringTemplate",
             args: [
                 "%baseUrl%endpoint?%queryString",
                 {
-                    baseUrl: "{testEnvironment}.options.baseUrl",
+                    baseUrl: "{that}.options.baseUrl",
                     endpoint: "{that}.options.endpoint",
                     queryString: "@expand:gpii.express.querystring.encodeObject({that}.options.qs)"
                 }
             ]
         }
     },
-    port: "{testEnvironment}.options.port",
     endpoint: "loopback",
     qs: {},
     method: "GET"
 });
 
-fluid.defaults("gpii.tests.express.withJsonQueryParser.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
-    rawModules: [{
-        name: "Testing query decoding integration with express...",
-        tests: [
-            {
-                name: "A complex query string should be handled correctly...",
-                type: "test",
-                sequence: [
-                    {
-                        func: "{complexQueryRequest}.send"
-                    },
-                    {
-                        event:    "{testEnvironment}.express.loopback.events.onRequestReceived",
-                        listener: "jqUnit.assertDeepEq",
-                        args:     ["The JSON payload should have been preserved...", "{complexQueryRequest}.options.qs", "{arguments}.0"]
-                    }
-                ]
-            },
-            {
-                name: "An empty query string should be handled correctly...",
-                type: "test",
-                sequence: [
-                    {
-                        func: "{emptyQueryRequest}.send"
-                    },
-                    {
-                        event:    "{testEnvironment}.express.loopback.events.onRequestReceived",
-                        listener: "jqUnit.assertDeepEq",
-                        args:     ["The resulting JSON payload should be an empty object...", "{emptyQueryRequest}.options.qs", "{arguments}.0"]
-                    }
-                ]
+gpii.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload = function (that, payload) {
+    that.currentExpected = payload;
+    gpii.tests.express.querystring.withJsonQueryParser.request({
+        qs: payload,
+        baseUrl: that.options.baseUrl,
+        port: that.options.port,
+        listeners: {
+            "onCreate.send": {
+                func: "{that}.send"
             }
-        ]
+        }
+    });
+};
+
+fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.caseHolder", {
+    gradeNames: ["gpii.tests.express.querystring.caseHolder", "gpii.test.express.caseHolder"],
+    rawModules: [gpii.tests.express.payloadTests],
+    port: "{testEnvironment}.options.port",
+    baseUrl: "{testEnvironment}.options.baseUrl",
+    // The choice was either to make another caseHolder with its own module resolver that duplicated bits of the standard express caseHolder wiring, or to do this.
+    // TODO:  Discuss other approaches with Antranig.
+    sequenceEnd: [{
+        event:    "{testEnvironment}.express.loopback.events.onRequestReceived",
+        listener: "jqUnit.assertDeepEq",
+        args:     ["The JSON payload should be preserved...", "{caseHolder}.currentExpected", "{arguments}.0"]
     }],
-    components: {
-        complexQueryRequest: {
-            type: "gpii.tests.express.withJsonQueryParser.request",
-            options: {
-                qs: {
-                    rootString: "root string value",
-                    rootNumber: 1,
-                    middle: {
-                        middleString: "middle string value",
-                        middleNumber: 2,
-                        bottom: {
-                            bottomString: "bottom string value",
-                            bottomNumber: 3.1415926
-                        }
-                    }
-                }
-            }
-        },
-        emptyQueryRequest: {
-            type: "gpii.tests.express.withJsonQueryParser.request"
+    invokers: {
+        testPayload: {
+            funcName: "gpii.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload",
+            args:    ["{that}", "{arguments}.0"] // payload
         }
     }
 });
@@ -98,13 +79,16 @@ fluid.defaults("gpii.tests.express.withJsonQueryParser.environment", {
             options: {
                 components: {
                     loopback: {
-                        type: "gpii.test.express.loopbackMiddleware"
+                        type: "gpii.test.express.loopbackMiddleware",
+                        options: {
+                            priority: "after:jsonQueryParser"
+                        }
                     }
                 }
             }
         },
         caseHolder: {
-            type: "gpii.tests.express.withJsonQueryParser.caseHolder"
+            type: "gpii.tests.express.querystring.withJsonQueryParser.caseHolder"
         }
     }
 });
