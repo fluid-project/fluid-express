@@ -7,7 +7,7 @@ that wires the decoder into a `gpii.express` instance.
 To assist in communicating with this grade (and with systems like CouchDB that support similar encoding), a
 custom grade that extends `kettle.dataSource.URL` is also provided.
 
-# Functions
+# Static Functions
 
 ## `gpii.express.querystring.encodeObject(toEncode, avoidStringifying)`
 * `toEncode`: `Object` The object to encode.
@@ -31,6 +31,16 @@ foo.bar=%22baz%22
 
 This "deep" encoding is not compatible with the CouchDB View API, but can be used with
 `gpii.express.withJsonQueryParser` (see below).
+
+The `avoidStringifying` option is intended for use with things like couchdb-lucene, which do not support enclosing
+values in quotes.  With that option set to something "truthy", `{ foo: "bar" }` becomes:
+
+```
+foo=bar
+```
+
+Note that there is no option to decode this format using the decoding function provided by this library or the companion
+middleware.  It is used with with couchdb-lucene in other packages, and is only crudely tested here.
 
 ## `gpii.express.querystring.decode(toDecode)`
 * `toDecode`: `String` The string to decode.
@@ -72,6 +82,64 @@ As a bit of shorthand, parameters that lack a value will be set to `true`.  Thus
         }
     }
 }
+```
+
+# Model Transformation Functions
+
+To assist in encoding and decoding values using the
+[Model Transformation API](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html), this package
+provides a transformation function for encoding and another for decoding.
+
+## `gpii.express.querystring.encodeTransform(valueToTransform, transformSpec)`
+* `valueToTransform`: `String` The object to transform.
+* `transformSpec`: `Object` The full transformation spec.  Besides the normal options for specifying the value to be transformed, only `avoidStringifying` is useful here (see below).
+* Returns: `String` A string containing the encoded values from the original object.
+
+
+```
+var encoded = fluid.model.transformWithRules({ foo: "bar"}, {
+    "": {
+        transform: {
+            type: "gpii.express.querystring.encodeTransform",
+            inputPath: ""
+        }
+    }
+});
+
+// encoded = `foo=%22bar%22`
+
+var encoded2 = fluid.model.transformWithRules({ foo: "bar"}, {
+    "": {
+        transform: {
+            type: "gpii.express.querystring.encodeTransform",
+            inputPath: "",
+            avoidStringifying: true
+        }
+    }
+});
+
+// encoded2 = `foo=bar`
+
+```
+
+
+## `gpii.express.querystring.decodeTransform(valueToTransform)`
+* `valueToTransform`: `String` The object to transform.
+* Returns: `Object` An object that contains the values in the encoded string.
+
+
+```
+var decoded = fluid.model.transformWithRules("foo=%22bar%22", {
+    "": {
+        transform: {
+            type: "gpii.express.querystring.decodeTransform",
+            inputPath: ""
+        }
+    }
+});
+
+// decoded = { foo: "bar" }
+
 ```
 
 # Components

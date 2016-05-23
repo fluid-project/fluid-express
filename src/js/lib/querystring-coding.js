@@ -12,6 +12,19 @@ var gpii  = fluid.registerNamespace("gpii");
 
 fluid.registerNamespace("gpii.express.querystring");
 
+gpii.express.querystring.encodeTransform = function (value, transformSpec) {
+    return gpii.express.querystring.encodeObject(value, transformSpec && transformSpec.avoidStringifying);
+};
+
+/**
+ * 
+ * Wrap our encoding function as a transformation function.
+ * 
+ */
+fluid.defaults("gpii.express.querystring.encodeTransform", {
+    gradeNames: ["fluid.standardTransformFunction"]
+});
+
 /**
  *
  * Encode an object and produce a query string.
@@ -109,4 +122,11 @@ fluid.defaults("gpii.express.dataSource.urlEncodedJson", {
             args:     ["{that}", "{arguments}.0", "{arguments}.2"] // url, termMap (not used), directModel
         }
     }
+});
+
+gpii.express.querystring.decodeTransform = gpii.express.querystring.decode;
+
+// Wrap the decode function for use in model transformations.
+fluid.defaults("gpii.express.querystring.decodeTransform", {
+    gradeNames: ["fluid.standardTransformFunction"]
 });
