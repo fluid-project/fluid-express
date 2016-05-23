@@ -11,5 +11,6 @@ require("./js/middleware/middleware-tests");
 require("./js/middleware/middleware-failure-tests");
 require("./js/priority/priority-integration-tests");
 require("./js/requestAware/requestAware-tests");
+require("./js/querystring/");
 require("./js/router/");
 

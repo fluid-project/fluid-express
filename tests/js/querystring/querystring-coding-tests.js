@@ -10,8 +10,6 @@ var gpii  = fluid.registerNamespace("gpii");
 require("../../../");
 
 var jqUnit = require("node-jqunit");
-jqUnit.module("Testing query string encoding and decoding...");
-
 
 require("./caseHolder");
 require("./payloadTests");
@@ -26,26 +24,16 @@ gpii.tests.express.querystring.coding.caseHolder.testPayload = function (payload
 
 // "extended" tests that do not fit our standard "round tripping" pattern.
 gpii.tests.express.querystring.coding.caseHolder.extendedTests = function () {
-    jqUnit.test("Testing decoding of fields without a value...", function () {
-        var input    = "foo.bar&baz&qux.quux.corge";
-        var output   = gpii.express.querystring.decode(input);
-        var expected = { foo: { bar: true }, baz: true, qux: { quux: { corge: true }}};
-        jqUnit.assertDeepEq("Values without a right-hand should become `true`...", expected, output);
-    });
+    var input    = "foo.bar&baz&qux.quux.corge";
+    jqUnit.assertDeepEq("Values without a right-hand should become `true`...", { foo: { bar: true }, baz: true, qux: { quux: { corge: true }}}, gpii.express.querystring.decode(input));
 
-    jqUnit.test("Test encoding of empty payloads...", function () {
-        var input    = {};
-        var output   = gpii.express.querystring.encodeObject(input);
-        var expected = "";
-        jqUnit.assertDeepEq("An empty object should be encoded as an empty query string...", expected, output);
-    });
+    jqUnit.assertDeepEq("An empty object should be encoded as an empty query string...", "", gpii.express.querystring.encodeObject({}));
 
-    jqUnit.test("Test decoding of empty strings...", function () {
-        var input    = "";
-        var output   = gpii.express.querystring.decode(input);
-        var expected = {};
-        jqUnit.assertDeepEq("An empty string should be decoded as an empty object...", expected, output);
-    });
+    jqUnit.assertDeepEq("An empty string should be decoded as an empty object...", {}, gpii.express.querystring.decode(""));
+
+    jqUnit.expectFrameworkDiagnostic("Decoding a non-string should result in an error...", function () { gpii.express.querystring.decode({}); }, ["Can only decode strings."]);
+
+    jqUnit.expectFrameworkDiagnostic("Encoding a non-object should result in an error...", function () { gpii.express.querystring.encodeObject("HCF"); }, ["Can only encode objects."]);
 };
 
 fluid.defaults("gpii.tests.express.querystring.coding.caseHolder", {
@@ -56,7 +44,7 @@ fluid.defaults("gpii.tests.express.querystring.coding.caseHolder", {
             name: "Extended en/decoding tests...",
             tests: [{
                 name: "Test various asymmetric conditions that cannot be tested in the normal manner",
-                expect: 0,
+                expect: 3,
                 sequence: [{
                     funcName: "gpii.tests.express.querystring.coding.caseHolder.extendedTests"
                 }]

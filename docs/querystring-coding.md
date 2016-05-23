@@ -9,8 +9,9 @@ custom grade that extends `kettle.dataSource.URL` is also provided.
 
 # Functions
 
-## `gpii.express.querystring.encodeObject(toEncode)`
+## `gpii.express.querystring.encodeObject(toEncode, avoidStringifying)`
 * `toEncode`: `Object` The object to encode.
+* `avoidStringifying`: `{Boolean}` By default, all values are stringified.  Pass a "truthy" value for this parameter to pass raw values.  Intended for use with systems like [couchdb-lucene](https://github.com/rnewson/couchdb-lucene) that support this format.
 * Returns: `String` A string that represents the original object (see below).
 
 This function converts `toEncode` to a string and URI encodes it.  For example, `{ foo: "bar" }` becomes:

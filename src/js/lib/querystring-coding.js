@@ -19,19 +19,20 @@ fluid.registerNamespace("gpii.express.querystring");
  * Encode an object and produce a query string.
  *
  * @param valueToEncode {Object} The value to encode.
+ * @param avoidStringifying {Boolean} By default, all values are stringified.  Pass a "truthy" value for this parameter to pass raw values.
  * @param parentKey {String} If we are working with "deep" material, parentKey will represent the path to the value.
  * @returns {string} A query string representing the object.
  */
-gpii.express.querystring.encodeObject = function (valueToEncode, parentKey) {
+gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifying, parentKey) {
     if (typeof valueToEncode === "object" && !Array.isArray(valueToEncode)) {
         var segments = [];
         fluid.each(valueToEncode, function (subValue, subKey) {
             var segmentKey = parentKey ? parentKey + "." + subKey : subKey;
-            segments.push(gpii.express.querystring.encodeObject(subValue, segmentKey));
+            segments.push(gpii.express.querystring.encodeObject(subValue, avoidStringifying, segmentKey));
         });
         if (segments.length === 0) {
             if (parentKey) {
-                return encodeURIComponent(parentKey) + "=" + encodeURIComponent(JSON.stringify(valueToEncode));
+                return encodeURIComponent(parentKey) + "=" + encodeURIComponent(avoidStringifying ? valueToEncode : JSON.stringify(valueToEncode));
             }
             else {
                 return "";
@@ -42,7 +43,7 @@ gpii.express.querystring.encodeObject = function (valueToEncode, parentKey) {
         }
     }
     else if (parentKey) {
-        return encodeURIComponent(parentKey) + "=" + encodeURIComponent(JSON.stringify(valueToEncode));
+        return encodeURIComponent(parentKey) + "=" + encodeURIComponent(avoidStringifying ? valueToEncode : JSON.stringify(valueToEncode));
     }
     else {
         fluid.fail("Can only encode objects.");
@@ -132,7 +133,7 @@ gpii.express.dataSource.urlEncodedJson.resolveUrl = function (that, urlToResolve
         fluid.fail("Cannot work with a URL that already includes query data.");
     }
     else if (directModel) {
-        return urlToResolve + "?" + gpii.express.querystring.encodeObject(directModel);
+        return urlToResolve + "?" + gpii.express.querystring.encodeObject(directModel, that.options.avoidStringifying);
     }
     else {
         return urlToResolve;

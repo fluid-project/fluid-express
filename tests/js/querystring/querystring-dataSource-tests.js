@@ -77,6 +77,21 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                 ]
             },
             {
+                name: "It should be possible to encode values without stringifying them...",
+                type: "test",
+                sequence: [
+                    {
+                        func: "{avoidStringifying}.get",
+                        args: ["{testEnvironment}.options.input.avoidStringifying"]
+                    },
+                    {
+                        listener: "jqUnit.assertDeepEq",
+                        event: "{testEnvironment}.express.rawLoopback.events.onRequestReceived",
+                        args: ["The JSON payload should have been received by the server...", "{testEnvironment}.options.expected.avoidStringifying", "{arguments}.0"]
+                    }
+                ]
+            },
+            {
                 name: "Attempting to use the grade with existing query data should result in an error...",
                 type: "test",
                 sequence: [
@@ -102,6 +117,13 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
     components: {
         normalDatasource: {
             type: "gpii.tests.express.querystring.dataSource.dataSource"
+        },
+        avoidStringifying: {
+            type: "gpii.tests.express.querystring.dataSource.dataSource",
+            options: {
+                avoidStringifying: true,
+                endpoint: "rawLoopback"
+            }
         },
         existingQueryDataDatasource: {
             type: "gpii.tests.express.querystring.dataSource.dataSource",
@@ -133,6 +155,9 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
             },
             topLevelArray: [0, 1, 2]
 
+        },
+        avoidStringifying: {
+            q: "foo AND (status:bar OR status:baz)"
         }
     },
     expected: {
@@ -149,19 +174,32 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
                 }
             },
             topLevelArray: [0, 1, 2]
+        },
+        avoidStringifying: {
+            q: "foo AND (status:bar OR status:baz)"
         }
     },
     components: {
         express: {
-            type: "gpii.express.withJsonQueryParser",
             options: {
                 components: {
+                    rawLoopback: {
+                        type: "gpii.test.express.loopbackMiddleware",
+                        options: {
+                            path: "/rawLoopback",
+                            priority: "before:jsonQueryParser"
+                        }
+                    },
+                    jsonQueryParser: {
+                        type: "gpii.express.middleware.withJsonQueryParser"
+                    },
                     loopback: {
                         type: "gpii.test.express.loopbackMiddleware",
                         options: {
                             priority: "after:jsonQueryParser"
                         }
                     }
+
                 }
             }
         },

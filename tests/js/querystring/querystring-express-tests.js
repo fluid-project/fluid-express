@@ -2,7 +2,9 @@
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
-fluid.loadTestingSupport();
+
+// TODO: Reviewing with Antranig, uncommenting this line results in lots of "assertion outside test context" errors when requiring this from another file.
+// fluid.loadTestingSupport();
 
 require("../../../");
 gpii.express.loadTestingSupport();
