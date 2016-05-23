@@ -57,7 +57,7 @@ fluid.defaults("gpii.tests.express.querystring.transforms.caseHolder", {
     modules: [
         gpii.tests.express.payloadTests,
         {
-            name: "Extended en/d.transforms.tests...",
+            name: "Extended transform tests...",
             tests: [{
                 name: "Test various asymmetric conditions that cannot be tested in the normal manner",
                 expect: 3,
