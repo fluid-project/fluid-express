@@ -35,7 +35,7 @@ gpii.tests.express.querystring.transforms.caseHolder.testPayload = function (pay
         }
     });
 
-    jqUnit.assertDeepEq("The original value should be preserved after e.transforms.and d.transforms.", payload, decoded);
+    jqUnit.assertDeepEq("The original value should be preserved after encoding and decoding...", payload, decoded);
 };
 
 // "extended" tests that do not fit our standard "round tripping" pattern.
@@ -47,9 +47,9 @@ gpii.tests.express.querystring.transforms.caseHolder.extendedTests = function ()
 
     jqUnit.assertDeepEq("An empty string should be decoded as an empty object...", {}, gpii.express.querystring.decode(""));
 
-    jqUnit.expectFrameworkDiagnostic("D.transforms.a non-string should result in an error...", function () { gpii.express.querystring.decode({}); }, ["Can only decode strings."]);
+    jqUnit.expectFrameworkDiagnostic("Decoding a non-string should result in an error...", function () { gpii.express.querystring.decode({}); }, ["Can only decode strings."]);
 
-    jqUnit.expectFrameworkDiagnostic("E.transforms.a non-object should result in an error...", function () { gpii.express.querystring.encodeObject("HCF"); }, ["Can only encode objects."]);
+    jqUnit.expectFrameworkDiagnostic("Encoding a non-object should result in an error...", function () { gpii.express.querystring.encodeObject("HCF"); }, ["Can only encode objects."]);
 };
 
 fluid.defaults("gpii.tests.express.querystring.transforms.caseHolder", {
