@@ -1,0 +1,19 @@
+app_name: gpii-binder
+
+git_repository: https://github.com/the-t-in-rtf/gpii-binder.git
+
+email: tony@raisingthefloor.org
+
+env_runtime: linux-desktop
+
+app_start_service: false
+
+software_stack: nodejs
+
+software_stack_version: 4.3.1
+
+setup:
+  - npm install
+
+commands:
+  - npm test
