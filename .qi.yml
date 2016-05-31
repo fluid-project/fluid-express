@@ -1,10 +1,10 @@
-app_name: gpii-binder
+app_name: gpii-express
 
-git_repository: https://github.com/the-t-in-rtf/gpii-binder.git
+git_repository: https://github.com/the-t-in-rtf/gpii-express.git
 
 email: tony@raisingthefloor.org
 
-env_runtime: linux-desktop
+env_runtime: linux
 
 app_start_service: false
 
