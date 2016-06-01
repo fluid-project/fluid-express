@@ -4,7 +4,7 @@
   "description": "Fluid components to model an express server and associated router modules.",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/all-tests.js"
+    "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js"
   },
   "author": "Tony Atkins <tony@raisingthefloor.org>",
   "license": "BSD-3-Clause",
@@ -25,6 +25,7 @@
     "grunt-jsonlint": "1.0.4",
     "grunt-shell": "0.6.4",
     "gruntify-eslint": "2.0.0",
+    "istanbul": "0.4.3",
     "kettle": "git://github.com/amb26/kettle.git#d808f3d5e326265aab9aaa1014703d75fa8ef0d0",
     "node-jqunit": "1.1.4",
     "request": "2.51.0"
