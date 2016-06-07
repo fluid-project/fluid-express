@@ -173,7 +173,7 @@ fluid.defaults("gpii.express.handler", {
     }
 });
 
-// The base grade for things like the "request aware" and "content aware" grades that dispatch individual requests to 
+// The base grade for things like the "request aware" and "content aware" grades that dispatch individual requests to
 // a `gpii.express.handler`.
 fluid.defaults("gpii.express.handlerDispatcher", {
     gradeNames: ["fluid.component"],

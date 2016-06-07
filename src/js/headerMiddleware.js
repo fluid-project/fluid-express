@@ -61,5 +61,4 @@ fluid.defaults("gpii.express.middleware.headerSetter.error", {
             args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{arguments}.3"] // err, req, res, next
         }
     }
-
 });

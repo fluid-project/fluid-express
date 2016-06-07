@@ -17,9 +17,9 @@ gpii.express.querystring.encodeTransform = function (value, transformSpec) {
 };
 
 /**
- * 
+ *
  * Wrap our encoding function as a transformation function.
- * 
+ *
  */
 fluid.defaults("gpii.express.querystring.encodeTransform", {
     gradeNames: ["fluid.standardTransformFunction"]
