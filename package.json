@@ -22,7 +22,6 @@
     "grunt": "1.0.1",
     "grunt-eslint": "18.1.0",
     "grunt-jsonlint": "1.0.4",
-    "grunt-shell": "1.3.0",
     "istanbul": "0.4.3",
     "kettle": "git://github.com/amb26/kettle.git#d808f3d5e326265aab9aaa1014703d75fa8ef0d0",
     "node-jqunit": "1.1.4",
