@@ -36,7 +36,7 @@ elsif app_env_runtime == "linux"
 else
   fail "Unable to find suitable Vagrant box. Please specify valid env_runtime."
 end
-
+  
 Vagrant.configure(2) do |config|
 
   if app_env_runtime == "linux-desktop"
@@ -84,7 +84,7 @@ cat <<-'EOF' >/home/vagrant/playbook.yml
   vars:
     nodejs_app_name: "{{ app_name }}"
     nodejs_version: "{{ software_stack_version }}"
-    #nodejs_app_commands: "{{ setup }}"
+    nodejs_app_commands: "{{ setup }}"
     nodejs_app_start_script: "{{ app_start_script }}"
     nodejs_app_tcp_port: "{{ app_tcp_port }}"
     nodejs_app_git_clone: false
@@ -126,10 +126,6 @@ SHELL
 
     config.vm.provision "shell", inline: "sudo systemctl restart systemd-journal-gatewayd.service",
       run: "always"
-  end
-
-  app_commands.each do |command|
-    config.vm.provision "shell", inline: "cd #{app_directory} && #{command}"
   end
 
 end
