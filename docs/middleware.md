@@ -171,3 +171,7 @@ See the [`contentAwareMiddleware` documentation](contentAwareMiddleware.md).
 ## `gpii.express.middleware.requestAware`
 
 See the [`requestAwareMiddleware` documentation](requestAwareMiddleware.md).
+
+## `gpii.express.middleware.redirect`
+
+See the ["redirect" middleware documentation](redirectMiddleware.md).

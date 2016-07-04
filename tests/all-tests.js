@@ -2,6 +2,7 @@
 
 require("./js/contentAware/contentAware-tests");
 require("./js/errorMiddleware/errorMiddleware-tests");
+require("./js/redirectMiddleware/redirectMiddleware-tests");
 require("./js/express/express-failure-tests");
 require("./js/handler/handler-tests");
 require("./js/headerMiddleware/headerMiddleware-tests");
