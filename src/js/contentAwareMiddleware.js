@@ -15,13 +15,13 @@ require("./handler");
 fluid.registerNamespace("gpii.express.middleware.contentAware");
 
 /**
- * 
+ *
  * Handle all traffic routed to us.  Locate an appropriate handler if possible, return a clear error if not.
- * 
+ *
  * @param that {Object} The router component itself.
  * @param request {Object} The Express {Request} object.
  * @param response {Object} The Express {Response} object.
- * 
+ *
  */
 gpii.express.middleware.contentAware.delegateToHandler = function (that, request, response, next) {
     var handlerGrades = gpii.express.middleware.contentAware.getHandlerGradesByContentType(that, request);
@@ -35,14 +35,14 @@ gpii.express.middleware.contentAware.delegateToHandler = function (that, request
 };
 
 /**
- * 
- * Return the first matching handler that matches the `request` object's `accept` header.  Handlers are sorted by 
+ *
+ * Return the first matching handler that matches the `request` object's `accept` header.  Handlers are sorted by
  * priority before they are evaluated.
- * 
+ *
  * @param that {Object} The router component itself.
  * @param request {Object} The Express {Request} object.
  * @returns {Array} An array of handler grades that will be used to create our handler.
- * 
+ *
  */
 gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (that, request) {
     var orderedHandlers = fluid.parsePriorityRecords(that.options.handlers, "Content aware entry");

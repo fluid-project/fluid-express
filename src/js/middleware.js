@@ -13,7 +13,7 @@ fluid.registerNamespace("gpii.express.middleware");
 
 // We must use this construct so that we always expose a function with the right signature, as Express determines
 // that we are a standard piece of middleware based on the method signature.
-// 
+//
 // It incorporates the previous mechanism for gating requests by method (get, post, put, use, etc.).
 gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
     var wrappedFunction = function wrappedStandardMiddleware(request, response, next) {

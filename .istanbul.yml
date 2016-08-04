@@ -1,0 +1,8 @@
+reporting:
+  print: none
+  dir: ./reports
+  reports:
+    - lcov
+    - cobertura
+  report-config:
+      cobertura: {file: report.cov }
