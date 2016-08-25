@@ -1,3 +1,4 @@
+# A configuration file for our Quality Infrastructure builds: https://wiki.gpii.net/w/Quality_Infrastructure
 app_name: gpii-express
 
 git_repository: https://github.com/the-t-in-rtf/gpii-express.git

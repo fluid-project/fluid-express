@@ -1,3 +1,8 @@
+# A configuration file that allows us to launch a local vagrant VM comparable to what's used in the Quality Infrastructure:
+#
+# https://wiki.gpii.net/w/Quality_Infrastructure
+#
+# TODO: This boilerplate file will be replaced with a much smaller "shim" once this issue is resolved: https://issues.gpii.net/browse/GPII-1876
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
