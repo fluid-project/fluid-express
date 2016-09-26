@@ -14,11 +14,11 @@
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
     "express-session": "1.14.1",
-    "infusion": "2.0.0-dev.20160519T222603Z.754d2c6",
+    "infusion": "2.0.0-dev.20160902T155354Z.b963420",
     "resolve": "1.1.7"
   },
   "devDependencies": {
-    "eslint": "3.3.1",
+    "eslint": "3.5.0",
     "grunt": "1.0.1",
     "fluid-grunt-eslint": "18.1.2",
     "grunt-jsonlint": "1.1.0",
