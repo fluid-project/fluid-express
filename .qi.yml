@@ -13,7 +13,7 @@ apps:
     run_in: fedora
     deploy: false
     setup:
-      - npm install -g https://github.com/amatas/vagrant-vmenv.git
+      - sudo npm install -g https://github.com/amatas/vagrant-vmenv.git
       - sudo npm install -g yarn
       - yarn install
     test_cmds:
