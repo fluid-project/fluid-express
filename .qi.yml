@@ -8,6 +8,7 @@ apps:
     git_repository: https://github.com/the-t-in-rtf/gpii-express.git
     git_branch: GPII-1985
     software_stack: nodejs
+    software_stack_version: lts
     folder:
       dest: /app/gpii-express
     run_in: fedora
