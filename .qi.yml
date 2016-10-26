@@ -14,6 +14,7 @@ apps:
     deploy: false
     setup:
       - npm install -g https://github.com/amatas/vagrant-vmenv.git
-      - npm install
+      - sudo npm install -g yarn
+      - yarn install
     test_cmds:
-      - npm test
+      - yarn test
