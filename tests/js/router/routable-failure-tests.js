@@ -1,3 +1,4 @@
+/* eslint-env node */
 // Simple sanity checks for poorly constructed `routable` grades
 "use strict";
 var fluid  = require("infusion");

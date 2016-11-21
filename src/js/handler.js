@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     An abstract grade for "request handler" modules, which respond to individual requests sent to `requestAware` or

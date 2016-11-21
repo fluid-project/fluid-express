@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     Tests for our query string en/decoding.

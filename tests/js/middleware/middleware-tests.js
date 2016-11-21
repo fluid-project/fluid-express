@@ -1,3 +1,4 @@
+/* eslint-env node */
 /* Tests for the "middleware" grade and "wrapper" modules for common Express middleware. */
 "use strict";
 var fluid = require("infusion");

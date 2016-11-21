@@ -1,3 +1,4 @@
+/* eslint-env node */
 "use strict";
 
 require("./js/contentAware/contentAware-tests");

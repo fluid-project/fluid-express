@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     A router which passes a request to different handlers based on what the request accepts.  See the documentation for

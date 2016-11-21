@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     Practical tests to confirm that the `priority` of middleware and routers controls the order in which it is wired in.

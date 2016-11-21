@@ -1,3 +1,4 @@
+/* eslint-env node */
 /* Test environment for the "router" grade and "wrapper" modules for common Express routers. */
 "use strict";
 var fluid = require("infusion");

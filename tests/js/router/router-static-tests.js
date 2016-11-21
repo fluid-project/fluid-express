@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     Tests for our wrapper surrounding the Express "static" router module.

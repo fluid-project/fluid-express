@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     A "global error handler" that can be used to test asynchronous failures.

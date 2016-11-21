@@ -1,3 +1,4 @@
+/* eslint-env node */
 "use strict";
 require("./routable-failure-tests");
 require("./router-nesting-tests");

@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
   Test the convenience caseholder we provide.  Wiring in sequence steps at the start of the sequence is well exercised

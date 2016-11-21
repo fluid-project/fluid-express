@@ -1,3 +1,4 @@
+/* eslint-env node */
 // "loopback" middleware that fires an `onRequestReceived` event with selected data it receives from the client.
 "use strict";
 var fluid = require("infusion");

@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     The base grade for express middleware modules represented as Fluid components. See the documentation for details:

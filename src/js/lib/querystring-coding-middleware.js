@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     Functions to consistently encode and decode JSON objects that are part of a query string, and components

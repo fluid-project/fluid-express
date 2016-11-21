@@ -1,3 +1,4 @@
+/* eslint-env node */
 // Common "payload" tests cases, in which the caseHolder's testPayload invoker is called to verify that a payload is roundtripped correctly (encoded and then decoded, transmitted to the server, etc.)
 "use strict";
 var fluid = require("infusion");

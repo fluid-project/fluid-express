@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     Middleware that redirects all incoming requests to `that.options.redirectUrl`.  See the docs for details:

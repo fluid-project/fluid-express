@@ -1,3 +1,4 @@
+/* eslint-env node */
 // Test middleware module to expose the "req" object so that we can confirm that our middleware is installed correctly.
 "use strict";
 var fluid = require("infusion");

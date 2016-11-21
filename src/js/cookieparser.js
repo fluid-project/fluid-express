@@ -1,3 +1,4 @@
+/* eslint-env node */
 /*
 
     Module to add body parsing to express.  See the documentation for more details:

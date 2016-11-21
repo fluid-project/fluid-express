@@ -1,3 +1,4 @@
+/* eslint-env node */
 /* Tests for the "express" and "router" module */
 "use strict";
 var fluid = require("infusion");

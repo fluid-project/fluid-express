@@ -1,3 +1,4 @@
+/* eslint-env node */
 // Tests for our query decoding integrated with Express
 "use strict";
 var fluid = require("infusion");
