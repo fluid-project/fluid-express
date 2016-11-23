@@ -4,7 +4,7 @@
   "description": "Fluid components to model an express server and associated router modules.",
   "main": "index.js",
   "scripts": {
-    "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js"
+    "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js --print summary"
   },
   "author": "Tony Atkins <tony@raisingthefloor.org>",
   "license": "BSD-3-Clause",
@@ -13,18 +13,19 @@
     "body-parser": "1.15.2",
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
-    "express-session": "1.14.1",
-    "infusion": "2.0.0-dev.20160519T222603Z.754d2c6",
+    "express-session": "1.14.2",
+    "infusion": "2.0.0-dev.20161027T155641Z.0bcd507",
     "resolve": "1.1.7"
   },
   "devDependencies": {
-    "eslint": "3.3.1",
-    "grunt": "1.0.1",
+    "eslint": "3.10.2",
+    "eslint-config-fluid": "1.0.0",
     "fluid-grunt-eslint": "18.1.2",
+    "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.1.0",
+    "kettle": "1.2.1",
     "node-jqunit": "1.1.4",
-    "request": "2.74.0"
+    "request": "2.79.0"
   }
 }

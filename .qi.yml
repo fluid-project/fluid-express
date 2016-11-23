@@ -1,20 +1,21 @@
 # A configuration file for our Quality Infrastructure builds: https://wiki.gpii.net/w/Quality_Infrastructure
-app_name: gpii-express
-
-git_repository: https://github.com/the-t-in-rtf/gpii-express.git
 
 email: tony@raisingthefloor.org
+env_runtime: linux-desktop
 
-env_runtime: linux
-
-app_start_service: false
-
-software_stack: nodejs
-
-software_stack_version: 4.3.1
-
-setup:
-  - npm install
-
-commands:
-  - npm test
+apps:
+  - app_name: gpii-express
+    git_repository: https://github.com/the-t-in-rtf/gpii-express.git
+    git_branch: GPII-1985
+    software_stack: nodejs
+    software_stack_version: lts
+    folder:
+      dest: /app/gpii-express
+    run_in: fedora
+    deploy: false
+    setup:
+      - sudo npm install -g https://github.com/amatas/vagrant-vmenv.git
+      - sudo npm install -g yarn
+      - yarn install
+    test_cmds:
+      - yarn test
