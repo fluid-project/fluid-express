@@ -1,4 +1,3 @@
-/* eslint-env node */
 // The main file that is included when you run `require("gpii-express")`.
 //
 // You can optionally load testing support by assigning a variable to the results of `require` and calling

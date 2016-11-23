@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Tests to confirm that methods (GET, POST, PUT, and DELETE) that use the same path are cleanly separated.

@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Caseholder for nesting of routers.

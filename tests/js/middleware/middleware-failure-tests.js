@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Leave out required pieces of the puzzle and ensure that the grade complains appropriately.

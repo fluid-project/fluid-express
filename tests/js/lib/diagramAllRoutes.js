@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     A helper function to diagram all routes in a `gpii.express` instance.

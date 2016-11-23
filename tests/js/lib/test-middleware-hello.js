@@ -1,4 +1,3 @@
-/* eslint-env node */
 // Sample "Hello World" middleware
 "use strict";
 var fluid = require("infusion");

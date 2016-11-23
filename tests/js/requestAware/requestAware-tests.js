@@ -1,4 +1,3 @@
-/* eslint-env node */
 /* Tests for the `requestAware` modules. */
 "use strict";
 var fluid = require("infusion");

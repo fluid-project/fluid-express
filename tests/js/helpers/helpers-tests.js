@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
   We provide some "helper" grades to assist other people in test routers and other components that run in conjunction

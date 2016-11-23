@@ -1,4 +1,3 @@
-/* eslint-env node */
 "use strict";
 
 require("./querystring-coding-tests.js");

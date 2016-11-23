@@ -1,4 +1,3 @@
-/* eslint-env node */
 "use strict";
 require("./diagramAllRoutes");
 require("./globalFailureHandler");

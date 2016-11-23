@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Tests for router "nesting".

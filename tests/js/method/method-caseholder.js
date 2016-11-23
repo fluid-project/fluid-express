@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Test cases to confirm the clean separation of routers that use the same path but a different method.

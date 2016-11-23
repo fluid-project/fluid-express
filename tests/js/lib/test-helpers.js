@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Helpers for use in testing gpii.express and services built on top of it.  These support client-side usage because
