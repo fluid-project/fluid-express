@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Module to serve up static files available in the `content` directory.  See the documentation for more details:

@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     A default error handler that relays an upstream error to the user. See the documentation for details:

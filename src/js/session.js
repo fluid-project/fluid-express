@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Module to add session handling to express.  See the documentation for details:

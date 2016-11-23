@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Middleware that creates a `gpii.express.handler` component and uses that to process each request.  See the

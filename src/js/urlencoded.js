@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     Router module to parse URL-encoded data in requests.  See the documentation for more details:

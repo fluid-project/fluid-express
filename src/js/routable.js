@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     A base grade for things like a router and express itself, which contain other middleware components.

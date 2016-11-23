@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     The base grade for express router modules.  See the documentation for details:

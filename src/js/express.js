@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     An [Express.js](http://expressjs.com/) instance represented as a Fluid component.  See the documentation for details:

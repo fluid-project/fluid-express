@@ -1,4 +1,3 @@
-/* eslint-env node */
 /*
 
     A `gpii.express.middleware` component that sets one or more HTTP headers based on the content of `options.headers`.
