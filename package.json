@@ -1,6 +1,6 @@
 {
   "name": "gpii-express",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fluid components to model an express server and associated router modules.",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.2.1",
+    "kettle": "1.2.2",
     "node-jqunit": "1.1.4",
     "request": "2.79.0"
   }
