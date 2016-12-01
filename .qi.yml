@@ -16,6 +16,6 @@ apps:
     setup:
       - sudo npm install -g yarn
       - sudo npm install -g https://github.com/amatas/vagrant-vmenv.git
-    test_cmds:
       - yarn install
+    test_cmds:
       - yarn test
