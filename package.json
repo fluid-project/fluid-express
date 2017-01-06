@@ -14,7 +14,7 @@
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
     "express-session": "1.14.2",
-      "infusion": "2.0.0-dev.20161219T170555Z.5778f7e",
+    "infusion": "2.0.0-dev.20161219T170555Z.5778f7e",
     "resolve": "1.2.0"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.2.2",
+    "kettle": "1.3.0",
     "node-jqunit": "1.1.4",
     "request": "2.79.0"
   }

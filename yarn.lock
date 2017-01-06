@@ -1057,12 +1057,6 @@ infusion@2.0.0-dev.20151130T180545Z.18ee3f8:
   dependencies:
     resolve "1.1.6"
 
-infusion@2.0.0-dev.20160519T222603Z.754d2c6:
-  version "2.0.0-dev.20160519T222603Z.754d2c6"
-  resolved "https://registry.yarnpkg.com/infusion/-/infusion-2.0.0-dev.20160519T222603Z.754d2c6.tgz#c50ecd08d6fb950be98cb2254ace373e3b37f877"
-  dependencies:
-    resolve "1.1.6"
-
 infusion@2.0.0-dev.20161219T170555Z.5778f7e:
   version "2.0.0-dev.20161219T170555Z.5778f7e"
   resolved "https://registry.yarnpkg.com/infusion/-/infusion-2.0.0-dev.20161219T170555Z.5778f7e.tgz#3568b448d1e6c0a491e8ad45d6c592de3b7fd4bf"
@@ -1276,19 +1270,19 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
-kettle@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/kettle/-/kettle-1.2.2.tgz#169cf6948da181170e56ae7c33b36f77ef7eb339"
+kettle@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/kettle/-/kettle-1.3.0.tgz#ac3e63d10f0b31ac6edf4abfd4ed6ba78e96a541"
   dependencies:
     body-parser "1.15.2"
     cookie-parser "1.4.3"
     express "4.14.0"
     express-session "1.14.0"
-    infusion "2.0.0-dev.20160519T222603Z.754d2c6"
+    fluid-resolve "1.2.0"
+    infusion "2.0.0-dev.20161219T170555Z.5778f7e"
     json5 "0.5.0"
     jsonlint "1.6.0"
     path-to-regexp "1.5.3"
-    resolve "1.1.6"
     serve-static "1.11.1"
     ws "1.1.1"
 
