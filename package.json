@@ -10,15 +10,15 @@
   "license": "BSD-3-Clause",
   "repository": "https://github.com/GPII/gpii-express",
   "dependencies": {
-    "body-parser": "1.15.2",
+    "body-parser": "1.16.0",
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
-    "express-session": "1.14.2",
+    "express-session": "1.15.0",
     "infusion": "3.0.0-dev.20170127T130413Z.103de6e"
   },
   "devDependencies": {
-    "eslint": "3.12.2",
-    "eslint-config-fluid": "1.0.0",
+    "eslint": "3.14.1",
+    "eslint-config-fluid": "1.1.0",
     "fluid-grunt-eslint": "18.1.2",
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
