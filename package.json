@@ -10,22 +10,20 @@
   "license": "BSD-3-Clause",
   "repository": "https://github.com/GPII/gpii-express",
   "dependencies": {
-    "body-parser": "1.15.2",
+    "body-parser": "1.16.0",
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
-    "express-session": "1.14.2",
-    "infusion": "2.0.0-dev.20161027T155641Z.0bcd507",
-    "resolve": "1.1.7"
+    "express-session": "1.15.0",
+    "infusion": "3.0.0-dev.20170127T130413Z.103de6e"
   },
   "devDependencies": {
-    "eslint": "3.10.2",
-    "eslint-config-fluid": "1.0.0",
+    "eslint": "3.14.1",
+    "eslint-config-fluid": "1.1.0",
     "fluid-grunt-eslint": "18.1.2",
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.2.2",
-    "node-jqunit": "1.1.4",
-    "request": "2.79.0"
+    "kettle": "1.3.1",
+    "node-jqunit": "1.1.4"
   }
 }
