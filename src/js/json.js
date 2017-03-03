@@ -20,7 +20,7 @@ var bp = require("body-parser");
  *
  */
 gpii.express.middleware.bodyparser.json.init = function (that) {
-    that.json = bp.json();
+    that.json = bp.json(that.options.bodyParserOptions);
 };
 
 /**
@@ -37,6 +37,7 @@ gpii.express.middleware.bodyparser.json.middleware = function (that, req, res, n
 fluid.defaults("gpii.express.middleware.bodyparser.json", {
     gradeNames: ["gpii.express.middleware"],
     namespace: "json",
+    bodyParserOptions: {},
     invokers: {
         "middleware": {
             funcName: "gpii.express.middleware.bodyparser.json.middleware",

@@ -156,6 +156,13 @@ Parses URL encoded data passed by the client and makes it available via `request
 Parses JSON data passed by the client and makes it available via `request.body`.  Wraps part of the
 [body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
 
+### Component Options
+
+| Option              | Type       | Description |
+| ------------------- | ---------- | ----------- |
+| `bodyParserOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserjsonoptions). |
+
+
 ## `gpii.express.middleware.error`
 
 See the ["error handler" middleware documentation](errorMiddleware.md).
