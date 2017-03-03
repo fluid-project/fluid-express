@@ -145,12 +145,22 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                         }
                                     }
                                 },
+                                urlencoded: {
+                                    type: "gpii.express.middleware.bodyparser.urlencoded",
+                                    options: {
+                                        priority: "after:json",
+                                        bodyParserOptions: {
+                                            limit: 16
+                                        }
+                                    }
+                                },
                                 world: {
                                     type: "gpii.test.express.middleware.hello",
                                     options: {
-                                        path:    "/",
-                                        method:  "post",
-                                        message: "You passed through the eye of the needle."
+                                        priority: "last",
+                                        path:     "/",
+                                        method:   "post",
+                                        message:  "You passed through the eye of the needle."
                                     }
                                 }
                             }

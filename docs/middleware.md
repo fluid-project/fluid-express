@@ -151,6 +151,12 @@ with Express.  Requires the `cookieparser` middleware above to be in the middlew
 Parses URL encoded data passed by the client and makes it available via `request.query`.  Wraps part of the
 [body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
 
+### Component Options
+
+| Option              | Type       | Description |
+| ------------------- | ---------- | ----------- |
+| `bodyParserOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions). |
+
 ##  `gpii.express.middleware.json`
 
 Parses JSON data passed by the client and makes it available via `request.body`.  Wraps part of the
