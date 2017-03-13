@@ -140,7 +140,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     type: "gpii.express.middleware.bodyparser.json",
                                     options: {
                                         priority: "first",
-                                        bodyParserOptions: {
+                                        middlewareOptions: {
                                             limit: 16
                                         }
                                     }
@@ -149,7 +149,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     type: "gpii.express.middleware.bodyparser.urlencoded",
                                     options: {
                                         priority: "after:json",
-                                        bodyParserOptions: {
+                                        middlewareOptions: {
                                             limit: 16
                                         }
                                     }
@@ -161,6 +161,28 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                         path:     "/",
                                         method:   "post",
                                         message:  "You passed through the eye of the needle."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    badlyWrapped: {
+                        type: "gpii.express.router",
+                        options: {
+                            path: "/badlyWrapped",
+                            components: {
+                                json: {
+                                    type: "gpii.express.middleware.wrappedMiddleware",
+                                    options: {
+                                        priority: "first"
+                                    }
+                                },
+                                world: {
+                                    type: "gpii.test.express.middleware.hello",
+                                    options: {
+                                        priority: "last",
+                                        path:     "/",
+                                        message:  "Somehow you got here."
                                     }
                                 }
                             }

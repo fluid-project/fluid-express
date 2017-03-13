@@ -168,6 +168,20 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
                             args:     ["A smaller response should be accepted...", 200, "{bodyParserOptionsSmallEnoughRequest}.nativeResponse.statusCode"]
                         }
                     ]
+                },
+                {
+                    name: "Testing error handling for wrappedMiddleware...",
+                    type: "test",
+                    sequence: [
+                        {
+                            func: "{badlyWrappedMiddlewareRequest}.send"
+                        },
+                        {
+                            event:    "{badlyWrappedMiddlewareRequest}.events.onComplete",
+                            listener: "jqUnit.assertEquals",
+                            args:     ["An incomplete wrapped middleware grade should return an error...", 500, "{badlyWrappedMiddlewareRequest}.nativeResponse.statusCode"]
+                        }
+                    ]
                 }
             ]
         }
@@ -234,6 +248,12 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
             options: {
                 endpoint: "needle",
                 method:   "POST"
+            }
+        },
+        badlyWrappedMiddlewareRequest: {
+            type: "gpii.test.express.request",
+            options: {
+                endpoint: "badlyWrapped"
             }
         }
     }

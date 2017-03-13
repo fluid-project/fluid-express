@@ -128,34 +128,57 @@ invokers: {
 
 For a reference example of an error handler, see the ["error handler" middleware docs](errorMiddleware.md).
 
+## `gpii.express.middleware.wrappedMiddleware`
+
+The base grade for all "wrapped" third-party middleware, such as `gpii.express.middleware.cookieparser`,
+`gpii.express.middleware.urlencoded` and `gpii.express.middleware.json` (see below).
+
+### Component Options
+
+| Option              | Type         | Description |
+| ------------------- | ------------ | ----------- |
+| `middlewareOptions` | `{Object}`   | The configuration options to pass on to the underlying third-party middleware. |
+| `middlewareImpl`    | `{Function}` | The underlying third-party middleware function which will field all requests. |
+
+### Component Invokers
+
+#### `{that}.middleware(request, response, next)`
+* `request {Object}` An Express Request object (see [the docs](express.md) for details).
+* `response {Object}` An Express Response object (see [the docs](express.md) for details).
+* `next`: The next Express middleware or router function in the chain.
+* Returns: Nothing.
+
+Passes through `request`, `response`, and `next` to the underlying middleware implementation, which is expected to
+be found at `middleware.options.middlewareImpl`.  You must provide your own `middlewareImpl` to use this grade, as
+demonstrated in the following example:
+
+```
+var fluid = require("infusion");
+fluid.require("%gpii-express");
+
+fluid.require("third-party-middleware", require, "my.middleware.npm.thirdPartyMiddleware");
+
+fluid.defaults("my.middleware.wrapper", {
+    gradeNames: ["gpii.express.middleware.wrappedMiddleware"],
+    middlewareImpl: "@expand:my.middleware.npm.thirdPartyMiddleware({that}.middlewareOptions)"
+}
+```
+
+This example assumes that the `third-party-middleware` package exports its constructor, and that it accepts
+configuration options as its only argument.  The expander will take care of creating the `middlewareImpl` option,
+and the `middleware` invoker will use this middleware to handle incoming requests.
+
 ## `gpii.express.middleware.cookieparser`
 
 Parses client cookie headers and makes them available via `request.cookies`.  Wraps the standard
 [cookie parser middleware](https://github.com/expressjs/cookie-parser) previously bundled with Express.
 
-## `gpii.express.middleware.session`
-
-Parses client session cookies makes server-side session data associated with the cookie available via
-`request.sesssion`.  Wraps the standard [session middleware](https://github.com/expressjs/session) previously bundled
-with Express.  Requires the `cookieparser` middleware above to be in the middleware chain before it.
-
 ### Component Options
 
-| Option                  | Type       | Description |
-| ----------------------- | ---------- | ----------- |
-| `sessionOptions`        | `{Object}` | The configuration options to pass on to [the underlying `express-session` instance](https://github.com/expressjs/session). |
-| `sessionOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
-
-## `gpii.express.middleware.urlencoded`
-
-Parses URL encoded data passed by the client and makes it available via `request.query`.  Wraps part of the
-[body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
-
-### Component Options
-
-| Option              | Type       | Description |
-| ------------------- | ---------- | ----------- |
-| `bodyParserOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions). |
+| Option                     | Type       | Description |
+| -------------------------- | ---------- | ----------- |
+| `middlewareOptions`        | `{Object}` | The configuration options to pass on to [cookie parser middleware](https://github.com/expressjs/cookie-parser). See [the cookie-parser docs](https://github.com/expressjs/cookie-parser#cookieparsersecret-options) for more details. |
+| `middlewareOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
 
 ##  `gpii.express.middleware.json`
 
@@ -166,7 +189,31 @@ Parses JSON data passed by the client and makes it available via `request.body`.
 
 | Option              | Type       | Description |
 | ------------------- | ---------- | ----------- |
-| `bodyParserOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserjsonoptions). |
+| `middlewareOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserjsonoptions). |
+
+## `gpii.express.middleware.session`
+
+Parses client session cookies makes server-side session data associated with the cookie available via
+`request.sesssion`.  Wraps the standard [session middleware](https://github.com/expressjs/session) previously bundled
+with Express.  Requires the `cookieparser` middleware above to be in the middleware chain before it.
+
+### Component Options
+
+| Option                     | Type       | Description |
+| -------------------------- | ---------- | ----------- |
+| `middlewareOptions`        | `{Object}` | The configuration options to pass on to [the underlying `express-session` instance](https://github.com/expressjs/session). |
+| `middlewareOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
+
+## `gpii.express.middleware.urlencoded`
+
+Parses URL encoded data passed by the client and makes it available via `request.query`.  Wraps part of the
+[body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
+
+### Component Options
+
+| Option              | Type       | Description |
+| ------------------- | ---------- | ----------- |
+| `middlewareOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions). |
 
 
 ## `gpii.express.middleware.error`
