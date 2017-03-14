@@ -130,6 +130,63 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                 }
                             }
                         }
+                    },
+                    needle: {
+                        type: "gpii.express.router",
+                        options: {
+                            path: "/needle",
+                            components: {
+                                json: {
+                                    type: "gpii.express.middleware.bodyparser.json",
+                                    options: {
+                                        priority: "first",
+                                        middlewareOptions: {
+                                            limit: 16
+                                        }
+                                    }
+                                },
+                                urlencoded: {
+                                    type: "gpii.express.middleware.bodyparser.urlencoded",
+                                    options: {
+                                        priority: "after:json",
+                                        middlewareOptions: {
+                                            limit: 16
+                                        }
+                                    }
+                                },
+                                world: {
+                                    type: "gpii.test.express.middleware.hello",
+                                    options: {
+                                        priority: "last",
+                                        path:     "/",
+                                        method:   "post",
+                                        message:  "You passed through the eye of the needle."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    badlyWrapped: {
+                        type: "gpii.express.router",
+                        options: {
+                            path: "/badlyWrapped",
+                            components: {
+                                json: {
+                                    type: "gpii.express.middleware.wrappedMiddleware",
+                                    options: {
+                                        priority: "first"
+                                    }
+                                },
+                                world: {
+                                    type: "gpii.test.express.middleware.hello",
+                                    options: {
+                                        priority: "last",
+                                        path:     "/",
+                                        message:  "Somehow you got here."
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
