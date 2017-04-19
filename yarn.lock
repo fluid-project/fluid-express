@@ -1018,12 +1018,6 @@ infusion@2.0.0-dev.20151130T180545Z.18ee3f8:
   dependencies:
     resolve "1.1.6"
 
-infusion@3.0.0-dev.20170214T161720Z.6126724:
-  version "3.0.0-dev.20170214T161720Z.6126724"
-  resolved "https://registry.yarnpkg.com/infusion/-/infusion-3.0.0-dev.20170214T161720Z.6126724.tgz#02af003f7f50a22edf5a9b0f4a7d604bc49f6d85"
-  dependencies:
-    fluid-resolve "1.2.0"
-
 infusion@3.0.0-dev.20170322T234120Z.278de35:
   version "3.0.0-dev.20170322T234120Z.278de35"
   resolved "https://registry.yarnpkg.com/infusion/-/infusion-3.0.0-dev.20170322T234120Z.278de35.tgz#102ce3c8e89104d7ca59b7a89c3b334432d915bc"
@@ -1196,16 +1190,16 @@ jsonpointer@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.0.tgz#6661e161d2fc445f19f98430231343722e1fcbd5"
 
-kettle@1.4.0:
+"kettle@git://github.com/the-t-in-rtf/kettle#ae8462ae9f7169db72de89d6bbe0f7b1a12da657":
   version "1.4.0"
-  resolved "https://registry.yarnpkg.com/kettle/-/kettle-1.4.0.tgz#fcc67df08796be2c9c2a71dc744012691fc607e6"
+  resolved "git://github.com/the-t-in-rtf/kettle#ae8462ae9f7169db72de89d6bbe0f7b1a12da657"
   dependencies:
     body-parser "1.16.1"
     cookie-parser "1.4.3"
     express "4.14.1"
     express-session "1.15.1"
     fluid-resolve "1.2.0"
-    infusion "3.0.0-dev.20170214T161720Z.6126724"
+    infusion "3.0.0-dev.20170322T234120Z.278de35"
     json5 "0.5.1"
     jsonlint "1.6.2"
     path-to-regexp "1.7.0"
@@ -1608,11 +1602,11 @@ resolve@1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.6.tgz#d3492ad054ca800f5befa612e61beac1eec98f8f"
 
-resolve@1.1.x, resolve@^1.1.6, resolve@~1.1.0:
+resolve@1.1.x, resolve@~1.1.0:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
-resolve@1.3.2:
+resolve@1.3.2, resolve@^1.1.6:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.3.2.tgz#1f0442c9e0cbb8136e87b9305f932f46c7f28235"
   dependencies:
