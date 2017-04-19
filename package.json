@@ -24,7 +24,7 @@
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "git://github.com/the-t-in-rtf/kettle#ae8462ae9f7169db72de89d6bbe0f7b1a12da657",
+    "kettle": "1.4.1",
     "node-jqunit": "1.1.4",
     "rimraf": "2.6.1"
   }
