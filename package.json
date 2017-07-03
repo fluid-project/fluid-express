@@ -24,7 +24,7 @@
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.4.1",
+    "kettle": "1.5.0",
     "node-jqunit": "1.1.4",
     "rimraf": "2.6.1"
   }
