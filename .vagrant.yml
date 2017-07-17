@@ -12,20 +12,15 @@ env:
 
 stages:                # Stages to perform when 'ci test' command is invoked
   - setup              # Install our system-level dependencies, etc.
-  - vdrive             # Connect to our V: Network drive
   - test               # Run the actual tests
 
 setup_job:
   stage: setup
   script:
     - choco install nodejs.install --version 6.9.1 --forcex86 -y
+    - choco install python2 -y
     # node-inspector is pre-installed as a courtesy to assist in debugging.
     - do.ps1 -c "npm install -g node-inspector"
-vdrive_job:
-  stage: vdrive
-  script:
-    - "net use v: \\\\vboxsrv\\vagrant  /yes"
-    - "do.ps1 -c 'net use v: \\\\VBOXSVR\\vagrant /yes'"
 
 test_job:
   stage: test          # name of the stage
