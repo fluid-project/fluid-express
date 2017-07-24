@@ -1,6 +1,6 @@
 {
   "name": "gpii-express",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Fluid components to model an express server and associated router modules.",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "body-parser": "1.17.2",
     "cookie-parser": "1.4.3",
     "express": "4.15.3",
-    "express-session": "1.15.3",
-    "infusion": "3.0.0-dev.20170713T172705Z.330ed53"
+    "express-session": "1.15.4",
+    "infusion": "3.0.0-dev.20170724T165035Z.eee50c1"
   },
   "devDependencies": {
     "eslint": "3.19.0",
@@ -24,8 +24,8 @@
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.6.2",
-    "node-jqunit": "1.1.5",
+    "kettle": "1.6.3",
+    "node-jqunit": "1.1.6",
     "rimraf": "2.6.1"
   }
 }
