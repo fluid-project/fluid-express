@@ -1,6 +1,6 @@
 {
   "name": "gpii-express",
-  "version": "1.0.9",
+  "version": "1.10.0",
   "description": "Fluid components to model an express server and associated router modules.",
   "main": "index.js",
   "scripts": {
