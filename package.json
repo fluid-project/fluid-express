@@ -14,7 +14,7 @@
     "body-parser": "1.17.2",
     "cookie-parser": "1.4.3",
     "express": "4.15.3",
-    "express-session": "1.15.3",
+    "express-session": "1.15.4",
     "infusion": "3.0.0-dev.20170724T165035Z.eee50c1"
   },
   "devDependencies": {
