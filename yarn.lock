@@ -1098,9 +1098,9 @@ jsonpointer@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.0.tgz#6661e161d2fc445f19f98430231343722e1fcbd5"
 
-kettle@1.6.3:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/kettle/-/kettle-1.6.3.tgz#a397e1bcd289feac6f04d1bad323ff51cf1b4778"
+kettle@1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/kettle/-/kettle-1.6.4.tgz#f179c741cc9ac3680a788d61c2fa2f60ac239756"
   dependencies:
     body-parser "1.17.2"
     cookie-parser "1.4.3"
