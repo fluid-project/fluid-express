@@ -1,6 +1,6 @@
 {
   "name": "gpii-express",
-  "version": "1.10.0",
+  "version": "1.0.10",
   "description": "Fluid components to model an express server and associated router modules.",
   "main": "index.js",
   "scripts": {
@@ -11,21 +11,21 @@
   "license": "BSD-3-Clause",
   "repository": "https://github.com/GPII/gpii-express",
   "dependencies": {
-    "body-parser": "1.17.2",
+    "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
-    "express": "4.15.3",
-    "express-session": "1.15.4",
-    "infusion": "3.0.0-dev.20170724T165035Z.eee50c1"
+    "express": "4.15.5",
+    "express-session": "1.15.6",
+    "infusion": "3.0.0-dev.20170830T182157Z.392b2f8"
   },
   "devDependencies": {
-    "eslint": "3.19.0",
+    "eslint": "4.7.2",
     "eslint-config-fluid": "1.1.0",
     "fluid-grunt-eslint": "18.1.2",
     "grunt": "1.0.1",
     "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.5",
-    "kettle": "1.6.4",
-    "node-jqunit": "1.1.6",
-    "rimraf": "2.6.1"
+    "kettle": "1.7.0",
+    "node-jqunit": "1.1.7",
+    "rimraf": "2.6.2"
   }
 }
