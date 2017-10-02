@@ -37,6 +37,10 @@
             ]
         }
     });
+    ```
+
+    The default listener just asserts, i.e. the test passes if the event is fired.  If you want to perform more
+    specific checks, replace that listener with your own.
  */
 // TODO: Discuss the best place for this to live longer-term.
 "use strict";
