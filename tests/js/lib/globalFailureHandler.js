@@ -5,6 +5,10 @@
     Use this by requiring this file and then referring to it in your test sequences, as in:
 
     ```
+    fluid.require("%gpii-express");
+    gpii.express.loadTestingSupport();
+    gpii.express.loadGlobalFailureHandler();
+
     fluid.defaults("my.namespaced.caseholder", {
         gradeNames: ["fluid.test.testCaseHolder"],
         modules: {
@@ -16,14 +20,14 @@
                     sequence: [
                         {
                             funcName: "kettle.test.pushInstrumentedErrors",
-                            args:     ["gpii.test.notifyGlobalError"]
+                            args:     ["gpii.test.notifyGlobalFailure"]
                         },
                         {
                             // SET FIRE TO SOMETHING AND WALK AWAY
                         },
                         {
-                            event:    "{globalErrorHandler}.events.onError",
-                            listener: "gpii.test.awaitGlobalError"
+                            event:    "{globalFailureHandler}.events.onError",
+                            listener: "gpii.test.awaitGlobalFailure"
                         },
                         {
                             funcName: "kettle.test.popInstrumentedErrors"
@@ -40,21 +44,23 @@ var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
 var jqUnit = require("node-jqunit");
 
-fluid.defaults("gpii.test.globalErrorHandler", {
+
+fluid.defaults("gpii.test.globalFailureHandler", {
     gradeNames: ["fluid.component", "fluid.resolveRootSingle"],
-    singleRootType: "gpii.test.globalErrorHandlerHolder",
+    singleRootType: "gpii.test.globalFailureHandlerHolder",
     events: {
         onError: null
     }
 });
 
-var globalErrorHandler = gpii.test.globalErrorHandler();
 
-fluid.registerNamespace("gpii.test.globalErrorHandler");
-gpii.test.awaitGlobalError = function (priority, message) {
+fluid.registerNamespace("gpii.test.globalFailureHandler");
+gpii.test.awaitGlobalFailure = function (priority, message) {
     jqUnit.assert(message);
 };
 
-gpii.test.notifyGlobalError = function () {
-    globalErrorHandler.events.onError.fire(fluid.makeArray(arguments));
+gpii.test.notifyGlobalFailure = function () {
+    globalFailureHandler.events.onError.fire(fluid.makeArray(arguments));
 };
+
+var globalFailureHandler = gpii.test.globalFailureHandler();
