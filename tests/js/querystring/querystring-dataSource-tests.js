@@ -5,6 +5,7 @@ var gpii = fluid.registerNamespace("gpii");
 
 require("../../../");
 gpii.express.loadTestingSupport();
+gpii.express.loadGlobalFailureHandler();
 
 var kettle = require("kettle");
 kettle.loadTestingSupport();
@@ -96,15 +97,15 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                 sequence: [
                     {
                         funcName: "kettle.test.pushInstrumentedErrors",
-                        args: ["gpii.test.notifyGlobalError"]
+                        args: ["gpii.test.notifyGlobalFailure"]
                     },
                     {
                         func: "{existingQueryDataDatasource}.get",
                         args: []
                     },
                     {
-                        event: "{globalErrorHandler}.events.onError",
-                        listener: "gpii.test.awaitGlobalError"
+                        event: "{globalFailureHandler}.events.onError",
+                        listener: "gpii.test.awaitGlobalFailure"
                     },
                     {
                         funcName: "kettle.test.popInstrumentedErrors"
