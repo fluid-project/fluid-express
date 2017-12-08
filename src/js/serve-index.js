@@ -44,19 +44,20 @@ fluid.defaults("gpii.express.router.serveContentAndIndex", {
     serveIndexMiddlewareOptions: gpii.express.router.serveIndex.defaultOptions,
     staticMiddlewareOptions: {},
     components: {
+        // This comes first so that index.html will win out if it's present.
+        static: {
+            type: "gpii.express.router.static",
+            options: {
+                priority: "before:serveIndex",
+                content: "{gpii.express.router.serveContentAndIndex}.options.content",
+                staticMiddlewareOptions: "{gpii.express.router.serveContentAndIndex}.options.staticMiddlewareOptions"
+            }
+        },
         serveIndex: {
             type: "gpii.express.router.serveIndex",
             options: {
                 content: "{gpii.express.router.serveContentAndIndex}.options.content",
                 serveIndexMiddlewareOptions: "{gpii.express.router.serveContentAndIndex}.options.serveIndexMiddlewareOptions"
-            }
-        },
-        static: {
-            type: "gpii.express.router.static",
-            options: {
-                priority: "after:serveIndex",
-                content: "{gpii.express.router.serveContentAndIndex}.options.content",
-                staticMiddlewareOptions: "{gpii.express.router.serveContentAndIndex}.options.staticMiddlewareOptions"
             }
         }
     }
