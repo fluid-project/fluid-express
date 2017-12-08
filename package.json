@@ -1,31 +1,32 @@
 {
-    "name": "gpii-express",
-    "version": "1.0.13",
-    "description": "Fluid components to model an express server and associated router modules.",
-    "main": "index.js",
-    "scripts": {
-        "pretest": "node node_modules/rimraf/rimraf coverage/* reports/*",
-        "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js --print summary"
-    },
-    "author": "Tony Atkins <tony@raisingthefloor.org>",
-    "license": "BSD-3-Clause",
-    "repository": "https://github.com/GPII/gpii-express",
-    "dependencies": {
-        "body-parser": "1.18.2",
-        "cookie-parser": "1.4.3",
-        "express": "4.16.2",
-        "express-session": "1.15.6",
-        "infusion": "3.0.0-dev.20171117T095227Z.67ff934"
-    },
-    "devDependencies": {
-        "eslint": "4.11.0",
-        "eslint-config-fluid": "1.2.0",
-        "fluid-grunt-eslint": "18.1.2",
-        "grunt": "1.0.1",
-        "grunt-jsonlint": "1.1.0",
-        "istanbul": "0.4.5",
-        "kettle": "1.7.1",
-        "node-jqunit": "1.1.8",
-        "rimraf": "2.6.2"
-    }
+  "name": "gpii-express",
+  "version": "1.0.13",
+  "description": "Fluid components to model an express server and associated router modules.",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "node node_modules/rimraf/rimraf coverage/* reports/*",
+    "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js --print summary"
+  },
+  "author": "Tony Atkins <tony@raisingthefloor.org>",
+  "license": "BSD-3-Clause",
+  "repository": "https://github.com/GPII/gpii-express",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "cookie-parser": "1.4.3",
+    "express": "4.16.2",
+    "express-session": "1.15.6",
+    "infusion": "3.0.0-dev.20171121T212609Z.9b4fde781",
+    "serve-index": "1.9.1"
+  },
+  "devDependencies": {
+    "eslint": "4.12.1",
+    "eslint-config-fluid": "1.2.0",
+    "fluid-grunt-eslint": "18.1.2",
+    "grunt": "1.0.1",
+    "grunt-jsonlint": "1.1.0",
+    "istanbul": "0.4.5",
+    "kettle": "1.7.1",
+    "node-jqunit": "1.1.8",
+    "rimraf": "2.6.2"
+  }
 }

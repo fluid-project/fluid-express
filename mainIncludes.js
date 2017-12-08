@@ -11,6 +11,7 @@ require("./src/js/wrappedMiddleware");
 require("./src/js/errorMiddleware");
 require("./src/js/router");
 require("./src/js/static");
+require("./src/js/serve-index");
 require("./src/js/handler");
 require("./src/js/requestAwareMiddleware");
 require("./src/js/contentAwareMiddleware");

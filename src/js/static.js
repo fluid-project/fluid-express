@@ -16,7 +16,7 @@ var express = require("express");
 /* jshint -W024 */
 gpii.express.router["static"].init = function (that) {
     fluid.each(gpii.express.expandPaths(that.options.content), function (contentDir) {
-        that.router.use(express["static"](contentDir));
+        that.router.use(express["static"](contentDir, that.options.staticMiddlewareOptions));
     });
 };
 
@@ -24,6 +24,7 @@ fluid.defaults("gpii.express.router.static", {
     gradeNames: ["gpii.express.router"],
     namespace: "static",
     content: null,
+    staticMiddlewareOptions: {},
     listeners: {
         "onCreate.init": {
             funcName: "gpii.express.router.static.init",
