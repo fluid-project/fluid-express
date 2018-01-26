@@ -143,7 +143,7 @@ fluid.defaults("gpii.tests.express.router.serveIndex.testEnvironment", {
                         type: "gpii.express.router.serveContentAndIndex",
                         options: {
                             path:    "/",
-                            // staticMiddlewareOptions: { index: false },
+                            staticMiddlewareOptions: { index: false },
                             content: "%gpii-express/tests/html"
                         }
                     }
