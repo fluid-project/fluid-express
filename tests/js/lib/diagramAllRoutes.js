@@ -14,7 +14,7 @@ fluid.registerNamespace("gpii.test.express");
  * Diagram all routes within an express instance.
  *
  * @param expressComponent {Object} A `gpii.express` component.
- * @returns {Object} A JSON Object representing all routes within a `gpii.express` instance.
+ * @return {Object} A JSON Object representing all routes within a `gpii.express` instance.
  *
  */
 gpii.test.express.diagramAllRoutes = function (expressComponent) {
@@ -28,7 +28,7 @@ gpii.test.express.diagramAllRoutes = function (expressComponent) {
  *
  * @param component {Object} A `gpii.express.middleware` component.
  * @param router {Object} The router instance within the component (if there is one).
- * @returns {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
+ * @return {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
  */
 gpii.test.express.diagramOneLevel = function (component, router) {
     var thisLevel = fluid.filterKeys(component.options, ["method", "path"]);

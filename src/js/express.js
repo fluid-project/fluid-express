@@ -73,7 +73,7 @@ gpii.express.stopServer = function (that) {
 /**
  *
  * @param array {Object} - An array of strings.
- * @returns {Array} - A new array with all references resolved.  The order of elements is preserved.
+ * @return {Array} - A new array with all references resolved.  The order of elements is preserved.
  *
  * Resolves package references (e. g. `%package-name/path/within/package/`) in an array of strings, which are presumed
  * to represent filesystem paths.
