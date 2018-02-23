@@ -287,6 +287,67 @@ contains matching content will handle the request.
 
 In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
 
-| Option      | Type       | Description |
-| ----------- | ---------- | ----------- |
-| `content`   | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
+| Option                    | Type       | Description |
+| ------------------------- | ---------- | ----------- |
+| `content`                 | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
+| `staticMiddlewareOptions` | `{Object}` | Configuration options to pass to the underlying "static" middleware.  See [their documentation](http://expressjs.com/en/resources/middleware/serve-static.html) for details. |
+
+## `gpii.express.router.serveIndex`
+
+This is a wrapper for the [serve-index middleware](https://github.com/expressjs/serve-index), which serves up a
+directory listing for one or more content directories based the path used in the request URL.
+
+**Note:**  Although `gpii.express.router.static` supports an array of `content` directories,  the underlying serve-index
+middleware has no mechanism for presenting a combined list of content found in multiple directories.  The first content
+directory provided will be used to generate the directory listing.
+
+### Component Options
+
+In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+
+| Option                        | Type       | Description |
+| ----------------------------- | ---------- | ----------- |
+| `content`                     | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`.  If multiple directories are provided, only the first will be used to prepare the directory listing (see above). |
+| `serveIndexMiddlewareOptions` | `{Object}` | Configuration options to pass to the underlying "serve-index" middleware.  See [their documentation](https://github.com/expressjs/serve-index) for details. |
+
+
+## `gpii.express.router.serveContentAndIndex`
+
+The "serveIndex" middleware (see above) generates a directory listing, with links to individual files.  These links will
+only work if you serve up the actual content from the same relative path.  The easiest way to do this is to use the
+"serveStatic" middleware in combination with the "static" middleware (see above).  This grade handles that for you.
+
+
+### Example
+
+Here's an example of using `gpii.express.router.serveContentAndIndex` to serve up a single directory of content:
+
+### Component Options
+
+In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+
+| Option                        | Type       | Description |
+| ----------------------------- | ---------- | ----------- |
+| `content`                     | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
+| `serveIndexMiddlewareOptions` | `{Object}` | Configuration options to pass to the underlying "serve-index" middleware.  See [their documentation](https://github.com/expressjs/serve-index) for details. |
+| `staticMiddlewareOptions`     | `{Object}` | Configuration options to pass to the underlying "static" middleware.  See [their documentation](http://expressjs.com/en/resources/middleware/serve-static.html) for details. |
+
+
+```javascript
+var my = fluid.registerNamespace("my");
+
+fluid.defaults("my.express.instance", {
+    gradeNames: ["gpii.express"],
+    components: {
+        contentRouter: {
+            type: "gpii.express.router.serveContentAndIndex",
+            options: {
+                path:    "/content",
+                content: "%my-package/src/content"
+            }
+        }
+    }
+});
+
+my.express.instance();
+```

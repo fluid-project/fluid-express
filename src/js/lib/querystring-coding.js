@@ -32,7 +32,7 @@ fluid.defaults("gpii.express.querystring.encodeTransform", {
  * @param valueToEncode {Object} The value to encode.
  * @param avoidStringifying {Boolean} By default, all values are stringified.  Pass a "truthy" value for this parameter to pass raw values.
  * @param parentKey {String} If we are working with "deep" material, parentKey will represent the path to the value.
- * @returns {string} A query string representing the object.
+ * @return {string} A query string representing the object.
  */
 gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifying, parentKey) {
     if (typeof valueToEncode === "object" && !Array.isArray(valueToEncode)) {
@@ -66,7 +66,7 @@ gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifyi
  * Decode a query string and produce a JSON object with its values.
  *
  * @param stringToDecode {String} The raw query string to decode.
- * @returns {Object} An object representing the decoded value.
+ * @return {Object} An object representing the decoded value.
  */
 gpii.express.querystring.decode = function (stringToDecode) {
     if (typeof stringToDecode !== "string") {
@@ -100,7 +100,7 @@ fluid.registerNamespace("gpii.express.dataSource.urlEncodedJson");
  * @param that {Object} The dataSource component itself.
  * @param urlToResolve {String} The raw URL we will be accessing.
  * @param directModel {Object} The JSON data to be encoded as the query string portion of the URL.
- * @returns {String} The combined URL, including the encoded query data.
+ * @return {String} The combined URL, including the encoded query data.
  */
 gpii.express.dataSource.urlEncodedJson.resolveUrl = function (that, urlToResolve, directModel) {
     if (urlToResolve.indexOf("?") !== -1) {

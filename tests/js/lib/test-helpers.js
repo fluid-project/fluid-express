@@ -80,7 +80,7 @@ gpii.test.express.checkHeader = function (message, response, header, expected) {
  * Diagram all routes within an express instance.
  *
  * @param expressComponent {Object} A `gpii.express` component.
- * @returns {Object} A JSON Object representing all routes within a `gpii.express` instance.
+ * @return {Object} A JSON Object representing all routes within a `gpii.express` instance.
  *
  */
 gpii.test.express.diagramAllRoutes = function (expressComponent) {
@@ -94,7 +94,7 @@ gpii.test.express.diagramAllRoutes = function (expressComponent) {
  *
  * @param component {Object} A `gpii.express.middleware` component.
  * @param router {Object} The router instance within the component (if there is one).
- * @returns {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
+ * @return {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
  */
 gpii.test.express.diagramOneLevel = function (component, router) {
     var thisLevel = fluid.filterKeys(component.options, ["method", "path"]);
@@ -132,7 +132,7 @@ gpii.test.express.diagramOneLevel = function (component, router) {
  * @param rawTests {Object} - The original unmodified tests.
  * @param sequenceStart {Object} - The sequence steps (if any) to insert before each test's sequences.
  * @param sequenceEnd {Object} - The sequence steps (if any) to append after each test's sequences.
- * @returns {Object} - The tests with the required start and end steps wired into all test sequences.
+ * @return {Object} - The tests with the required start and end steps wired into all test sequences.
  *
  */
 gpii.test.express.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {

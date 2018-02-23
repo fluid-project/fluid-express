@@ -41,7 +41,7 @@ gpii.express.middleware.contentAware.delegateToHandler = function (that, request
  *
  * @param that {Object} The router component itself.
  * @param request {Object} The Express {Request} object.
- * @returns {Array} An array of handler grades that will be used to create our handler.
+ * @return {Array} An array of handler grades that will be used to create our handler.
  *
  */
 gpii.express.middleware.contentAware.getHandlerGradesByContentType = function (that, request) {

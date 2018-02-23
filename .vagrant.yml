@@ -17,10 +17,8 @@ stages:                # Stages to perform when 'ci test' command is invoked
 setup_job:
   stage: setup
   script:
-    - choco install nodejs.install --version 6.9.1 --forcex86 -y
+    - choco install nodejs-lts -y
     - choco install python2 -y
-    # node-inspector is pre-installed as a courtesy to assist in debugging.
-    - do.ps1 -c "npm install -g node-inspector"
 
 test_job:
   stage: test          # name of the stage
