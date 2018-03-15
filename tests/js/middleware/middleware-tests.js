@@ -64,8 +64,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     }
                                 },
                                 hello: {
-                                    type:     "gpii.test.express.middleware.hello",
-                                    priority: "last"
+                                    type:     "gpii.test.express.middleware.hello"
                                 },
                                 world: {
                                     type: "gpii.express.router",
