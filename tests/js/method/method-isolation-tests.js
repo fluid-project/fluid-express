@@ -17,7 +17,8 @@ fluid.defaults("gpii.tests.express.method.router", {
         counter: {
             type: "gpii.test.express.middleware.counter",
             options: {
-                priority: "before:requestAware"
+                //priority: "before:requestAware"
+                priority: "first" // TODO: Why does this work and the other doesn't?
             }
         },
         requestAware: {

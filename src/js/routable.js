@@ -11,6 +11,46 @@ var gpii  = fluid.registerNamespace("gpii");
 
 fluid.registerNamespace("gpii.express.routable");
 
+// TODO: Discuss if / how / when to pull this up into Infusion itself.
+/**
+ *
+ * Return a map of immediate child components that extend `grade`.
+ *
+ * @param {Object} that - The component itself.
+ * @param {String} grade - The gradename to search for.
+ * @return {Object} - A map of child components that extend `grade`, keyed by member name.
+ *
+ */
+gpii.express.routable.childrenWithGrade = function (that, grade) {
+    var componentsMatchingGrade = {};
+    fluid.visitComponentChildren(that, function (childComponent, name) {
+        if (fluid.componentHasGrade(childComponent, grade)) {
+            componentsMatchingGrade[name] = childComponent;
+        }
+    }, { flat: true });
+    return componentsMatchingGrade;
+};
+
+/**
+ *
+ * Order an array of components using their `namespace` and `priority` options.
+ *
+ * @param unsortedComponentMap {Object} - A map of components to be sorted.
+ * @return {Array} - The components, sorted by namespaced priority.
+ *
+ */
+gpii.express.routable.prioritiseComponentArray = function (unsortedComponentMap)  {
+    var componentOptionsById = {};
+    fluid.each(unsortedComponentMap, function (singleComponent, memberName) {
+        var optionsForPrioritySorting = fluid.copy(singleComponent.options);
+        optionsForPrioritySorting.pocketedComponent = singleComponent;
+        componentOptionsById[memberName] = optionsForPrioritySorting;
+    });
+    var sortedComponentOptions = fluid.parsePriorityRecords(componentOptionsById, "router entry");
+    var sortedComponents = fluid.transform(sortedComponentOptions, function (componentDef) { return componentDef.pocketedComponent; });
+    return sortedComponents;
+};
+
 /**
  *
  * @param that {Object} - The `gpii.express.routable` instance itself.
@@ -20,26 +60,12 @@ fluid.registerNamespace("gpii.express.routable");
  */
 gpii.express.routable.connectDirectDescendants = function (that) {
     if (that.router) {
-        // We have to look at `that.options.components` and iterate through them because we cannot safely inject
-        // a registration function from one instance of `gpii.express.routable` to another.  Previously we worked
-        // around this by having `gpii.express` (a singleton) inject its function into every `gpii.express.middleware`
-        // instance.  This new approach allows for multiple express instances and simplifies the infrastructure greatly.
-
-        // We need to preserve the existing component names (keys) as part of the individual record before we can
-        // safely order them by `priority` and `namespace`.
-        var componentDefinitionsWithNicks = fluid.transform(that.options.components, function (componentDef, key) {
-            var modifiedOptions = fluid.copy(componentDef.options || {});
-            modifiedOptions.pocketedKey = key;
-            return modifiedOptions;
-        });
-
-        fluid.each(fluid.parsePriorityRecords(componentDefinitionsWithNicks, "router entry"), function (componentDef) {
-            var childComponent = that[componentDef.pocketedKey];
-            if (fluid.componentHasGrade(childComponent, "gpii.express.middleware")) {
-                fluid.each(fluid.makeArray(childComponent.options.method), function (methodName) {
-                    that.router[methodName](childComponent.options.path, childComponent.getMiddlewareFn());
-                });
-            }
+        var childMiddlewareComponents = gpii.express.routable.childrenWithGrade(that, "gpii.express.middleware");
+        var childMiddlewareComponentsOrderedByPriority = gpii.express.routable.prioritiseComponentArray(childMiddlewareComponents);
+        fluid.each(childMiddlewareComponentsOrderedByPriority, function (childComponent) {
+            fluid.each(fluid.makeArray(childComponent.options.method), function (methodName) {
+                that.router[methodName](childComponent.options.path, childComponent.getMiddlewareFn());
+            });
         });
 
         that.events.onChildrenWired.fire(that);

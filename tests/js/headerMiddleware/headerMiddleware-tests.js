@@ -21,6 +21,7 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                     topLevelMiddleware: {
                         type: "gpii.express.middleware.headerSetter",
                         options: {
+                            priority: "first",
                             headers: {
                                 queryVar: {
                                     fieldName: "Top-Level-Query-Variable",
@@ -55,7 +56,7 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                                 deepMiddleware: {
                                     type: "gpii.express.middleware.headerSetter",
                                     options: {
-                                        priority: "before:helloMiddleware",
+                                        priority: "first",
                                         headers: {
                                             queryVar: {
                                                 fieldName: "Deep-Query-Variable",
