@@ -18,9 +18,10 @@ fluid.registerNamespace("gpii.express.middleware.contentAware");
  *
  * Handle all traffic routed to us.  Locate an appropriate handler if possible, return a clear error if not.
  *
- * @param that {Object} The router component itself.
- * @param request {Object} The Express {Request} object.
- * @param response {Object} The Express {Response} object.
+ * @param {Object} that - The router component itself.
+ * @param {Object} request - The Express {Request} request - object.
+ * @param {Object} response - The Express {Response} response - object.
+ * @param {Function} next - The next piece of middleware in the chain.
  *
  */
 gpii.express.middleware.contentAware.delegateToHandler = function (that, request, response, next) {
@@ -39,8 +40,8 @@ gpii.express.middleware.contentAware.delegateToHandler = function (that, request
  * Return the first matching handler that matches the `request` object's `accept` header.  Handlers are sorted by
  * priority before they are evaluated.
  *
- * @param that {Object} The router component itself.
- * @param request {Object} The Express {Request} object.
+ * @param {Object} that - The router component itself.
+ * @param {Object} request - The Express {Request} request - object.
  * @return {Array} An array of handler grades that will be used to create our handler.
  *
  */

@@ -29,10 +29,10 @@ fluid.defaults("gpii.express.querystring.encodeTransform", {
  *
  * Encode an object and produce a query string.
  *
- * @param valueToEncode {Object} The value to encode.
- * @param avoidStringifying {Boolean} By default, all values are stringified.  Pass a "truthy" value for this parameter to pass raw values.
- * @param parentKey {String} If we are working with "deep" material, parentKey will represent the path to the value.
- * @return {string} A query string representing the object.
+ * @param {Object} valueToEncode - The value to encode.
+ * @param {Boolean} avoidStringifying - By default, all values are stringified.  Pass a "truthy" value for this parameter to pass raw values.
+ * @param {String} parentKey - If we are working with "deep" material, parentKey will represent the path to the value.
+ * @return {String} A query string representing the object.
  */
 gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifying, parentKey) {
     if (typeof valueToEncode === "object" && !Array.isArray(valueToEncode)) {
@@ -65,7 +65,7 @@ gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifyi
  *
  * Decode a query string and produce a JSON object with its values.
  *
- * @param stringToDecode {String} The raw query string to decode.
+ * @param {String} stringToDecode - The raw query string to decode.
  * @return {Object} An object representing the decoded value.
  */
 gpii.express.querystring.decode = function (stringToDecode) {
@@ -97,9 +97,9 @@ fluid.registerNamespace("gpii.express.dataSource.urlEncodedJson");
  * A replacement for the built-in `resolveUrl` invoker included with `kettle.dataSource.URL`, that encodes
  * `directModel` as part of the query string.
  *
- * @param that {Object} The dataSource component itself.
- * @param urlToResolve {String} The raw URL we will be accessing.
- * @param directModel {Object} The JSON data to be encoded as the query string portion of the URL.
+ * @param {Object} that - The dataSource component itself.
+ * @param {String} urlToResolve - The raw URL we will be accessing.
+ * @param {Object} directModel - The JSON data to be encoded as the query string portion of the URL.
  * @return {String} The combined URL, including the encoded query data.
  */
 gpii.express.dataSource.urlEncodedJson.resolveUrl = function (that, urlToResolve, directModel) {

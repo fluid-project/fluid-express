@@ -35,7 +35,7 @@ gpii.express.routable.childrenWithGrade = function (that, grade) {
  *
  * Order an array of components using their `namespace` and `priority` options.
  *
- * @param unsortedComponentMap {Object} - A map of components to be sorted.
+ * @param {Object} unsortedComponentMap - A map of components to be sorted.
  * @return {Array} - The components, sorted by namespaced priority.
  *
  */
@@ -47,13 +47,13 @@ gpii.express.routable.prioritiseComponentArray = function (unsortedComponentMap)
         componentOptionsById[memberName] = optionsForPrioritySorting;
     });
     var sortedComponentOptions = fluid.parsePriorityRecords(componentOptionsById, "router entry");
-    var sortedComponents = fluid.transform(sortedComponentOptions, function (componentDef) { return componentDef.pocketedComponent; });
+    var sortedComponents = fluid.getMembers(sortedComponentOptions, "pocketedComponent");
     return sortedComponents;
 };
 
 /**
  *
- * @param that {Object} - The `gpii.express.routable` instance itself.
+ * @param {Object} that - The `gpii.express.routable` instance itself.
  *
  * Wire our immediate child middleware into our router.
  *

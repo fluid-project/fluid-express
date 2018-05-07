@@ -15,10 +15,11 @@ fluid.registerNamespace("gpii.express.middleware.headerSetter");
 
 /**
  *
- * @param that {Object} The middleware component itself.
- * @param req {Object} The Express request object.
- * @param res {Object} The Express response object.
- * @param next {Function} The function to be executed next in the middleware chain.
+ * @param {Object} that - The middleware component itself.
+ * @param {Any} err - An optional error to pass along to the next piece of middleware in the chain.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @param {Function} next - The function to be executed next in the middleware chain.
  *
  * A middleware function that adds one or more headers before launching the next middleware function in the chain.
  *

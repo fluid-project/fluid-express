@@ -13,11 +13,11 @@ fluid.registerNamespace("gpii.express.middleware.error");
 
 /**
  *
- * @param that - The middleware component itself.
- * @param error - The raw upstream error.
- * @param request {Object} The Express {Request} object.
- * @param response {Object} The Express {Response} object.
- * @param next {Function} The next piece of middleware in the chain.  Only used if a response has already been sent (i.e. we have no way of contacting the user).
+ * @param {Object} that - The middleware component itself.
+ * @param {Any} error - The raw upstream error.
+ * @param {Object} request - The Express {Request} request - object.
+ * @param {Object} response - The Express {Response} response - object.
+ * @param {Function} next - The next piece of middleware in the chain.  Only used if a response has already been sent (i.e. we have no way of contacting the user).
  *
  */
 gpii.express.middleware.error.sendError = function (that, error, request, response, next) {
