@@ -13,8 +13,17 @@ var express = require("express");
 
 fluid.registerNamespace("gpii.express.middleware.static");
 
-gpii.express.middleware["static"].init = function (that) {
-    that.staticMiddleware = express["static"](that.options.contentDir, that.options.staticMiddlewareOptions);
+/**
+ *
+ * An expander to instantiate the underlying static middleware.
+ *
+ * @param {String} contentDir - The full or package-relative path to the content directory.
+ * @param {Object} staticMiddlewareOptions - Configuration options to pass to the underlying middleware.
+ * @return {Function} - The instantiated static middleware instance.
+ *
+ */
+gpii.express.middleware["static"].init = function (contentDir, staticMiddlewareOptions) {
+    return express["static"](contentDir, staticMiddlewareOptions);
 };
 
 gpii.express.middleware["static"].getMiddlewareFn = function (that) {
@@ -24,17 +33,16 @@ gpii.express.middleware["static"].getMiddlewareFn = function (that) {
 fluid.defaults("gpii.express.middleware.static", {
     gradeNames: ["gpii.express.middleware"],
     members: {
-        staticMiddleware: fluid.fail
+        staticMiddleware: {
+            expander: {
+                funcName: "gpii.express.middleware.static.init",
+                args: ["{that}.options.contentDir", "{that}.options.staticMiddlewareOptions"]
+            }
+        }
     },
     invokers: {
         "getMiddlewareFn": {
             funcName: "gpii.express.middleware.static.getMiddlewareFn",
-            args:     ["{that}"]
-        }
-    },
-    listeners: {
-        "onCreate.init": {
-            funcName: "gpii.express.middleware.static.init",
             args:     ["{that}"]
         }
     }

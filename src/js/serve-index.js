@@ -15,13 +15,21 @@ require("./static");
 
 fluid.registerNamespace("gpii.express.middleware.serveIndex");
 
-gpii.express.middleware.serveIndex.init = function (that) {
-    var allPaths = gpii.express.expandPaths(that.options.content);
+/**
+ *
+ * Expand key options and instantiate the underlying serveIndex middleware.
+ *
+ * @param {String|Array<String>} content - The content directory or directories to index.  If an array is passed, only the first directory will be used.
+ * @param {Object} serveIndexMiddlewareOptions - The configuration options to use when instantiating the serveIndex middleware.
+ * @return {Function} - The instantiated serveIndex middleware instance.
+ */
+gpii.express.middleware.serveIndex.init = function (content, serveIndexMiddlewareOptions) {
+    var allPaths = gpii.express.expandPaths(content);
     if (allPaths.length > 1) {
         fluid.log("WARN: Multiple content paths found.  Only content from the first content directory will be used in generating the directory index.");
     }
 
-    that.serveIndexMiddleware = serveIndex(allPaths[0], that.options.serveIndexMiddlewareOptions);
+    return serveIndex(allPaths[0], serveIndexMiddlewareOptions);
 };
 
 gpii.express.middleware.serveIndex.getMiddlewareFn = function (that) {
@@ -34,17 +42,16 @@ fluid.defaults("gpii.express.middleware.serveIndex", {
     content: null,
     serveIndexMiddlewareOptions: gpii.express.middleware.serveIndex.defaultOptions,
     members: {
-        serveIndexMiddleware: fluid.fail
+        serveIndexMiddleware: {
+            expander: {
+                funcName: "gpii.express.middleware.serveIndex.init",
+                args:     ["{that}.options.content", "{that}.options.serveIndexMiddlewareOptions"]
+            }
+        }
     },
     invokers: {
         "getMiddlewareFn": {
             funcName: "gpii.express.middleware.serveIndex.getMiddlewareFn",
-            args:     ["{that}"]
-        }
-    },
-    listeners: {
-        "onCreate.init": {
-            funcName: "gpii.express.middleware.serveIndex.init",
             args:     ["{that}"]
         }
     }
