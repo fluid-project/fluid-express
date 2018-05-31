@@ -19,6 +19,7 @@ fluid.defaults("gpii.tests.express.router.static.testEnvironment", {
                     staticMultiball: {
                         type: "gpii.express.router.static",
                         options: {
+                            priority: "first",
                             path:    "/multiball",
                             content: ["%gpii-express/tests/data/primary", "%gpii-express/tests/data/secondary"]
                         }

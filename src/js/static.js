@@ -8,27 +8,60 @@
 "use strict";
 var fluid = require("infusion");
 var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.router.static");
 
 var express = require("express");
 
-// The Express module is actually named "static", so for clarity I want to use that name in spite of the warnings in older versions of JSHint
-/* jshint -W024 */
-gpii.express.router["static"].init = function (that) {
-    fluid.each(gpii.express.expandPaths(that.options.content), function (contentDir) {
-        that.router.use(express["static"](contentDir, that.options.staticMiddlewareOptions));
-    });
+fluid.registerNamespace("gpii.express.middleware.static");
+
+/**
+ *
+ * An expander to instantiate the underlying static middleware.
+ *
+ * @param {String} contentDir - The full or package-relative path to the content directory.
+ * @param {Object} staticMiddlewareOptions - Configuration options to pass to the underlying middleware.
+ * @return {Function} - The instantiated static middleware instance.
+ *
+ */
+gpii.express.middleware["static"].init = function (contentDir, staticMiddlewareOptions) {
+    return express["static"](contentDir, staticMiddlewareOptions);
 };
+
+gpii.express.middleware["static"].getMiddlewareFn = function (that) {
+    return that.staticMiddleware;
+};
+
+fluid.defaults("gpii.express.middleware.static", {
+    gradeNames: ["gpii.express.middleware"],
+    members: {
+        staticMiddleware: {
+            expander: {
+                funcName: "gpii.express.middleware.static.init",
+                args: ["{that}.options.contentDir", "{that}.options.staticMiddlewareOptions"]
+            }
+        }
+    },
+    invokers: {
+        "getMiddlewareFn": {
+            funcName: "gpii.express.middleware.static.getMiddlewareFn",
+            args:     ["{that}"]
+        }
+    }
+});
 
 fluid.defaults("gpii.express.router.static", {
     gradeNames: ["gpii.express.router"],
     namespace: "static",
+    method: "use",
     content: null,
     staticMiddlewareOptions: {},
-    listeners: {
-        "onCreate.init": {
-            funcName: "gpii.express.router.static.init",
-            args:     ["{that}"]
+    dynamicComponents:{
+        contentMiddleware: {
+            sources: "@expand:gpii.express.expandPaths({gpii.express.router.static}.options.content)",
+            type:    "gpii.express.middleware.static",
+            options: {
+                contentDir: "{source}",
+                staticMiddlewareOptions: "{gpii.express.router.static}.options.staticMiddlewareOptions"
+            }
         }
     }
 });

@@ -15,7 +15,7 @@ fluid.registerNamespace("gpii.express.handler");
  *
  * Check that all our requirements are met before doing any actual work.
  *
- * @param that {Object} the handler component itself.
+ * @param {Object} that - the handler component itself.
  *
  */
 gpii.express.handler.checkRequirements = function (that) {
@@ -30,7 +30,7 @@ gpii.express.handler.checkRequirements = function (that) {
  *
  * Put a timeout mechanism in place that will send a stock response if the handler does not complete its work in time.
  *
- * @param that {Object} the handler component itself.
+ * @param {Object} that - the handler component itself.
  *
  */
 gpii.express.handler.setTimeout = function (that) {
@@ -41,7 +41,7 @@ gpii.express.handler.setTimeout = function (that) {
  *
  * Clear the timeout mechanism once a response has been sent.
  *
- * @param that {Object} the handler component itself.
+ * @param {Object} that - the handler component itself.
  *
  */
 gpii.express.handler.clearTimeout = function (that) {
@@ -54,7 +54,7 @@ gpii.express.handler.clearTimeout = function (that) {
  *
  * Send a canned response if no one else has responded in `options.timeout` milliseconds.
  *
- * @param that {Object} the handler component itself.
+ * @param {Object} that - the handler component itself.
  *
  */
 gpii.express.handler.sendTimeoutResponse = function (that) {
@@ -65,10 +65,10 @@ gpii.express.handler.sendTimeoutResponse = function (that) {
  *
  * Send a response using `that.options.response`.  Commonly accessed using `{that}.sendResponse`.
  *
- * @param that {Object} the handler component itself.
- * @param response {Object} The Express `request` object.
- * @param statusCode {Number} The status code for the response.
- * @param body {Object} The payload to send.
+ * @param {Object} that - the handler component itself.
+ * @param {Object} response - The Express `request` object.
+ * @param {Number} statusCode - The status code for the response.
+ * @param {Object} body - The payload to send.
  */
 gpii.express.handler.sendResponse = function (that, response, statusCode, body) {
     if (!response) {
@@ -84,9 +84,9 @@ gpii.express.handler.sendResponse = function (that, response, statusCode, body) 
  * Wrap a raw error based on the rules found in `that.options.rules.sendError` and pass it along to downstream
  * middleware using `that.options.next`.
  *
- * @param that {Object} the handler component itself.
- * @param statusCode {Number} The status code for the response.
- * @param body {Object} The payload to send.
+ * @param {Object} that - the handler component itself.
+ * @param {Number} statusCode - The status code for the response.
+ * @param {Object} body - The payload to send.
  */
 gpii.express.handler.sendError = function (that, statusCode, body) {
     var transformedError = fluid.model.transformWithRules({ statusCode: statusCode, body: body}, that.options.rules.sendError);
@@ -97,7 +97,7 @@ gpii.express.handler.sendError = function (that, statusCode, body) {
  *
  * Add a listener to the native response object's `finish` listener that triggers our own `afterResponseSent` event.
  *
- * @param that {Object} the handler component itself.
+ * @param {Object} that - the handler component itself.
  *
  */
 gpii.express.handler.addResponseListener = function (that) {

@@ -12,7 +12,7 @@ fluid.registerNamespace("gpii.express.router");
 
 /**
  *
- * @param that {Object} - The router object itself.
+ * @param {Object} that - The router object itself.
  *
  * Instantiate our router object.  The root `gpii.express` instance will wire everything together.
  *

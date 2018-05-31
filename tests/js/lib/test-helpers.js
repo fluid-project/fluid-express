@@ -18,9 +18,9 @@ var jqUnit = jqUnit || require("node-jqunit");
  *
  * Confirm that a response has a body and the expected status.
  *
- * @param response {Object} - The Express response object.
- * @param body {Object} - The response body.
- * @param status {Number} - The expected status code (defaults to `200`).
+ * @param {Object} response - The Express response object.
+ * @param {Object} body - The response body.
+ * @param {Number} status - The expected status code (defaults to `200`).
  */
 gpii.test.express.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;
@@ -52,10 +52,10 @@ gpii.test.express.helpers.assembleUrl = function () {
  *
  * Confirm that a request has the expected value for a particular header.
  *
- * @param message {Object} - The message to use for test output.
- * @param response {Object} - The Express response object to inspect.
- * @param header {String} - The header to inspect.
- * @param expected {String} - The expected value.
+ * @param {Object} message - The message to use for test output.
+ * @param {Object} response - The Express response object to inspect.
+ * @param {String} header - The header to inspect.
+ * @param {String} expected - The expected value.
  */
 gpii.test.express.checkHeader = function (message, response, header, expected) {
     var headerContent = response.headers[header.toLowerCase()];
@@ -79,7 +79,7 @@ gpii.test.express.checkHeader = function (message, response, header, expected) {
  *
  * Diagram all routes within an express instance.
  *
- * @param expressComponent {Object} A `gpii.express` component.
+ * @param {Object} expressComponent - A `gpii.express` component.
  * @return {Object} A JSON Object representing all routes within a `gpii.express` instance.
  *
  */
@@ -92,8 +92,8 @@ gpii.test.express.diagramAllRoutes = function (expressComponent) {
  * Diagram the routes for a single component.  To preserve the routing order of the stack, each level's children
  * are represented in a `children` Array.
  *
- * @param component {Object} A `gpii.express.middleware` component.
- * @param router {Object} The router instance within the component (if there is one).
+ * @param {Object} component - A `gpii.express.middleware` component.
+ * @param {Object} router - The router instance within the component (if there is one).
  * @return {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
  */
 gpii.test.express.diagramOneLevel = function (component, router) {
@@ -129,9 +129,9 @@ gpii.test.express.diagramOneLevel = function (component, router) {
  * Add boilerplate test sequence steps that are required to (for example) safely create all fixtures on startup or
  * safely tear down fixtures after a test is complete.
  *
- * @param rawTests {Object} - The original unmodified tests.
- * @param sequenceStart {Object} - The sequence steps (if any) to insert before each test's sequences.
- * @param sequenceEnd {Object} - The sequence steps (if any) to append after each test's sequences.
+ * @param {Object} rawTests - The original unmodified tests.
+ * @param {Object} sequenceStart - The sequence steps (if any) to insert before each test's sequences.
+ * @param {Object} sequenceEnd - The sequence steps (if any) to append after each test's sequences.
  * @return {Object} - The tests with the required start and end steps wired into all test sequences.
  *
  */

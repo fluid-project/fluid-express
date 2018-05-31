@@ -13,7 +13,7 @@ fluid.registerNamespace("gpii.test.express");
  *
  * Diagram all routes within an express instance.
  *
- * @param expressComponent {Object} A `gpii.express` component.
+ * @param {Object} expressComponent - A `gpii.express` component.
  * @return {Object} A JSON Object representing all routes within a `gpii.express` instance.
  *
  */
@@ -26,8 +26,8 @@ gpii.test.express.diagramAllRoutes = function (expressComponent) {
  * Diagram the routes for a single component.  To preserve the routing order of the stack, each level's children
  * are represented in a `children` Array.
  *
- * @param component {Object} A `gpii.express.middleware` component.
- * @param router {Object} The router instance within the component (if there is one).
+ * @param {Object} component - A `gpii.express.middleware` component.
+ * @param {Object} router - The router instance within the component (if there is one).
  * @return {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
  */
 gpii.test.express.diagramOneLevel = function (component, router) {

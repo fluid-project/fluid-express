@@ -73,6 +73,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.testEnvironment", {
                     complexErrorCatcher: {
                         type: "gpii.express.middleware.error",
                         options: {
+                            priority: "after:complexErrorPitcher",
                             componentOptions: "are good",
                             errorOutputRules: {
                                 componentOptions: "that.options.componentOptions",

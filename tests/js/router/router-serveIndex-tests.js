@@ -134,7 +134,7 @@ fluid.defaults("gpii.tests.express.router.serveIndex.testEnvironment", {
                     serveIndexMultiplePaths: {
                         type: "gpii.express.router.serveContentAndIndex",
                         options: {
-                            priority: "first",
+                            priority: "before:serveIndexSinglePath",
                             path:    "/multiple",
                             content: ["%gpii-express/tests/data/secondary", "%gpii-express/tests/data/primary"]
                         }
