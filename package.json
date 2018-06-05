@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "pretest": "node node_modules/rimraf/rimraf coverage/* reports/*",
-        "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js --print summary"
+        "test": "node node_modules/nyc/bin/nyc.js node tests/all-tests.js"
     },
     "author": "Tony Atkins <tony@raisingthefloor.org>",
     "license": "BSD-3-Clause",
@@ -24,9 +24,9 @@
         "fluid-grunt-eslint": "18.1.2",
         "grunt": "1.0.2",
         "grunt-jsonlint": "1.1.0",
-        "istanbul": "0.4.5",
         "kettle": "1.7.1",
         "node-jqunit": "1.1.8",
+        "nyc": "12.0.2",
         "rimraf": "2.6.2"
     }
 }
