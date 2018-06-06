@@ -4,7 +4,7 @@
     "description": "Fluid components to model an express server and associated router modules.",
     "main": "index.js",
     "scripts": {
-        "pretest": "node node_modules/rimraf/rimraf coverage/* reports/*",
+        "pretest": "node node_modules/rimraf/bin.js coverage/* reports/*",
         "test": "node node_modules/nyc/bin/nyc.js node tests/all-tests.js"
     },
     "author": "Tony Atkins <tony@raisingthefloor.org>",
