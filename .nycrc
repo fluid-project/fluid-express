@@ -1,5 +1,7 @@
 {
   "reporter": ["html", "text-summary"],
   "report-dir": "reports",
-  "temp-directory": "coverage"
+  "temp-directory": "coverage",
+  "include": ["./src/**/*.js", "./*.js"],
+  "exclude": ["Gruntfile.js", "./tests"]
 }
