@@ -28,4 +28,7 @@ node_modules
 .lock-wscript
 reports
 .vagrant
+
+# npm package lock.
 package-lock.json
+
