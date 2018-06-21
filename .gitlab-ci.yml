@@ -32,6 +32,10 @@ vagrant_up:
 
 vagrant_tests:
   stage: vagrant_tests
+  coverage: '/.+ Coverage summary .+/'
+  artifacts:
+    paths:
+    - reports/
   script:
     - vagrant ci test
 
