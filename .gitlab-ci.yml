@@ -27,6 +27,7 @@ before_script:
 vagrant_up:
   stage: vagrant_up
   script:
+    - export DISPLAY=:0
     - vagrant up
   when: always
 
@@ -37,6 +38,7 @@ vagrant_tests:
     paths:
     - reports/
   script:
+    - export DISPLAY=:0
     - vagrant ci test
 
 vagrant_destroy:
