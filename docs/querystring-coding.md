@@ -7,16 +7,19 @@ that wires the decoder into a `gpii.express` instance.
 To assist in communicating with this grade (and with systems like CouchDB that support similar encoding), a
 custom grade that extends `kettle.dataSource.URL` is also provided.
 
-# Static Functions
+## Static Functions
 
-## `gpii.express.querystring.encodeObject(toEncode, avoidStringifying)`
+### `gpii.express.querystring.encodeObject(toEncode, avoidStringifying)`
+
 * `toEncode`: `Object` The object to encode.
-* `avoidStringifying`: `{Boolean}` By default, all values are stringified.  Pass a "truthy" value for this parameter to pass raw values.  Intended for use with systems like [couchdb-lucene](https://github.com/rnewson/couchdb-lucene) that support this format.
+* `avoidStringifying`: `{Boolean}` By default, all values are stringified.  Pass a "truthy" value for this parameter to
+  pass raw values.  Intended for use with systems like [couchdb-lucene](https://github.com/rnewson/couchdb-lucene) that
+  support this format.
 * Returns: `String` A string that represents the original object (see below).
 
 This function converts `toEncode` to a string and URI encodes it.  For example, `{ foo: "bar" }` becomes:
 
-```
+```snippet
 foo=%22bar%22
 ```
 
@@ -25,7 +28,7 @@ That functionality is tested in the `gpii-pouchdb` package.
 
 This function calls itself recursively to handle deep values.  `{foo: { bar: "baz" } }` becomes:
 
-```
+```snippet
 foo.bar=%22baz%22
 ```
 
@@ -35,14 +38,15 @@ This "deep" encoding is not compatible with the CouchDB View API, but can be use
 The `avoidStringifying` option is intended for use with things like couchdb-lucene, which do not support enclosing
 values in quotes.  With that option set to something "truthy", `{ foo: "bar" }` becomes:
 
-```
+```snippet
 foo=bar
 ```
 
 Note that there is no option to decode this format using the decoding function provided by this library or the companion
 middleware.  It is used with with couchdb-lucene in other packages, and is only crudely tested here.
 
-## `gpii.express.querystring.decode(toDecode)`
+### `gpii.express.querystring.decode(toDecode)`
+
 * `toDecode`: `String` The string to decode.
 * Returns: `Object` An object that contains the values in the encoded string (see below).
 
@@ -56,47 +60,48 @@ Decode a query string and produce a JSON object with its values.  Although you c
 
 This would be decoded as:
 
-```
+```json
 {
-    foo: "bar",
-    baz: ["qux", true, 1 ]
+    "foo": "bar",
+    "baz": ["qux", true, 1 ]
 }
 ```
 
 As a bit of shorthand, parameters that lack a value will be set to `true`.  Thus `foo="bar"&baz` becomes:
 
-```
+```json
 {
-    foo: "bar",
-    baz: true
+    "foo": "bar",
+    "baz": true
 }
 ```
 
 "Deep" objects are represented using EL paths, thus `foo.bar.baz=%22qux%22` becomes:
 
-```
+```json
 {
-    foo: {
-        bar: {
-            baz: "qux"
+    "foo": {
+        "bar": {
+            "baz": "qux"
         }
     }
 }
 ```
 
-# Model Transformation Functions
+## Model Transformation Functions
 
-To assist in encoding and decoding values using the
-[Model Transformation API](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html), this package
-provides a transformation function for encoding and another for decoding.
+To assist in encoding and decoding values using the [Model Transformation
+API](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html), this package provides a
+transformation function for encoding and another for decoding.
 
-## `gpii.express.querystring.encodeTransform(valueToTransform, transformSpec)`
+### `gpii.express.querystring.encodeTransform(valueToTransform, transformSpec)`
+
 * `valueToTransform`: `String` The object to transform.
-* `transformSpec`: `Object` The full transformation spec.  Besides the normal options for specifying the value to be transformed, only `avoidStringifying` is useful here (see below).
+* `transformSpec`: `Object` The full transformation spec.  Besides the normal options for specifying the value to be
+  transformed, only `avoidStringifying` is useful here (see below).
 * Returns: `String` A string containing the encoded values from the original object.
 
-
-```
+```javascript
 var encoded = fluid.model.transformWithRules({ foo: "bar"}, {
     "": {
         transform: {
@@ -122,13 +127,12 @@ var encoded2 = fluid.model.transformWithRules({ foo: "bar"}, {
 
 ```
 
+### `gpii.express.querystring.decodeTransform(valueToTransform)`
 
-## `gpii.express.querystring.decodeTransform(valueToTransform)`
 * `valueToTransform`: `String` The object to transform.
 * Returns: `Object` An object that contains the values in the encoded string.
 
-
-```
+```javascript
 var decoded = fluid.model.transformWithRules("foo=%22bar%22", {
     "": {
         transform: {
@@ -142,15 +146,14 @@ var decoded = fluid.model.transformWithRules("foo=%22bar%22", {
 
 ```
 
-# Components
+## Components
 
-## `gpii.express.withJsonQueryParser`
+### `gpii.express.withJsonQueryParser`
 
 This component extends `gpii.express` and configures `gpii.express.querystring.decode` (see above) to parse incoming
 query strings.
 
-
-## `gpii.express.dataSource.urlEncodedJson`
+### `gpii.express.dataSource.urlEncodedJson`
 
 This component extends [`kettle.dataSource.URL`](https://github.com/amb26/kettle/blob/KETTLE-32/docs/DataSources.md),
 addingthe ability to request data using a complex query string.  When calling the default `get` invoker, the standard
@@ -163,15 +166,15 @@ Although there are currently no client-side dataSources, the unique parts of thi
 usage in mind as a long-term goal.  Once an in-browser equivalent of `kettle.dataSource.URL` is available, this grade
 will be updated to include documentation and tests for in-browser usage.
 
-### Usage Examples
+#### Usage Examples
 
 Let's suppose you would like to pass a list of keys to a CouchDB View.  You might use code like the
 following:
 
-```
+```javascript
 fluid.defaults("my.dataSource", {
     gradeNames: ["gpii.express.dataSource.urlEncodedJson"],
-    url: "http://localhost:6789/rest/endpoint"
+    url: "http://localhost:6789/rest/endpoint",
     invokers: {
         "onRead.log": {
             funcName: "fluid.log",
@@ -184,6 +187,7 @@ fluid.defaults("my.dataSource", {
 var dataSource = my.dataSource();
 dataSource.get({ keys: [1, 2, null, undefined]});
 ```
+
 This example grade makes a request and then logs the results.  Based on the supplied data, the call to the `get`
 invoker makes a GET request to the following URL:
 
@@ -193,7 +197,7 @@ Note that the `null` and `undefined` options were stripped based on the default 
 
 Let's look at a more complex example with deeper structures:
 
-```
+```javascript
 // See above
 
 dataSource.get({ foo: "bar", baz: { qux: [1, 2] }});
@@ -210,7 +214,7 @@ Although our default options were able to simplify the first example to avoid us
 It is important to note that although `Qs` and Express can preserve deep structure, the final values can only be passed
 as strings.  As an example:
 
-```
+```javascript
 dataSource.get({ keys: [1, true, "string", null, undefined]});
 
 // The server ends up with string values, as in: { keys: ["1", "true", "string"] }
@@ -218,20 +222,19 @@ dataSource.get({ keys: [1, true, "string", null, undefined]});
 
 You are expected to convert the received values into booleans, numbers, etc. as required.
 
-### Component Options
+#### Component Options
 
 This component supports all of the options of `kettle.dataSource.URL`, as well as the following unique options:
-
 
 | Option      | Type       | Description |
 | ----------- | ---------- | ----------- |
 | `qsOptions` | `{Object}` | The configuration options to be passed to [`qs.stringify`](https://github.com/ljharb/qs#stringifying).  The defaults use multiple values for array data rather than square brackets, and strip null values.   The defaults also only support 5 levels of depth in your object. |
 
-### Component Invokers
+#### Component Invokers
 
 This component inherits most of its invokers from `kettle.dataSource.URL`, with the following exceptions.
 
-#### `{that}.resolveUrl(url, termMap, directModel)`
+##### `{that}.resolveUrl(url, termMap, directModel)`
 
 * `url`: `String` The raw URL string to be resolved.
 * `termMap`: `Object` The unused `termMap` parameter from the underlying invoker, which is allowed here but ignored.

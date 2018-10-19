@@ -17,11 +17,13 @@ The `next` function gives your middleware control over whether processing should
 chance to process a `request`, each piece of middleware is aware of the next piece of middleware in the chain.  It can
 do one of three things with this:
 
-1. Not call the `next` function (ending the conversation, presumably after sending something to the user using the `response` object).
-2. Call the `next` function with an `error` argument (see "Error Handling Middleware" below), indicating that an error was encountered by this piece of middleware.
+1. Not call the `next` function (ending the conversation, presumably after sending something to the user using the
+   `response` object).
+2. Call the `next` function with an `error` argument (see "Error Handling Middleware" below), indicating that an error
+   was encountered by this piece of middleware.
 3. Call the `next` function with no arguments, allowing the next piece of middleware to start its work.
 
-# Error Handling Middleware
+## Error Handling Middleware
 
 A middleware function with the alternate signature `function (error, request, response, next)` is designed to respond to
 an `error` passed to the `next` function by a piece of upstream middleware.  Once an error is thrown, only middleware
@@ -30,18 +32,18 @@ chance to decide whether to allow additional error handlers to respond after it 
 downstream error handlers to respond, a piece of errorMiddleware must pass along the `error` it received, typically by
 calling `next(error)`.¯
 
-# Ordering Middleware by Priority
+## Ordering Middleware by Priority
 
 As each link in the chain gets to decide whether the remaining links will even get to see a particular request, the
-order in which middleware is called is very important.  This package uses
-[namespaces and priorities](http://docs.fluidproject.org/infusion/development/Priorities.html) to control the order in
-which middleware is called.
+order in which middleware is called is very important.  This package uses [namespaces and
+priorities](http://docs.fluidproject.org/infusion/development/Priorities.html) to control the order in which middleware
+is called.
 
 Unless you are only working with a single router or piece of middleware, it is strongly recommended that you use this
-mechanism to ensure that your middleware is called at the right time.  Take a look at this example, which
-might be found inside a `gpii.express` or `gpii.express.router` instance:
+mechanism to ensure that your middleware is called at the right time.  Take a look at this example, which might be found
+inside a `gpii.express` or `gpii.express.router` instance:
 
-```
+```snippet
 components: {
     cookie: {
         type: "gpii.express.middleware.cookieparser",
@@ -70,18 +72,18 @@ the session middleware will be able to find its cookie and look up the user's da
 after all middleware, to ensure that our router only sees requests that already have cookie and session data.
 
 Note that we were only able to use priorities like `after:session` and `after:cookie` because the "wrapper" grades
-included with this package include priorities.  When writing your own middleware or routers, best practice is to
-include a distinct namespace option in your grade definition.
+included with this package include priorities.  When writing your own middleware or routers, best practice is to include
+a distinct namespace option in your grade definition.
 
-# Middleware Components Included in This Package
+## Middleware Components Included in This Package
 
-## `gpii.express.middleware`
+### `gpii.express.middleware`
 
 The base grade you will extend to define your own middleware.  An instance of `gpii.express` or `gpii.express.router`
 will automatically attempt to wire a component with this grade name into itself.  To use this grade, you must implement
 the `middleware` invoker (see below).
 
-### Component Options
+#### Component Options
 
 | Option                 | Type                    | Description |
 | ---------------------- | ----------------------- | ----------- |
@@ -90,13 +92,14 @@ the `middleware` invoker (see below).
 | `namespace` (optional) | `{String}`              | The namespace to use when ordering other middleware relative to this one, as in `after:<namespace>`. |
 | `priority` (optional)  | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
 
-Please note that although middleware may also be limited to a particular `method` or `path`, it does not do any
-routing at all to child components.  Only the middleware itself will be given the chance to work with an appropriate
-response.  Routing is only handled by [`gpii.express`](express.md) and [`gpii.express.router`](router.md) components.
+Please note that although middleware may also be limited to a particular `method` or `path`, it does not do any routing
+at all to child components.  Only the middleware itself will be given the chance to work with an appropriate response.
+Routing is only handled by [`gpii.express`](express.md) and [`gpii.express.router`](router.md) components.
 
-### Component Invokers
+#### Component Invokers
 
-#### `{that}.middleware(request, response, next)`
+##### `{that}.middleware(request, response, next)`
+
 * `request {Object}` An Express Request object (see [the docs](express.md) for details).
 * `response {Object}` An Express Response object (see [the docs](express.md) for details).
 * `next`: The next Express middleware or router function in the chain.
@@ -105,7 +108,7 @@ response.  Routing is only handled by [`gpii.express`](express.md) and [`gpii.ex
 This function is called when your middleware is given the chance to work with an individual request.  An invoker
 definition for standard middleware might look something like:
 
-```
+```snippet
 invokers: {
   middleware: {
     funcName: "your.namespaced.function",
@@ -114,10 +117,10 @@ invokers: {
 }
 ```
 
-If you want to define a middleware that handles errors (see above), you would simply use a different invoker
-definition, as in:
+If you want to define a middleware that handles errors (see above), you would simply use a different invoker definition,
+as in:
 
-```
+```snippet
 invokers: {
   errorMiddleware: {
     funcName: "your.namespaced.errorFunction",
@@ -128,31 +131,32 @@ invokers: {
 
 For a reference example of an error handler, see the ["error handler" middleware docs](errorMiddleware.md).
 
-## `gpii.express.middleware.wrappedMiddleware`
+### `gpii.express.middleware.wrappedMiddleware`
 
 The base grade for all "wrapped" third-party middleware, such as `gpii.express.middleware.cookieparser`,
 `gpii.express.middleware.urlencoded` and `gpii.express.middleware.json` (see below).
 
-### Component Options
+#### Component Options
 
 | Option              | Type         | Description |
 | ------------------- | ------------ | ----------- |
 | `middlewareOptions` | `{Object}`   | The configuration options to pass on to the underlying third-party middleware. |
 | `middlewareImpl`    | `{Function}` | The underlying third-party middleware function which will field all requests. |
 
-### Component Invokers
+#### Component Invokers
 
-#### `{that}.middleware(request, response, next)`
+##### `{that}.middleware(request, response, next)`
+
 * `request {Object}` An Express Request object (see [the docs](express.md) for details).
 * `response {Object}` An Express Response object (see [the docs](express.md) for details).
 * `next`: The next Express middleware or router function in the chain.
 * Returns: Nothing.
 
-Passes through `request`, `response`, and `next` to the underlying middleware implementation, which is expected to
-be found at `middleware.options.middlewareImpl`.  You must provide your own `middlewareImpl` to use this grade, as
+Passes through `request`, `response`, and `next` to the underlying middleware implementation, which is expected to be
+found at `middleware.options.middlewareImpl`.  You must provide your own `middlewareImpl` to use this grade, as
 demonstrated in the following example:
 
-```
+```javascript
 var fluid = require("infusion");
 fluid.require("%gpii-express");
 
@@ -161,77 +165,76 @@ fluid.require("third-party-middleware", require, "my.middleware.npm.thirdPartyMi
 fluid.defaults("my.middleware.wrapper", {
     gradeNames: ["gpii.express.middleware.wrappedMiddleware"],
     middlewareImpl: "@expand:my.middleware.npm.thirdPartyMiddleware({that}.middlewareOptions)"
-}
+});
 ```
 
 This example assumes that the `third-party-middleware` package exports its constructor, and that it accepts
 configuration options as its only argument.  The expander will take care of creating the `middlewareImpl` option,
 and the `middleware` invoker will use this middleware to handle incoming requests.
 
-## `gpii.express.middleware.cookieparser`
+### `gpii.express.middleware.cookieparser`
 
 Parses client cookie headers and makes them available via `request.cookies`.  Wraps the standard
 [cookie parser middleware](https://github.com/expressjs/cookie-parser) previously bundled with Express.
 
-### Component Options
+#### Component Options
 
 | Option                     | Type       | Description |
 | -------------------------- | ---------- | ----------- |
 | `middlewareOptions`        | `{Object}` | The configuration options to pass on to [cookie parser middleware](https://github.com/expressjs/cookie-parser). See [the cookie-parser docs](https://github.com/expressjs/cookie-parser#cookieparsersecret-options) for more details. |
 | `middlewareOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
 
-##  `gpii.express.middleware.json`
+### `gpii.express.middleware.json`
 
-Parses JSON data passed by the client and makes it available via `request.body`.  Wraps part of the
-[body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
+Parses JSON data passed by the client and makes it available via `request.body`.  Wraps part of the [body parser
+middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
 
-### Component Options
+#### Component Options
 
 | Option              | Type       | Description |
 | ------------------- | ---------- | ----------- |
 | `middlewareOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserjsonoptions). |
 
-## `gpii.express.middleware.session`
+### `gpii.express.middleware.session`
 
 Parses client session cookies makes server-side session data associated with the cookie available via
 `request.sesssion`.  Wraps the standard [session middleware](https://github.com/expressjs/session) previously bundled
 with Express.  Requires the `cookieparser` middleware above to be in the middleware chain before it.
 
-### Component Options
+#### Component Options
 
 | Option                     | Type       | Description |
 | -------------------------- | ---------- | ----------- |
 | `middlewareOptions`        | `{Object}` | The configuration options to pass on to [the underlying `express-session` instance](https://github.com/expressjs/session). |
 | `middlewareOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
 
-## `gpii.express.middleware.urlencoded`
+### `gpii.express.middleware.urlencoded`
 
 Parses URL encoded data passed by the client and makes it available via `request.query`.  Wraps part of the
 [body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
 
-### Component Options
+#### Component Options
 
 | Option              | Type       | Description |
 | ------------------- | ---------- | ----------- |
 | `middlewareOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions). |
 
-
-## `gpii.express.middleware.error`
+### `gpii.express.middleware.error`
 
 See the ["error handler" middleware documentation](errorMiddleware.md).
 
-## `gpii.express.middleware.headerSetter`
+### `gpii.express.middleware.headerSetter`
 
 See the ["header setter" middleware documentation](headerMiddleware.md).
 
-## `gpii.express.middleware.contentAware`
+### `gpii.express.middleware.contentAware`
 
 See the [`contentAwareMiddleware` documentation](contentAwareMiddleware.md).
 
-## `gpii.express.middleware.requestAware`
+### `gpii.express.middleware.requestAware`
 
 See the [`requestAwareMiddleware` documentation](requestAwareMiddleware.md).
 
-## `gpii.express.middleware.redirect`
+### `gpii.express.middleware.redirect`
 
 See the ["redirect" middleware documentation](redirectMiddleware.md).

@@ -45,7 +45,8 @@ gpii.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload = func
         port: that.options.port,
         listeners: {
             "onCreate.send": {
-                func: "{that}.send"
+                func: "{that}.send",
+                args: []
             }
         }
     });

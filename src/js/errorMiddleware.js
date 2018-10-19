@@ -68,4 +68,3 @@ fluid.defaults("gpii.express.middleware.error", {
         }
     }
 });
-
