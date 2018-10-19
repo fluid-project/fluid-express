@@ -4,8 +4,8 @@
     "description": "Fluid components to model an express server and associated router modules.",
     "main": "index.js",
     "scripts": {
-        "pretest": "node node_modules/rimraf/rimraf coverage/* reports/*",
-        "test": "node node_modules/istanbul/lib/cli.js cover tests/all-tests.js --print summary"
+        "pretest": "node node_modules/rimraf/bin.js coverage/* reports/*",
+        "test": "node node_modules/nyc/bin/nyc.js node tests/all-tests.js"
     },
     "author": "Tony Atkins <tony@raisingthefloor.org>",
     "license": "BSD-3-Clause",
@@ -27,6 +27,7 @@
         "istanbul": "0.4.5",
         "kettle": "1.8.1",
         "node-jqunit": "1.1.8",
+        "nyc": "12.0.2",
         "rimraf": "2.6.2"
     }
 }
