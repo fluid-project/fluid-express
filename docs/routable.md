@@ -3,7 +3,7 @@
 This is the base grade that both [`gpii.express.router`](router.md) and [`gpii.express`](express.md) use to add their
 immediate children to  their [routing "stack"](router.md).  This process happens "bottom up", as in the following example:
 
-```
+```javascript
 fluid.defaults("my.express.grade", {
     gradeNames: ["gpii.express"],
     port:       "8090",
@@ -51,4 +51,3 @@ occurred to start up, so routing should be entirely finished by the time it's `o
 
 This information is provided for reference purposes, in all likelihood you will only ever work directly with either
 [`gpii.express`](express.md) or [`gpii.express.router`](router.md).
-

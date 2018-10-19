@@ -8,7 +8,8 @@ For example, let's assume that you are writing an API that lets a user search a 
 to return the full records in order of how well they match the search terms.  Let's assume that  you need to make two
 requests to accomplish this:
 
-1. Use something like couchdb-lucene to run the search.  This returns a list of product ids in order by how well they match the search terms.
+1. Use something like couchdb-lucene to run the search.  This returns a list of product ids in order by how well they
+   match the search terms.
 2. Perform a separate lookup to get the full details for each record.
 
 You might choose to store the search results, look up all detailed records, and then create a new structure that lists the
@@ -33,7 +34,6 @@ request, and a `handler` (see below) that handles the individual request.
 For practical examples of how this is used, look at the [`contentAwareMiddleware`](contentAwareMiddleware.md) and
 [`requestAwareMiddleware`](requestAwareMiddleware.md) grades in this package..
 
-
 ## `gpii.express.handlerDispatcher`
 
 A grade which creates a handler (see below) when its `onRequest` event is triggered.  You are expected to fire the
@@ -57,7 +57,6 @@ which can make use of it internally.
 | ---------- | ---------- | ----------- |
 | `timeout`  | `{Number}` | The timeout option (see above) to be distributed to the handler. Set to `5000` (5 seconds) by default. |
 
-
 ## `gpii.express.handler`
 
 An abstract grade for "request handler" modules.  Modules that extend this grade are expected to be created
@@ -70,7 +69,7 @@ to the parent middleware.
 
 The simplest implementation uses the built-in `sendResponse` invoker (see below), as in the following example:
 
-```
+```snippet
 invokers: {
   handleRequest: {
     func: "{that}.sendResponse",
@@ -80,7 +79,6 @@ invokers: {
 ```
 
 For more examples of how this can be used, check out the tests included with this package.
-
 
 ### Component Options
 
@@ -92,7 +90,6 @@ For more examples of how this can be used, check out the tests included with thi
 | `rules.sendError` | `{Object}` | [Model transformation rules](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html) that transform raw errors into "wrapped" errors (see `{that}.sendError` below). |
 | `timeout`         | `{Number}` | The handler starts a timer when it is created, and will respond with an error message if no response is send in `timeout` milliseconds. |
 
-
 ### Component Invokers
 
 #### `{that}`.handleRequest
@@ -101,6 +98,7 @@ This function is not implemented by default.  It is fired once the handler has b
 to implement this and ensure that a response is eventually sent (for example, by calling `{that}.sendResponse`).
 
 #### `{that}.sendError(statusCode, body)`
+
 * `statusCode`: The [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) associated with the error.
 * `body`: The body (JSON, text, or otherwise) to be passed along as an error message.
 * Returns: Nothing.
@@ -111,8 +109,8 @@ error is created by transforming `{ body: body, statusCode: statusCode }` using 
 [error rendering middleware](https://github.com/GPII/gpii-handlebars/blob/master/src/js/server/errorRenderingMiddleware.js)
 included with [`gpii-handlebars`](https://github.com/GPII/gpii-handlebars/).
 
-
 #### `{that}.sendResponse(statusCode, body)`
+
 * `statusCode`: The [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to be sent to the user.
 * `body`: The body (JSON, text, or otherwise) to be sent via `that.response.send`.
 * Returns: Nothing.
@@ -120,6 +118,7 @@ included with [`gpii-handlebars`](https://github.com/GPII/gpii-handlebars/).
 Sends a response to the user.
 
 #### `{that}.sendTimeoutResponse()`
+
 * Returns: Nothing.
 
 This invoker sends an error message if an `afterResponseSent` event has not been fired within `options.timeout` seconds.
@@ -129,11 +128,10 @@ that fires `afterResponseSent`, so any piece of middleware that sends a response
 You can override this invoker if you want to send your own timeout error.  If you want to disable the timeout,
 override the invoker with a call to `fluid.identity`, as in:
 
-```
+```snippet
 invokers: {
   sendTimeoutResponse: {
     funcName: "fluid.identity"
   }
 }
 ```
-

@@ -13,7 +13,7 @@ Please note that Express does not send 404 errors to error handling middleware
 [see their FAQ for details](http://expressjs.com/en/starter/faq.html).  Best practice is to place routers and middleware
 whose path is `/` at the end of the chain, as in the following options snippet:
 
-```
+```snippet
 components: {
     // Other components that do actual work.
     404: {
@@ -25,6 +25,7 @@ components: {
     }
 }
 ```
+
 ## Component Options
 
 | Option              | Type       | Description |
@@ -49,7 +50,7 @@ meaning that you can modify the upstream error format using `options.errorOutput
 use of the component itself (`that`), the `request`, and the original `error`.  Here are the default rules, which simply
 pass through the `error` in its entirety:
 
-```
+```snippet
 errorOutputRules: {
     "": "error"
 }

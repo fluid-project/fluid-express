@@ -6,12 +6,12 @@ single API endpoint to:
 * Return HTML in response to a request from a browser.
 * Return JSON in response to a request from a script or AJAX request.
 
-# Component Options
+## Component Options
 
 To use this grade, you must create the map `options.handlers`, which indicates which content types should be handled by
 which `handler` grades, as in the following example:
 
-```
+```snippet
 handlers: {
   json: {
     contentType:   "application/json",
@@ -32,12 +32,12 @@ When the decision has been made and a match has been found, a dynamic component 
 'handlerGrades'.  This component is a `gpii.express.handler`, and is expected to perform the required functions (see
 [handler.md](the handler docs) for details).
 
-# Ordering handlers by priority
+## Ordering handlers by priority
 
 To control the order in which handlers are tested, you should use [the `namespace` and `priority` attributes](http://docs.fluidproject.org/infusion/development/Priorities.html),
 as in the following example:
 
-```
+```snippet
 handlers: {
     html: {
         priority: "first",
@@ -65,9 +65,9 @@ above example:
 3. A request with `Accept: application/json` or `Accept: application/*` will be handled by `my.json.handler.grade`.
 4. A request with any other `Accept` header will be handled by `my.default.handler.grade`
 
-# Component Invokers
+## Component Invokers
 
-## `{that}.middleware(request, response, next)`
+### `{that}.middleware(request, response, next)`
 
 This invoker fulfills the standard contract for a `gpii.express.middleware` component.  It locates an appropriate handler
 if possible, and allows that to handle the original request.  If no handler can be found, `next(err)` is called and

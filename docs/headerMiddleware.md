@@ -30,10 +30,12 @@ instance.  Here's an example of adding a single header to all responses send fro
 
 Note that as with any other `gpii.express.middleware`, this component will only add headers for conversations it's
 involved in.  When you add an instance of this component as a component of `gpii.express`, it will be allowed to modify
-every response for the whole instance, unless other middleware steps in and interrupts the conversation before it gets the chance.
+every response for the whole instance, unless other middleware steps in and interrupts the conversation before it gets
+the chance.
 
 Here's an example of how this component can be used with a `gpii.express.router` instance:
 
+```javascript
     fluid.defaults("my.other.express.grade", {
         gradeNames: ["gpii.express"],
         path: 8081,
@@ -56,7 +58,7 @@ Here's an example of how this component can be used with a `gpii.express.router`
                         staticMiddleware: {
                             type: "gpii.express.router.static",
                             options: {
-                                priority: "last,
+                                priority: "last",
                                 content: "%my-package/src"
                             }
                         }
@@ -66,6 +68,7 @@ Here's an example of how this component can be used with a `gpii.express.router`
         }
     });
     my.other.express.grade();
+```
 
 ## Component Options
 
@@ -77,6 +80,7 @@ The following component configuration options are supported:
 
 Individual headers are defined as in the following example:
 
+```snippet
     headers: {
         static: {
             fieldName: "Access-Control-Allow-Origin",
@@ -90,6 +94,7 @@ Individual headers are defined as in the following example:
             }
         }
     }
+```
 
 The supported fields are as follows:
 
@@ -101,18 +106,21 @@ The supported fields are as follows:
 
 The simplest header definition looks something like the following
 
+```snippet
     headers: {
         static: {
             fieldName: "Access-Control-Allow-Origin",
             template:   "*"
         }
     }
+```
 
 Note that the template has no variables (which would look something like `%var`).  As a result, the literal value `*` is
 set.  In this case, no data is interpolated, so `dataRules` is ignored and can be safely omitted.
 
 A full definition looks something like the following:
 
+```snippet
     headers: {
         dynamic: {
             fieldName: "Content-Type",
@@ -122,6 +130,7 @@ A full definition looks something like the following:
             }
         }
     }
+```
 
 If we were accessing a URL like `http://my.site.com/path/to/router?var=application%2Fjson`, this component would set
 the `Content-Type` header to `application/json`.
@@ -131,6 +140,7 @@ The rules defined in `dataRules` have access to `that`, the component itself, an
 `request` object.  We could just has easily have read a model variable from our component, or an option from our
 component.  Here is an example illustrating a few possibilities:
 
+```snippet
     headers: {
         deleteCookie: {
             fieldName: "Set-Cookie",
@@ -153,6 +163,7 @@ component.  Here is an example illustrating a few possibilities:
             }
         }
     }
+```
 
 With those rules, this component would:
 
