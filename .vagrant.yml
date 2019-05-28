@@ -19,6 +19,7 @@ setup_job:
   script:
     - choco install nodejs-lts -y
     - choco install python2 -y
+    - npm install -g grunt
 
 test_job:
   stage: test          # name of the stage
