@@ -15,7 +15,7 @@
         "cookie-parser": "1.4.3",
         "express": "4.16.4",
         "express-session": "1.15.6",
-        "infusion": "3.0.0-dev.20181010T171529Z.aeaa6e324.FLUID-6148",
+        "infusion": "3.0.0-dev.20190507T155813Z.4781871fd.FLUID-6148",
         "serve-index": "1.9.1"
     },
     "devDependencies": {
