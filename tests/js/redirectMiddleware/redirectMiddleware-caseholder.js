@@ -11,9 +11,8 @@ gpii.tests.express.redirectMiddleware.checkInitialResponse = function (request, 
     jqUnit.assertTrue("The body should indicate that we have been redirected...", body.indexOf("Moved Permanently") === 0);
 };
 
-gpii.tests.express.redirectMiddleware.launchSecondaryRequest = function (request, url) {
-    request.options.path = url;
-    request.send();
+gpii.tests.express.redirectMiddleware.launchSecondaryRequest = function (caseHolder, url) {
+    caseHolder.events.redirectRequest.fire(url);
 };
 
 gpii.tests.express.redirectMiddleware.checkSecondaryResponse = function (request, body) {
@@ -41,10 +40,11 @@ fluid.defaults("gpii.tests.express.redirectMiddleware.caseHolder", {
                         },
                         {
                             funcName: "gpii.tests.express.redirectMiddleware.launchSecondaryRequest",
-                            args:     ["{redirectRequest}", "{originalRequest}.nativeResponse.headers.location"]
-                        },                        {
+                            args:     ["{caseHolder}", "{originalRequest}.nativeResponse.headers.location"]
+                        },
+                        {
                             listener: "gpii.tests.express.redirectMiddleware.checkSecondaryResponse",
-                            event:    "{redirectRequest}.events.onComplete",
+                            event:    "{caseHolder redirectRequest}.events.onComplete",
                             args:    ["{redirectRequest}", "{arguments}.0"]
                         }
                     ]
@@ -52,6 +52,9 @@ fluid.defaults("gpii.tests.express.redirectMiddleware.caseHolder", {
             ]
         }
     ],
+    events: {
+        redirectRequest: null
+    },
     components: {
         originalRequest: {
             type: "gpii.test.express.request",
@@ -60,7 +63,17 @@ fluid.defaults("gpii.tests.express.redirectMiddleware.caseHolder", {
             }
         },
         redirectRequest: {
-            type: "gpii.test.express.request"
+            type: "gpii.test.express.request",
+            createOnEvent: "redirectRequest",
+            options: {
+                path: "{arguments}.0",
+                listeners: {
+                    "onCreate.send": {
+                        func: "{that}.send",
+                        args: []
+                    }
+                }
+            }
         }
     }
 });
