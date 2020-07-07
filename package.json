@@ -22,7 +22,7 @@
         "eslint": "7.4.0",
         "eslint-config-fluid": "1.4.0",
         "fluid-grunt-eslint": "18.1.2",
-        "fluid-grunt-lint-all": "1.0.8-dev.20200706T133632Z.3c1d6ce.FLUID-6524",
+        "fluid-grunt-lint-all": "1.0.8",
         "grunt": "1.2.0",
         "kettle": "1.12.0",
         "node-jqunit": "1.1.8",
