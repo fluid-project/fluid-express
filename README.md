@@ -22,8 +22,8 @@ In the long term, the two modules will likely evolve closer to each other, but i
 differences.
 
 [Kettle](https://github.com/fluid-project/kettle) is a server side framework written entirely as a series of Fluid components,
-and used extensively within the Fluid Community.  Kettle better serves use cases that don't involve a markup-based UI, and provides
-deeper options for replacing the internals of the server.  It also provides support for WebSockets.
+and used extensively within the Fluid Community.  Kettle better serves use cases that don't involve a markup-based UI,
+and provides deeper options for replacing the internals of the server.  It also provides support for WebSockets.
 
 The `fluid.express` module is a wrapper for Express, and only for Express.  It does not do anything that Express cannot,
 such as communicating using WebSockets.  However, as it is based on the idiom of a newer version of express, it provides

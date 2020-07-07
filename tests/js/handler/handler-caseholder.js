@@ -1,7 +1,6 @@
 "use strict";
 var fluid  = require("infusion");
 var jqUnit = require("node-jqunit");
-var jqUnit = require("node-jqunit");
 
 fluid.registerNamespace("fluid.tests.express.handler.caseHolder");
 

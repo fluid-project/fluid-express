@@ -27,7 +27,7 @@ fluid.test.express.helpers.isSaneResponse = function (response, body, status) {
 
     jqUnit.assertEquals("The response should have a reasonable status code", status, response.statusCode);
     if (response.statusCode !== status) {
-        console.log(JSON.stringify(body, null, 2));
+        fluid.log(JSON.stringify(body, null, 2));
     }
 
     jqUnit.assertNotNull("There should be a body.", body);
