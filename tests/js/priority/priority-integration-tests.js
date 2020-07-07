@@ -5,17 +5,16 @@
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("../../../");
-gpii.express.loadTestingSupport();
+fluid.express.loadTestingSupport();
 
-fluid.registerNamespace("gpii.tests.express.priority");
+fluid.registerNamespace("fluid.tests.express.priority");
 
 // Function to either add a string to a "work in progress" header or send the final results on to the user, depending
 // on whether we are the last in the chain (i.e. whether we have a `next` function).
 //
-gpii.tests.express.priority.sendString = function (request, response, string, next) {
+fluid.tests.express.priority.sendString = function (request, response, string, next) {
     if (next) {
         var currentValue = response.get("Exquisite-Corpse");
         response.set("Exquisite-Corpse", (currentValue || "") + string);
@@ -28,29 +27,29 @@ gpii.tests.express.priority.sendString = function (request, response, string, ne
 };
 
 // Middleware that adds a string to the "work in progress" header.
-fluid.defaults("gpii.tests.express.priority.oneStringMiddleware", {
-    gradeNames: ["gpii.express.middleware"],
+fluid.defaults("fluid.tests.express.priority.oneStringMiddleware", {
+    gradeNames: ["fluid.express.middleware"],
     invokers: {
         middleware: {
-            funcName: "gpii.tests.express.priority.sendString",
+            funcName: "fluid.tests.express.priority.sendString",
             args:     ["{arguments}.0", "{arguments}.1", "{that}.options.theString", "{arguments}.2"] // request, response, string, next
         }
     }
 });
 
 // Router that outputs the "work in progress" header (if found) plus its own string.
-fluid.defaults("gpii.tests.express.priority.stringOutputter", {
-    gradeNames: ["gpii.express.middleware"],
+fluid.defaults("fluid.tests.express.priority.stringOutputter", {
+    gradeNames: ["fluid.express.middleware"],
     invokers: {
         middleware: {
-            funcName: "gpii.tests.express.priority.sendString",
+            funcName: "fluid.tests.express.priority.sendString",
             args:     ["{arguments}.0", "{arguments}.1", "{that}.options.theString"] // request, response, string
         }
     }
 });
 
-fluid.defaults("gpii.tests.express.priority.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.priority.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [
         {
             name: "Testing router ordering by priority...",
@@ -92,13 +91,13 @@ fluid.defaults("gpii.tests.express.priority.caseHolder", {
     },
     components: {
         whoWinsRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "whoWins"
             }
         },
         combinedRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "combined"
             }
@@ -106,8 +105,8 @@ fluid.defaults("gpii.tests.express.priority.caseHolder", {
     }
 });
 
-fluid.defaults("gpii.tests.express.priority.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.priority.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7593,
     components: {
         express: {
@@ -116,7 +115,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                     // Confirming that the correct router gets the first shot at responding by surrounding it with
                     // wrong numbers.
                     tooSoon: {
-                        type:      "gpii.tests.express.priority.stringOutputter",
+                        type:      "fluid.tests.express.priority.stringOutputter",
                         options: {
                             priority:  "after:justInTime",
                             namespace: "tooSoon",
@@ -125,7 +124,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                         }
                     },
                     justInTime: {
-                        type:      "gpii.tests.express.priority.stringOutputter",
+                        type:      "fluid.tests.express.priority.stringOutputter",
                         options: {
                             priority:  "before:tooLate",
                             namespace: "justInTime",
@@ -135,7 +134,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
 
                     },
                     tooLate: {
-                        type:      "gpii.tests.express.priority.stringOutputter",
+                        type:      "fluid.tests.express.priority.stringOutputter",
                         options: {
                             namespace: "tooLate",
                             path:      "/whoWins",
@@ -144,12 +143,12 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                     },
                     // A combination of middleware and routers that should spit out "Hello, ordered world." when hit in the right order.
                     combined: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path:      "/combined",
                             components: {
                                 lastWord: {
-                                    type:      "gpii.tests.express.priority.stringOutputter",
+                                    type:      "fluid.tests.express.priority.stringOutputter",
                                     options: {
                                         priority:  "after:ordered",
                                         namespace: "lastWord",
@@ -158,7 +157,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                                     }
                                 },
                                 ordered: {
-                                    type:      "gpii.tests.express.priority.oneStringMiddleware",
+                                    type:      "fluid.tests.express.priority.oneStringMiddleware",
                                     options: {
                                         priority:  "after:hello",
                                         namespace: "ordered",
@@ -166,7 +165,7 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
                                     }
                                 },
                                 hello: {
-                                    type:      "gpii.tests.express.priority.oneStringMiddleware",
+                                    type:      "fluid.tests.express.priority.oneStringMiddleware",
                                     options: {
                                         namespace: "hello",
                                         theString: "Hello,"
@@ -179,9 +178,9 @@ fluid.defaults("gpii.tests.express.priority.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.priority.caseHolder"
+            type: "fluid.tests.express.priority.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.priority.testEnvironment");
+fluid.test.runTests("fluid.tests.express.priority.testEnvironment");

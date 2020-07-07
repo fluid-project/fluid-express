@@ -1,7 +1,6 @@
 // Simple sanity checks for poorly constructed `routable` grades
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
 
 require("../../../");
 
@@ -14,7 +13,7 @@ jqUnit.test("A `routable` without a router should throw an error...", function (
         jqUnit.assert("Fluid.fail should be called if we are asked to wire children in before we have a router...");
     }, "jqUnit", "before:fail");
 
-    var routable = gpii.express.routable();
+    var routable = fluid.express.routable();
     try {
         routable.events.onReadyToWireChildren.fire();
     }

@@ -1,14 +1,14 @@
 # Routers
 
-`gpii.express.router` is a subclass of [`gpii.express.middleware`](middleware.md) that wraps
+`fluid.express.router` is a subclass of [`fluid.express.middleware`](middleware.md) that wraps
 [the  Express `router` object](http://expressjs.com/en/4x/api.html#router), which is simply a container for a collection
 of [middleware](middleware.md).
 
-Both Express and the Express `router` object have the concept of a "stack" of middleware.  A `gpii.express.router`
-instance's "stack" generally consists of its immediate child components that have the [`gpii.express.middleware`](middleware.md)
-grade.  This may include other `gpii.express.router` instances as well.
+Both Express and the Express `router` object have the concept of a "stack" of middleware.  A `fluid.express.router`
+instance's "stack" generally consists of its immediate child components that have the [`fluid.express.middleware`](middleware.md)
+grade.  This may include other `fluid.express.router` instances as well.
 
-If a `gpii.express.router` instance is given the chance to handle a request, it evaluates its "stack" in order,
+If a `fluid.express.router` instance is given the chance to handle a request, it evaluates its "stack" in order,
 to find a piece of middleware whose path, [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html), and
 signature all match the current `request`.  See the [middleware](middleware.md) docs for details on the method signature
 and HTTP method.  The effective path for a given router module is determined by appending its path to that of its
@@ -16,18 +16,18 @@ immediate parent.  A `path` of `/` indicates that a router accepts all requests 
 
 If a match is found, the middleware is given the chance to work with a given request.  If a match is not found, the
 next piece of middleware in the "stack" is evaluated.  If the end of the "stack" is reached without finding any matching
-middleware, the parent container (either `gpii.express` or another `gpii.express.router` instance) will continue
+middleware, the parent container (either `fluid.express` or another `fluid.express.router` instance) will continue
 evaluating its own "stack".  If the "stack of stacks" has been exhausted and no middleware is found to match a given
 request method and path, Express itself will report a 404 error.
 
 ## Ordering Middleware and Routers
 
-When you are working only with `gpii.express` itself and `gpii.express.middleware`, there is only one "stack", that of
-`gpii.express` itself, which is in effect a "chain" of middleware in order.  When you start working with one or more
-`gpii.express.router` instances, you have a "stack of stacks", or something that is more of a "tree".  The "tree" is
+When you are working only with `fluid.express` itself and `fluid.express.middleware`, there is only one "stack", that of
+`fluid.express` itself, which is in effect a "chain" of middleware in order.  When you start working with one or more
+`fluid.express.router` instances, you have a "stack of stacks", or something that is more of a "tree".  The "tree" is
 [traversed in "pre-order" fashion](https://en.wikipedia.org/wiki/Tree_traversal#Pre-order), as illustrated here:
 
-![A diagram demonstrating the order in which routing occurs within `gpii.express`.](
+![A diagram demonstrating the order in which routing occurs within `fluid.express`.](
 https://upload.wikimedia.org/wikipedia/commons/d/d4/Sorted_binary_tree_preorder.svg "Tree traversal diagram.")
 
 This image and the explanation are taken from the [Wikipedia article on "tree traversal"](https://en.wikipedia.org/wiki/Tree_traversal).
@@ -42,12 +42,12 @@ fluid.defaults("my.enclosing.component", {
     gradeNames: ["fluid.component"],
     components: {
         f: {
-            type: "gpii.express",
+            type: "fluid.express",
             options: {
                 port: 9090,
                 components: {
                     b: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             priority: "before:g",
                             components: {
@@ -55,7 +55,7 @@ fluid.defaults("my.enclosing.component", {
                                     type: "my.namespaced.middleware"
                                 },
                                 d: {
-                                    type: "gpii.express.router",
+                                    type: "fluid.express.router",
                                     options: {
                                         components: {
                                             c: {
@@ -74,11 +74,11 @@ fluid.defaults("my.enclosing.component", {
                         }
                     },
                     g: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             components: {
                                 i: {
-                                    type: "gpii.express.router",
+                                    type: "fluid.express.router",
                                     options: {
                                         components: {
                                             h: {
@@ -116,15 +116,15 @@ middleware will be given the chance to work with the request in the order determ
 
 ## A Few Practical Examples
 
-Let's say we have an instance of `gpii.express` that is configured as follows:
+Let's say we have an instance of `fluid.express` that is configured as follows:
 
 ```javascript
 fluid.defaults("my.namespaced.express.grade", {
-    gradeNames: ["gpii.express"],
+    gradeNames: ["fluid.express"],
     port: 8080,
     components: {
         router1: {
-            type: "gpii.express.router",
+            type: "fluid.express.router",
             options: {
                 path: "/foo",
                 namespace: "router1",
@@ -146,7 +146,7 @@ fluid.defaults("my.namespaced.express.grade", {
             }
         },
         router2: {
-            type: "gpii.express.router",
+            type: "fluid.express.router",
             options: {
                 path: "/",
                 priority: "after:router1",
@@ -186,11 +186,11 @@ inherited, and how relative paths work.
 
 ```javascript
 fluid.defaults("my.other.namespaced.express.grade", {
-    gradeNames: ["gpii.express"],
+    gradeNames: ["fluid.express"],
     port: 8080,
     components: {
         router2: {
-            type: "gpii.express.router",
+            type: "fluid.express.router",
             options: {
                 path: "/",
                 priority: "after:router1",
@@ -202,7 +202,7 @@ fluid.defaults("my.other.namespaced.express.grade", {
                         }
                     },
                     router1: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/foo",
                             namespace: "router1",
@@ -254,9 +254,9 @@ _begins with `/foo`_, and can work with the correct method.  `router2` will rout
 then `router1` in turn.  Although `router1` can handle the specific path, it cannot handle the method.  The request will
 be routed to `middlewareTwoB`.
 
-## `gpii.express.router`
+## `fluid.express.router`
 
-The base grade for all routers.  An instance of [`gpii.express`](express.md) will automatically attempt to wire in
+The base grade for all routers.  An instance of [`fluid.express`](express.md) will automatically attempt to wire in
 anything with this gradeName into its routing stack.  To be meaningfully useful, a router must have one or more
 child [middleware](middleware.md) or router components.
 
@@ -270,7 +270,7 @@ child [middleware](middleware.md) or router components.
 | `priority` (optional)      | `{String}`              | The priority of this middleware relative to other pieces of middleware (see "Ordering Middleware by Priority" above). |
 | `routerOptions` (optional) | `{Object}`              | The router options to use when creating our internal Express router instance.  See [the Express documentation](http://expressjs.com/api.html#router) for details. |
 
-### `gpii.express.router.static`
+### `fluid.express.router.static`
 
 This is a wrapper for the [static middleware built into Express](http://expressjs.com/guide/using-middleware.html#middleware.built-in),
 which serves up filesystem content based on one or more content directories and the path used in the request URL.
@@ -285,32 +285,32 @@ contains matching content will handle the request.
 
 #### Component Options
 
-In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+In addition to the options for a `fluid.express.router` grade, this component supports the following unique options.
 
 | Option                    | Type       | Description |
 | ------------------------- | ---------- | ----------- |
-| `content`                 | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
+| `content`                 | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%fluid-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
 | `staticMiddlewareOptions` | `{Object}` | Configuration options to pass to the underlying "static" middleware.  See [their documentation](http://expressjs.com/en/resources/middleware/serve-static.html) for details. |
 
-### `gpii.express.router.serveIndex`
+### `fluid.express.router.serveIndex`
 
 This is a wrapper for the [serve-index middleware](https://github.com/expressjs/serve-index), which serves up a
 directory listing for one or more content directories based the path used in the request URL.
 
-**Note:**  Although `gpii.express.router.static` supports an array of `content` directories,  the underlying serve-index
+**Note:**  Although `fluid.express.router.static` supports an array of `content` directories,  the underlying serve-index
 middleware has no mechanism for presenting a combined list of content found in multiple directories.  The first content
 directory provided will be used to generate the directory listing.
 
 #### Component Options
 
-In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+In addition to the options for a `fluid.express.router` grade, this component supports the following unique options.
 
 | Option                        | Type       | Description |
 | ----------------------------- | ---------- | ----------- |
-| `content`                     | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`.  If multiple directories are provided, only the first will be used to prepare the directory listing (see above). |
+| `content`                     | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%fluid-express/tests/html`.  If multiple directories are provided, only the first will be used to prepare the directory listing (see above). |
 | `serveIndexMiddlewareOptions` | `{Object}` | Configuration options to pass to the underlying "serve-index" middleware.  See [their documentation](https://github.com/expressjs/serve-index) for details. |
 
-### `gpii.express.router.serveContentAndIndex`
+### `fluid.express.router.serveContentAndIndex`
 
 The "serveIndex" middleware (see above) generates a directory listing, with links to individual files.  These links will
 only work if you serve up the actual content from the same relative path.  The easiest way to do this is to use the
@@ -318,15 +318,15 @@ only work if you serve up the actual content from the same relative path.  The e
 
 #### Example
 
-Here's an example of using `gpii.express.router.serveContentAndIndex` to serve up a single directory of content:
+Here's an example of using `fluid.express.router.serveContentAndIndex` to serve up a single directory of content:
 
 #### Component Options
 
-In addition to the options for a `gpii.express.router` grade, this component supports the following unique options.
+In addition to the options for a `fluid.express.router` grade, this component supports the following unique options.
 
 | Option                        | Type       | Description |
 | ----------------------------- | ---------- | ----------- |
-| `content`                     | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%gpii-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
+| `content`                     | `{Array}`  | An array of directory locations. Can be full filesystem paths or package-relative paths like `%fluid-express/tests/html`. The order is significant, as the first directory containing matching content wins. |
 | `serveIndexMiddlewareOptions` | `{Object}` | Configuration options to pass to the underlying "serve-index" middleware.  See [their documentation](https://github.com/expressjs/serve-index) for details. |
 | `staticMiddlewareOptions`     | `{Object}` | Configuration options to pass to the underlying "static" middleware.  See [their documentation](http://expressjs.com/en/resources/middleware/serve-static.html) for details. |
 
@@ -334,10 +334,10 @@ In addition to the options for a `gpii.express.router` grade, this component sup
 var my = fluid.registerNamespace("my");
 
 fluid.defaults("my.express.instance", {
-    gradeNames: ["gpii.express"],
+    gradeNames: ["fluid.express"],
     components: {
         contentRouter: {
-            type: "gpii.express.router.serveContentAndIndex",
+            type: "fluid.express.router.serveContentAndIndex",
             options: {
                 path:    "/content",
                 content: "%my-package/src/content"

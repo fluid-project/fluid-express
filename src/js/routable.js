@@ -2,14 +2,13 @@
 
     A base grade for things like a router and express itself, which contain other middleware components.
 
-    https://github.com/GPII/gpii-express/blob/master/docs/routable.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/routable.md
 
 */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
-fluid.registerNamespace("gpii.express.routable");
+fluid.registerNamespace("fluid.express.routable");
 
 // TODO: Discuss if / how / when to pull this up into Infusion itself.
 /**
@@ -21,7 +20,7 @@ fluid.registerNamespace("gpii.express.routable");
  * @return {Object} - A map of child components that extend `grade`, keyed by member name.
  *
  */
-gpii.express.routable.childrenWithGrade = function (that, grade) {
+fluid.express.routable.childrenWithGrade = function (that, grade) {
     var componentsMatchingGrade = {};
     fluid.visitComponentChildren(that, function (childComponent, name) {
         if (fluid.componentHasGrade(childComponent, grade)) {
@@ -39,7 +38,7 @@ gpii.express.routable.childrenWithGrade = function (that, grade) {
  * @return {Array} - The components, sorted by namespaced priority.
  *
  */
-gpii.express.routable.prioritiseComponentArray = function (unsortedComponentMap)  {
+fluid.express.routable.prioritiseComponentArray = function (unsortedComponentMap)  {
     var componentOptionsById = {};
     fluid.each(unsortedComponentMap, function (singleComponent, memberName) {
         var optionsForPrioritySorting = fluid.copy(singleComponent.options);
@@ -53,15 +52,15 @@ gpii.express.routable.prioritiseComponentArray = function (unsortedComponentMap)
 
 /**
  *
- * @param {Object} that - The `gpii.express.routable` instance itself.
+ * @param {Object} that - The `fluid.express.routable` instance itself.
  *
  * Wire our immediate child middleware into our router.
  *
  */
-gpii.express.routable.connectDirectDescendants = function (that) {
+fluid.express.routable.connectDirectDescendants = function (that) {
     if (that.router) {
-        var childMiddlewareComponents = gpii.express.routable.childrenWithGrade(that, "gpii.express.middleware");
-        var childMiddlewareComponentsOrderedByPriority = gpii.express.routable.prioritiseComponentArray(childMiddlewareComponents);
+        var childMiddlewareComponents = fluid.express.routable.childrenWithGrade(that, "fluid.express.middleware");
+        var childMiddlewareComponentsOrderedByPriority = fluid.express.routable.prioritiseComponentArray(childMiddlewareComponents);
         fluid.each(childMiddlewareComponentsOrderedByPriority, function (childComponent) {
             fluid.each(fluid.makeArray(childComponent.options.method), function (methodName) {
                 that.router[methodName](childComponent.options.path, childComponent.getMiddlewareFn());
@@ -75,7 +74,7 @@ gpii.express.routable.connectDirectDescendants = function (that) {
     }
 };
 
-fluid.defaults("gpii.express.routable", {
+fluid.defaults("fluid.express.routable", {
     gradeNames: ["fluid.component"],
     events: {
         onReadyToWireChildren: null,
@@ -84,7 +83,7 @@ fluid.defaults("gpii.express.routable", {
     childMiddleware: [],
     listeners: {
         onReadyToWireChildren: {
-            "funcName": "gpii.express.routable.connectDirectDescendants",
+            "funcName": "fluid.express.routable.connectDirectDescendants",
             "args":     ["{that}"]
         }
     }

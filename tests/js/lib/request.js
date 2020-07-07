@@ -4,7 +4,7 @@ var fluid = require("infusion");
 var kettle = fluid.require("%kettle");
 kettle.loadTestingSupport();
 
-fluid.defaults("gpii.test.express.request", {
+fluid.defaults("fluid.test.express.request", {
     gradeNames: ["kettle.test.request.httpCookie"],
     path: {
         expander: {

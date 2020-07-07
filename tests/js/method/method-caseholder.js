@@ -5,13 +5,12 @@
 */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 var jqUnit = require("node-jqunit");
 
 require("../includes");
 
-fluid.registerNamespace("gpii.tests.express.method.caseHolder");
+fluid.registerNamespace("fluid.tests.express.method.caseHolder");
 
 /*
 
@@ -19,7 +18,7 @@ fluid.registerNamespace("gpii.tests.express.method.caseHolder");
     The list will get longer as we go, but the counts for everything that has been hit so far should remain stable.
 
  */
-gpii.tests.express.method.caseHolder.checkMethodAndCounts = function (body, method, middlewareComponents) {
+fluid.tests.express.method.caseHolder.checkMethodAndCounts = function (body, method, middlewareComponents) {
     jqUnit.assertTrue("The response from the server should match the request method...", body.indexOf(method) !== -1);
 
     fluid.each(middlewareComponents, function (component) {
@@ -27,14 +26,14 @@ gpii.tests.express.method.caseHolder.checkMethodAndCounts = function (body, meth
     });
 };
 
-fluid.defaults("gpii.tests.express.method.request", {
+fluid.defaults("fluid.tests.express.method.request", {
     gradeNames: ["kettle.test.request.http"],
     path:       "{testEnvironment}.options.baseUrl",
     port:       "{testEnvironment}.options.port"
 });
 
-fluid.defaults("gpii.tests.express.method.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.method.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [
         {
             name: "Testing method isolation...",
@@ -47,7 +46,7 @@ fluid.defaults("gpii.tests.express.method.caseHolder", {
                             func: "{getRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.method.caseHolder.checkMethodAndCounts",
+                            listener: "fluid.tests.express.method.caseHolder.checkMethodAndCounts",
                             event: "{getRequest}.events.onComplete",
                             args: ["{arguments}.0", "GET", ["{testEnvironment}.express.get.counter"]] // body, method, middlewareComponents
                         },
@@ -55,7 +54,7 @@ fluid.defaults("gpii.tests.express.method.caseHolder", {
                             func: "{postRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.method.caseHolder.checkMethodAndCounts",
+                            listener: "fluid.tests.express.method.caseHolder.checkMethodAndCounts",
                             event: "{postRequest}.events.onComplete",
                             args: ["{arguments}.0", "POST", ["{testEnvironment}.express.get.counter", "{testEnvironment}.express.post.counter"]] // body, method, middlewareComponents
                         },
@@ -63,7 +62,7 @@ fluid.defaults("gpii.tests.express.method.caseHolder", {
                             func: "{putRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.method.caseHolder.checkMethodAndCounts",
+                            listener: "fluid.tests.express.method.caseHolder.checkMethodAndCounts",
                             event: "{putRequest}.events.onComplete",
                             args: ["{arguments}.0", "PUT", ["{testEnvironment}.express.get.counter", "{testEnvironment}.express.post.counter", "{testEnvironment}.express.put.counter"]] // body, method, middlewareComponents
                         },
@@ -71,7 +70,7 @@ fluid.defaults("gpii.tests.express.method.caseHolder", {
                             func: "{deleteRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.method.caseHolder.checkMethodAndCounts",
+                            listener: "fluid.tests.express.method.caseHolder.checkMethodAndCounts",
                             event: "{deleteRequest}.events.onComplete",
                             args: ["{arguments}.0", "DELETE", ["{testEnvironment}.express.get.counter", "{testEnvironment}.express.post.counter", "{testEnvironment}.express.put.counter", "{testEnvironment}.express.delete.counter"]] // body, method, middlewareComponents
                         }
@@ -82,25 +81,25 @@ fluid.defaults("gpii.tests.express.method.caseHolder", {
     ],
     components: {
         getRequest: {
-            type: "gpii.tests.express.method.request",
+            type: "fluid.tests.express.method.request",
             options: {
                 method: "GET"
             }
         },
         putRequest: {
-            type: "gpii.tests.express.method.request",
+            type: "fluid.tests.express.method.request",
             options: {
                 method: "PUT"
             }
         },
         postRequest: {
-            type: "gpii.tests.express.method.request",
+            type: "fluid.tests.express.method.request",
             options: {
                 method: "POST"
             }
         },
         deleteRequest: {
-            type: "gpii.tests.express.method.request",
+            type: "fluid.tests.express.method.request",
             options: {
                 method: "DELETE"
             }

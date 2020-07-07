@@ -2,14 +2,14 @@
 
 By default, Express uses [Qs](https://github.com/ljharb/qs) to parse incoming query strings.  The resulting object
 can only contain string values.  A query decoding function is provided in this package, along with an extended grade
-that wires the decoder into a `gpii.express` instance.
+that wires the decoder into a `fluid.express` instance.
 
 To assist in communicating with this grade (and with systems like CouchDB that support similar encoding), a
 custom grade that extends `kettle.dataSource.URL` is also provided.
 
 ## Static Functions
 
-### `gpii.express.querystring.encodeObject(toEncode, avoidStringifying)`
+### `fluid.express.querystring.encodeObject(toEncode, avoidStringifying)`
 
 * `toEncode`: `Object` The object to encode.
 * `avoidStringifying`: `{Boolean}` By default, all values are stringified.  Pass a "truthy" value for this parameter to
@@ -24,7 +24,7 @@ foo=%22bar%22
 ```
 
 This type of "shallow" output is compatible with the [CouchDB view API](https://wiki.apache.org/couchdb/HTTP_view_API).
-That functionality is tested in the `gpii-pouchdb` package.
+That functionality is tested in the `fluid-pouchdb` package.
 
 This function calls itself recursively to handle deep values.  `{foo: { bar: "baz" } }` becomes:
 
@@ -33,7 +33,7 @@ foo.bar=%22baz%22
 ```
 
 This "deep" encoding is not compatible with the CouchDB View API, but can be used with
-`gpii.express.withJsonQueryParser` (see below).
+`fluid.express.withJsonQueryParser` (see below).
 
 The `avoidStringifying` option is intended for use with things like couchdb-lucene, which do not support enclosing
 values in quotes.  With that option set to something "truthy", `{ foo: "bar" }` becomes:
@@ -45,13 +45,13 @@ foo=bar
 Note that there is no option to decode this format using the decoding function provided by this library or the companion
 middleware.  It is used with with couchdb-lucene in other packages, and is only crudely tested here.
 
-### `gpii.express.querystring.decode(toDecode)`
+### `fluid.express.querystring.decode(toDecode)`
 
 * `toDecode`: `String` The string to decode.
 * Returns: `Object` An object that contains the values in the encoded string (see below).
 
 Decode a query string and produce a JSON object with its values.  Although you can certainly use the
-`gpii.express.querystring.encodeObject` function to encode an object, you can also supply your own input, as long as
+`fluid.express.querystring.encodeObject` function to encode an object, you can also supply your own input, as long as
  it conforms to the conventions outlined below.
 
  An encoded query string is expected to be comprised of key/value pairs that are stringified JSON, as in:
@@ -94,7 +94,7 @@ To assist in encoding and decoding values using the [Model Transformation
 API](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html), this package provides a
 transformation function for encoding and another for decoding.
 
-### `gpii.express.querystring.encodeTransform(valueToTransform, transformSpec)`
+### `fluid.express.querystring.encodeTransform(valueToTransform, transformSpec)`
 
 * `valueToTransform`: `String` The object to transform.
 * `transformSpec`: `Object` The full transformation spec.  Besides the normal options for specifying the value to be
@@ -105,7 +105,7 @@ transformation function for encoding and another for decoding.
 var encoded = fluid.model.transformWithRules({ foo: "bar"}, {
     "": {
         transform: {
-            type: "gpii.express.querystring.encodeTransform",
+            type: "fluid.express.querystring.encodeTransform",
             inputPath: ""
         }
     }
@@ -116,7 +116,7 @@ var encoded = fluid.model.transformWithRules({ foo: "bar"}, {
 var encoded2 = fluid.model.transformWithRules({ foo: "bar"}, {
     "": {
         transform: {
-            type: "gpii.express.querystring.encodeTransform",
+            type: "fluid.express.querystring.encodeTransform",
             inputPath: "",
             avoidStringifying: true
         }
@@ -127,7 +127,7 @@ var encoded2 = fluid.model.transformWithRules({ foo: "bar"}, {
 
 ```
 
-### `gpii.express.querystring.decodeTransform(valueToTransform)`
+### `fluid.express.querystring.decodeTransform(valueToTransform)`
 
 * `valueToTransform`: `String` The object to transform.
 * Returns: `Object` An object that contains the values in the encoded string.
@@ -136,7 +136,7 @@ var encoded2 = fluid.model.transformWithRules({ foo: "bar"}, {
 var decoded = fluid.model.transformWithRules("foo=%22bar%22", {
     "": {
         transform: {
-            type: "gpii.express.querystring.decodeTransform",
+            type: "fluid.express.querystring.decodeTransform",
             inputPath: ""
         }
     }
@@ -148,12 +148,12 @@ var decoded = fluid.model.transformWithRules("foo=%22bar%22", {
 
 ## Components
 
-### `gpii.express.withJsonQueryParser`
+### `fluid.express.withJsonQueryParser`
 
-This component extends `gpii.express` and configures `gpii.express.querystring.decode` (see above) to parse incoming
+This component extends `fluid.express` and configures `fluid.express.querystring.decode` (see above) to parse incoming
 query strings.
 
-### `gpii.express.dataSource.urlEncodedJson`
+### `fluid.express.dataSource.urlEncodedJson`
 
 This component extends [`kettle.dataSource.URL`](https://github.com/amb26/kettle/blob/KETTLE-32/docs/DataSources.md),
 addingthe ability to request data using a complex query string.  When calling the default `get` invoker, the standard
@@ -173,7 +173,7 @@ following:
 
 ```javascript
 fluid.defaults("my.dataSource", {
-    gradeNames: ["gpii.express.dataSource.urlEncodedJson"],
+    gradeNames: ["fluid.express.dataSource.urlEncodedJson"],
     url: "http://localhost:6789/rest/endpoint",
     invokers: {
         "onRead.log": {

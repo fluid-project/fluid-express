@@ -1,20 +1,20 @@
 // Sample "Hello World" middleware module
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.test.express.middleware.cookie");
 
-gpii.test.express.middleware.cookie.middleware = function (req, res) {
+fluid.registerNamespace("fluid.test.express.middleware.cookie");
+
+fluid.test.express.middleware.cookie.middleware = function (req, res) {
     res.status(200).cookie("foo", "bar").send({ok: true, message: "You should now have a cookie set..."});
 };
 
-fluid.defaults("gpii.test.express.middleware.cookie", {
-    gradeNames: ["gpii.express.middleware"],
+fluid.defaults("fluid.test.express.middleware.cookie", {
+    gradeNames: ["fluid.express.middleware"],
     method:     "get",
     path:       "/cookie",
     invokers: {
         middleware: {
-            funcName: "gpii.test.express.middleware.cookie.middleware",
+            funcName: "fluid.test.express.middleware.cookie.middleware",
             args:     ["{arguments}.0", "{arguments}.1"]
         }
     }

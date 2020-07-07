@@ -3,17 +3,16 @@
     Functions to consistently encode and decode JSON objects that are part of a query string, and components
     that use these functions.  See the documentation for details:
 
-    https://github.com/GPII/gpii-express/blob/master/docs/querystring-coding.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/querystring-coding.md
 
  */
 "use strict";
 var fluid = fluid || require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
-fluid.registerNamespace("gpii.express.querystring");
+fluid.registerNamespace("fluid.express.querystring");
 
-gpii.express.querystring.encodeTransform = function (value, transformSpec) {
-    return gpii.express.querystring.encodeObject(value, transformSpec && transformSpec.avoidStringifying);
+fluid.express.querystring.encodeTransform = function (value, transformSpec) {
+    return fluid.express.querystring.encodeObject(value, transformSpec && transformSpec.avoidStringifying);
 };
 
 /**
@@ -21,7 +20,7 @@ gpii.express.querystring.encodeTransform = function (value, transformSpec) {
  * Wrap our encoding function as a transformation function.
  *
  */
-fluid.defaults("gpii.express.querystring.encodeTransform", {
+fluid.defaults("fluid.express.querystring.encodeTransform", {
     gradeNames: ["fluid.standardTransformFunction"]
 });
 
@@ -34,12 +33,12 @@ fluid.defaults("gpii.express.querystring.encodeTransform", {
  * @param {String} parentKey - If we are working with "deep" material, parentKey will represent the path to the value.
  * @return {String} A query string representing the object.
  */
-gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifying, parentKey) {
+fluid.express.querystring.encodeObject = function (valueToEncode, avoidStringifying, parentKey) {
     if (typeof valueToEncode === "object" && !Array.isArray(valueToEncode)) {
         var segments = [];
         fluid.each(valueToEncode, function (subValue, subKey) {
             var segmentKey = parentKey ? parentKey + "." + subKey : subKey;
-            segments.push(gpii.express.querystring.encodeObject(subValue, avoidStringifying, segmentKey));
+            segments.push(fluid.express.querystring.encodeObject(subValue, avoidStringifying, segmentKey));
         });
         if (segments.length === 0) {
             if (parentKey) {
@@ -68,7 +67,7 @@ gpii.express.querystring.encodeObject = function (valueToEncode, avoidStringifyi
  * @param {String} stringToDecode - The raw query string to decode.
  * @return {Object} An object representing the decoded value.
  */
-gpii.express.querystring.decode = function (stringToDecode) {
+fluid.express.querystring.decode = function (stringToDecode) {
     if (typeof stringToDecode !== "string") {
         fluid.fail("Can only decode strings.");
     }
@@ -90,7 +89,7 @@ gpii.express.querystring.decode = function (stringToDecode) {
     return decodedObject;
 };
 
-fluid.registerNamespace("gpii.express.dataSource.urlEncodedJson");
+fluid.registerNamespace("fluid.express.dataSource.urlEncodedJson");
 
 /**
  *
@@ -102,31 +101,31 @@ fluid.registerNamespace("gpii.express.dataSource.urlEncodedJson");
  * @param {Object} directModel - The JSON data to be encoded as the query string portion of the URL.
  * @return {String} The combined URL, including the encoded query data.
  */
-gpii.express.dataSource.urlEncodedJson.resolveUrl = function (that, urlToResolve, directModel) {
+fluid.express.dataSource.urlEncodedJson.resolveUrl = function (that, urlToResolve, directModel) {
     if (urlToResolve.indexOf("?") !== -1) {
         fluid.fail("Cannot work with a URL that already includes query data.");
     }
     else if (directModel) {
-        return urlToResolve + "?" + gpii.express.querystring.encodeObject(directModel, that.options.avoidStringifying);
+        return urlToResolve + "?" + fluid.express.querystring.encodeObject(directModel, that.options.avoidStringifying);
     }
     else {
         return urlToResolve;
     }
 };
 
-fluid.defaults("gpii.express.dataSource.urlEncodedJson", {
+fluid.defaults("fluid.express.dataSource.urlEncodedJson", {
     gradeNames: ["kettle.dataSource.URL"],
     invokers: {
         resolveUrl: {
-            funcName: "gpii.express.dataSource.urlEncodedJson.resolveUrl",
+            funcName: "fluid.express.dataSource.urlEncodedJson.resolveUrl",
             args:     ["{that}", "{arguments}.0", "{arguments}.2"] // url, termMap (not used), directModel
         }
     }
 });
 
-gpii.express.querystring.decodeTransform = gpii.express.querystring.decode;
+fluid.express.querystring.decodeTransform = fluid.express.querystring.decode;
 
 // Wrap the decode function for use in model transformations.
-fluid.defaults("gpii.express.querystring.decodeTransform", {
+fluid.defaults("fluid.express.querystring.decodeTransform", {
     gradeNames: ["fluid.standardTransformFunction"]
 });

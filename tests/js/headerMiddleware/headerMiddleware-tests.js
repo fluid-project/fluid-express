@@ -11,15 +11,15 @@ require("../includes.js");
 
 require("./headerMiddleware-caseholder");
 
-fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.headerMiddleware.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
             options: {
                 components: {
                     topLevelMiddleware: {
-                        type: "gpii.express.middleware.headerSetter",
+                        type: "fluid.express.middleware.headerSetter",
                         options: {
                             priority: "first",
                             headers: {
@@ -49,12 +49,12 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                         }
                     },
                     helloPathRouter: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/hello",
                             components: {
                                 deepMiddleware: {
-                                    type: "gpii.express.middleware.headerSetter",
+                                    type: "fluid.express.middleware.headerSetter",
                                     options: {
                                         priority: "first",
                                         headers: {
@@ -69,7 +69,7 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
                                     }
                                 },
                                 helloMiddleware: {
-                                    type: "gpii.test.express.middleware.hello"
+                                    type: "fluid.test.express.middleware.hello"
                                 }
                             }
 
@@ -79,9 +79,9 @@ fluid.defaults("gpii.tests.express.headerMiddleware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.headerMiddleware.caseHolder"
+            type: "fluid.tests.express.headerMiddleware.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.headerMiddleware.testEnvironment");
+fluid.test.runTests("fluid.tests.express.headerMiddleware.testEnvironment");

@@ -2,7 +2,7 @@
 
 [Express](http://expressjs.com/) is a commonly-used package which adds a few key concepts on top of
 [a Node `http.Server`](https://nodejs.org/api/http.html#http_class_http_server).  Notably, it defines a standard
-contract for ["middleware"](middleware.md) and ["routing"](router.md).  Our wrapper around express is the `gpii.express`
+contract for ["middleware"](middleware.md) and ["routing"](router.md).  Our wrapper around express is the `fluid.express`
 component (see below).
 
 ## The Express `request` Object
@@ -17,15 +17,15 @@ Many of the [`handler`](handler.md) and [`middleware`](middleware.md) grades in 
 [response object](http://expressjs.com/en/api.html#res) provided by Express.   The Express `response` object is itself
 an extension of node's [`http.ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse).
 
-## `gpii.express`
+## `fluid.express`
 
 This grade is a wrapper for the [Express `app`](http://expressjs.com/en/4x/api.html#app) itself.  Although you can use
 routers and middleware written using this package without using this grade (see the [router](router.md) and
-[middleware documentation](middleware.md) for details), in most cases your `gpii.express.router` and
-`gpii.express.middleware` instances will perform their work within an instance of `gpii.express`.
+[middleware documentation](middleware.md) for details), in most cases your `fluid.express.router` and
+`fluid.express.middleware` instances will perform their work within an instance of `fluid.express`.
 
-To use this grade, you will generally need to wire in at least one [`gpii.express.router`](router.md) instance.
-You may also need one or more [`gpii.express.middleware`](middleware.md) instances.
+To use this grade, you will generally need to wire in at least one [`fluid.express.router`](router.md) instance.
+You may also need one or more [`fluid.express.middleware`](middleware.md) instances.
 
 ### Component Options
 

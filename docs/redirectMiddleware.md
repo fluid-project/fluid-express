@@ -1,4 +1,4 @@
-# `gpii.express.middleware.redirect`
+# `fluid.express.middleware.redirect`
 
 Middleware that redirects all requests to a specified relative or absolute URL.
 
@@ -19,5 +19,5 @@ The following component configuration options are supported:
 * `response {Object}` An Express Response object (see [the docs](express.md) for details).
 * Returns: Nothing.
 
-This invoker fulfills the standard contract for a `gpii.express.middleware` component.  It uses [`response.redirect`](http://expressjs.com/en/api.html#res.redirect)
+This invoker fulfills the standard contract for a `fluid.express.middleware` component.  It uses [`response.redirect`](http://expressjs.com/en/api.html#res.redirect)
 to handle the actual redirect, see that documentation for full details.

@@ -9,8 +9,8 @@ var fluid  = require("infusion");
 require("../includes");
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.tests.express.router.params.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.router.params.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [
         {
             name: "Testing URL parameters in router paths...",
@@ -23,7 +23,7 @@ fluid.defaults("gpii.tests.express.router.params.caseHolder", {
                             func: "{paramsRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event:    "{paramsRequest}.events.onComplete",
                             args:     ["{paramsRequest}.nativeResponse", "{arguments}.0", "fooBar"]
                         }
@@ -37,7 +37,7 @@ fluid.defaults("gpii.tests.express.router.params.caseHolder", {
                             func: "{deepParamsRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyJSONContent",
+                            listener: "fluid.test.express.helpers.verifyJSONContent",
                             event:    "{deepParamsRequest}.events.onComplete",
                             args:     ["{deepParamsRequest}.nativeResponse", "{arguments}.0", { ok: true, params: { myVar: "fooBar"}}]
                         }
@@ -48,13 +48,13 @@ fluid.defaults("gpii.tests.express.router.params.caseHolder", {
     ],
     components: {
         paramsRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "params/fooBar"
             }
         },
         deepParamsRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "params/fooBar/deep"
             }

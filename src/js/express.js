@@ -2,18 +2,17 @@
 
     An [Express.js](http://expressjs.com/) instance represented as a Fluid component.  See the documentation for details:
 
-    https://github.com/GPII/gpii-express/blob/master/docs/express.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/express.md
 
 */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 var express  = require("express");
 
-fluid.registerNamespace("gpii.express");
+fluid.registerNamespace("fluid.express");
 
-gpii.express.pathForComponent = function (that) {
+fluid.express.pathForComponent = function (that) {
     var instantiator  = fluid.getInstantiator(that);
     var path          = instantiator.idToPath(that.id);
 
@@ -22,12 +21,12 @@ gpii.express.pathForComponent = function (that) {
 
 /**
  *
- * @param {Object} that - The `gpii.express` component itself.
+ * @param {Object} that - The `fluid.express` component itself.
  *
  * Create, configure and start our internal instance of `express`.  Wire up all middleware and routers.
  *
  */
-gpii.express.init = function (that) {
+fluid.express.init = function (that) {
     if (!that.options.port) {
         fluid.fail(that.options.messages.missingPort);
     }
@@ -40,12 +39,12 @@ gpii.express.init = function (that) {
 
         that.router = that.express;
 
-        // Tell the `gpii.express.routable` bits we use to wire in our children.
+        // Tell the `fluid.express.routable` bits we use to wire in our children.
         that.events.onReadyToWireChildren.fire(that);
     }
 };
 
-gpii.express.startServer = function (that) {
+fluid.express.startServer = function (that) {
     that.server = that.express.listen(that.options.port, function () {
         fluid.log("Express server listening on port " + that.express.get("port"));
 
@@ -56,12 +55,12 @@ gpii.express.startServer = function (that) {
 
 /**
  *
- * @param {Object} that - The `gpii.express` component itself.
+ * @param {Object} that - The `fluid.express` component itself.
  *
  * Stop our internal instance of `express` when our component is destroyed.
  *
  */
-gpii.express.stopServer = function (that) {
+fluid.express.stopServer = function (that) {
     if (that.server) {
         that.server.close(function () {
             fluid.log("Express stopped...");
@@ -79,12 +78,12 @@ gpii.express.stopServer = function (that) {
  * to represent filesystem paths.
  *
  */
-gpii.express.expandPaths = function (array) {
+fluid.express.expandPaths = function (array) {
     return fluid.transform(fluid.makeArray(array), fluid.module.resolvePath);
 };
 
-fluid.defaults("gpii.express", {
-    gradeNames: ["gpii.express.routable", "gpii.express.expressConfigHolder"],
+fluid.defaults("fluid.express", {
+    gradeNames: ["fluid.express.routable", "fluid.express.expressConfigHolder"],
     messages: {
         missingPort: "Cannot initialize express because you have not supplied a 'port' option."
     },
@@ -101,15 +100,15 @@ fluid.defaults("gpii.express", {
     },
     listeners: {
         "onCreate.init": {
-            funcName: "gpii.express.init",
+            funcName: "fluid.express.init",
             args:     ["{that}"]
         },
         "onChildrenWired.startServer": {
-            funcName: "gpii.express.startServer",
+            funcName: "fluid.express.startServer",
             args:     ["{that}"]
         },
         "onDestroy.stopServer": {
-            funcName: "gpii.express.stopServer",
+            funcName: "fluid.express.stopServer",
             args:     ["{that}"]
         }
     }

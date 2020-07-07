@@ -1,7 +1,7 @@
 # Request Handling Using Dynamic Components
 
 If your middleware is composed of pure functions that do not store local data unique to a request, you can generally
-just write your own `gpii.express.middleware` grade.  However, there are more complex use cases, such as cases in which
+just write your own `fluid.express.middleware` grade.  However, there are more complex use cases, such as cases in which
 you need to perform multiple lookups before responding to the user with some final result.
 
 For example, let's assume that you are writing an API that lets a user search a product catalog, and that your goal is
@@ -34,7 +34,7 @@ request, and a `handler` (see below) that handles the individual request.
 For practical examples of how this is used, look at the [`contentAwareMiddleware`](contentAwareMiddleware.md) and
 [`requestAwareMiddleware`](requestAwareMiddleware.md) grades in this package..
 
-## `gpii.express.handlerDispatcher`
+## `fluid.express.handlerDispatcher`
 
 A grade which creates a handler (see below) when its `onRequest` event is triggered.  You are expected to fire the
 `onRequest` event with the following arguments:
@@ -57,12 +57,12 @@ which can make use of it internally.
 | ---------- | ---------- | ----------- |
 | `timeout`  | `{Number}` | The timeout option (see above) to be distributed to the handler. Set to `5000` (5 seconds) by default. |
 
-## `gpii.express.handler`
+## `fluid.express.handler`
 
 An abstract grade for "request handler" modules.  Modules that extend this grade are expected to be created
 dynamically, as outlined in [the Fluid documentation](http://docs.fluidproject.org/infusion/development/SubcomponentDeclaration.html#dynamic-subcomponents-with-a-source-event).
 
-These are used with a `gpii.express.middleware` module such as the `requestAware` and `contentAware` grades included in
+These are used with a `fluid.express.middleware` module such as the `requestAware` and `contentAware` grades included in
 this package.  The middleware is expected to construct one of these components per request.  Note that these
 components are not persisted.  Any data you wish to retain should be stored elsewhere, for example, by relaying it
 to the parent middleware.
@@ -106,8 +106,8 @@ to implement this and ensure that a response is eventually sent (for example, by
 Sends a "wrapped" error along to the next piece of error handling middleware using `that.options.next`.  The "wrapped"
 error is created by transforming `{ body: body, statusCode: statusCode }` using the rules found in
 `that.options.rules.sendError`. The default error format is intended for use with error-handling middleware like the
-[error rendering middleware](https://github.com/GPII/gpii-handlebars/blob/master/src/js/server/errorRenderingMiddleware.js)
-included with [`gpii-handlebars`](https://github.com/GPII/gpii-handlebars/).
+[error rendering middleware](https://github.com/fluid-project/fluid-handlebars/blob/master/src/js/server/errorRenderingMiddleware.js)
+included with [`fluid-handlebars`](https://github.com/fluid-project/fluid-handlebars/).
 
 #### `{that}.sendResponse(statusCode, body)`
 

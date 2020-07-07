@@ -1,17 +1,16 @@
 /*
 
-    A `gpii.express.middleware` component that sets one or more HTTP headers based on the content of `options.headers`.
+    A `fluid.express.middleware` component that sets one or more HTTP headers based on the content of `options.headers`.
 
     See the documentation for more details:
 
-    https://github.com/GPII/gpii-express/blob/master/docs/headerMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/headerMiddleware.md
 
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
-fluid.registerNamespace("gpii.express.middleware.headerSetter");
+fluid.registerNamespace("fluid.express.middleware.headerSetter");
 
 /**
  *
@@ -24,7 +23,7 @@ fluid.registerNamespace("gpii.express.middleware.headerSetter");
  * A middleware function that adds one or more headers before launching the next middleware function in the chain.
  *
  */
-gpii.express.middleware.headerSetter.addHeaders = function (that, err, req, res, next) {
+fluid.express.middleware.headerSetter.addHeaders = function (that, err, req, res, next) {
     fluid.each(that.options.headers, function (headerOptions) {
         var templateData = fluid.model.transformWithRules({ that: that, request: req }, headerOptions.dataRules);
         var fieldValue = fluid.stringTemplate(headerOptions.template, templateData);
@@ -37,28 +36,28 @@ gpii.express.middleware.headerSetter.addHeaders = function (that, err, req, res,
 };
 
 
-fluid.defaults("gpii.express.middleware.headerSetter.base", {
+fluid.defaults("fluid.express.middleware.headerSetter.base", {
     mergePolicy: {
         "headers": "nomerge"
     }
 });
 
-fluid.defaults("gpii.express.middleware.headerSetter", {
-    gradeNames: ["gpii.express.middleware.headerSetter.base", "gpii.express.middleware"],
+fluid.defaults("fluid.express.middleware.headerSetter", {
+    gradeNames: ["fluid.express.middleware.headerSetter.base", "fluid.express.middleware"],
     invokers: {
         middleware: {
-            funcName: "gpii.express.middleware.headerSetter.addHeaders",
+            funcName: "fluid.express.middleware.headerSetter.addHeaders",
             args:     ["{that}", null, "{arguments}.0", "{arguments}.1", "{arguments}.2"] // err, req, res, next
         }
     }
 
 });
 
-fluid.defaults("gpii.express.middleware.headerSetter.error", {
-    gradeNames: ["gpii.express.middleware.headerSetter.base", "gpii.express.middleware.error"],
+fluid.defaults("fluid.express.middleware.headerSetter.error", {
+    gradeNames: ["fluid.express.middleware.headerSetter.base", "fluid.express.middleware.error"],
     invokers: {
         middleware: {
-            funcName: "gpii.express.middleware.headerSetter.addHeaders",
+            funcName: "fluid.express.middleware.headerSetter.addHeaders",
             args:     ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{arguments}.3"] // err, req, res, next
         }
     }

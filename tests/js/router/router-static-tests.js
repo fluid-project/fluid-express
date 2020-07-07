@@ -9,35 +9,35 @@ var fluid = require("infusion");
 require("../includes");
 require("./router-static-caseholder");
 
-fluid.defaults("gpii.tests.express.router.static.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.router.static.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7432,
     components: {
         express: {
             options: {
                 components: {
                     staticMultiball: {
-                        type: "gpii.express.router.static",
+                        type: "fluid.express.router.static",
                         options: {
                             priority: "first",
                             path:    "/multiball",
-                            content: ["%gpii-express/tests/data/primary", "%gpii-express/tests/data/secondary"]
+                            content: ["%fluid-express/tests/data/primary", "%fluid-express/tests/data/secondary"]
                         }
                     },
                     staticRoot: {
-                        type: "gpii.express.router.static",
+                        type: "fluid.express.router.static",
                         options: {
                             path:    "/",
-                            content: "%gpii-express/tests/html"
+                            content: "%fluid-express/tests/html"
                         }
                     }
                 }
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.router.static.caseHolder"
+            type: "fluid.tests.express.router.static.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.router.static.testEnvironment");
+fluid.test.runTests("fluid.tests.express.router.static.testEnvironment");

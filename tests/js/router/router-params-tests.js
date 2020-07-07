@@ -1,36 +1,35 @@
 /* Test environment for the "router" grade and "wrapper" modules for common Express routers. */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 // Load all of the components to be tested and our test cases
 require("../includes.js");
 require("./router-params-caseholder");
 
-fluid.registerNamespace("gpii.tests.express.router.params.deepParamHandler");
-gpii.tests.express.router.params.deepParamHandler.handleRequest = function (that) {
+fluid.registerNamespace("fluid.tests.express.router.params.deepParamHandler");
+fluid.tests.express.router.params.deepParamHandler.handleRequest = function (that) {
     that.sendResponse(200, { ok: true, params: that.options.request.params});
 };
 
-fluid.defaults("gpii.tests.express.router.params.deepParamHandler", {
-    gradeName: ["gpii.express.handler"],
+fluid.defaults("fluid.tests.express.router.params.deepParamHandler", {
+    gradeName: ["fluid.express.handler"],
     invokers: {
         handleRequest: {
-            funcName: "gpii.tests.express.router.params.deepParamHandler.handleRequest",
+            funcName: "fluid.tests.express.router.params.deepParamHandler.handleRequest",
             args: ["{that}"]
         }
     }
 });
 
-fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.router.params.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7512,
     components: {
         express: {
             options: {
                 components: {
                     params: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/params/:myVar",
                             routerOptions: {
@@ -38,17 +37,17 @@ fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
                             },
                             components: {
                                 deepMiddleware: {
-                                    type: "gpii.express.middleware.requestAware",
+                                    type: "fluid.express.middleware.requestAware",
                                     options: {
                                         priority: "last",
-                                        handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
+                                        handlerGrades: ["fluid.tests.express.router.params.deepParamHandler"]
                                     }
                                 },
                                 deepPathedMiddleware: {
-                                    type: "gpii.express.middleware.requestAware",
+                                    type: "fluid.express.middleware.requestAware",
                                     options: {
                                         path: "/deep",
-                                        handlerGrades: ["gpii.tests.express.router.params.deepParamHandler"]
+                                        handlerGrades: ["fluid.tests.express.router.params.deepParamHandler"]
                                     }
                                 }
                             }
@@ -58,9 +57,9 @@ fluid.defaults("gpii.tests.express.router.params.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.router.params.caseHolder"
+            type: "fluid.tests.express.router.params.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.router.params.testEnvironment");
+fluid.test.runTests("fluid.tests.express.router.params.testEnvironment");

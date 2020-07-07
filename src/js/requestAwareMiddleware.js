@@ -1,9 +1,9 @@
 /*
 
-    Middleware that creates a `gpii.express.handler` component and uses that to process each request.  See the
+    Middleware that creates a `fluid.express.handler` component and uses that to process each request.  See the
     documentation for details:
 
-    https://github.com/GPII/gpii-express/blob/master/docs/requestAwareMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/requestAwareMiddleware.md
 
  */
 "use strict";
@@ -11,8 +11,8 @@ var fluid = require("infusion");
 
 require("./handler");
 
-fluid.defaults("gpii.express.middleware.requestAware", {
-    gradeNames: ["gpii.express.middleware", "gpii.express.handlerDispatcher"],
+fluid.defaults("fluid.express.middleware.requestAware", {
+    gradeNames: ["fluid.express.middleware", "fluid.express.handlerDispatcher"],
     invokers: {
         middleware: {
             func: "{that}.events.onRequest.fire",

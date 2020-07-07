@@ -7,23 +7,22 @@
  */
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
 
 var jqUnit = require("node-jqunit");
 
 require("../../../");
-gpii.express.loadTestingSupport();
+fluid.express.loadTestingSupport();
 
-fluid.registerNamespace("gpii.tests.express.helpers");
-gpii.tests.express.helpers.checkRoutingDiagram = function (expressInstance, expectedOutput) {
-    var output = gpii.test.express.diagramAllRoutes(expressInstance);
+fluid.registerNamespace("fluid.tests.express.helpers");
+fluid.tests.express.helpers.checkRoutingDiagram = function (expressInstance, expectedOutput) {
+    var output = fluid.test.express.diagramAllRoutes(expressInstance);
 
     jqUnit.assertLeftHand("The routing diagram should be as expected...", expectedOutput, output);
 };
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.tests.express.helpers.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder.base"],
+fluid.defaults("fluid.tests.express.helpers.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder.base"],
     expected: {
         routerDiagram: {
             children: [
@@ -37,7 +36,7 @@ fluid.defaults("gpii.tests.express.helpers.caseHolder", {
                                     children: [{
                                         method:   "get",
                                         path:     "/",
-                                        typeName: "gpii.test.express.middleware.hello"
+                                        typeName: "fluid.test.express.middleware.hello"
                                     }],
                                     methods: { get: true},
                                     path: "/"
@@ -45,13 +44,13 @@ fluid.defaults("gpii.tests.express.helpers.caseHolder", {
                             ],
                             method: "use",
                             path: "/deeper",
-                            typeName: "gpii.express.router"
+                            typeName: "fluid.express.router"
                         },
                         {
                             children: [{
                                 method: "get",
                                 path:   "/",
-                                typeName: "gpii.test.express.middleware.hello"
+                                typeName: "fluid.test.express.middleware.hello"
                             }],
                             methods: { get: true},
                             path: "/"
@@ -59,13 +58,13 @@ fluid.defaults("gpii.tests.express.helpers.caseHolder", {
                     ],
                     method: "use",
                     path: "/deep",
-                    typeName: "gpii.express.router"
+                    typeName: "fluid.express.router"
                 },
                 {
                     children: [{
                         method: "get",
                         path:   "/",
-                        typeName: "gpii.test.express.middleware.hello"
+                        typeName: "fluid.test.express.middleware.hello"
                     }],
                     methods: {
                         get: true
@@ -116,7 +115,7 @@ fluid.defaults("gpii.tests.express.helpers.caseHolder", {
                     name: "We should be able to correctly diagram the routes within our instance...",
                     type: "test",
                     sequence: [{
-                        func: "gpii.tests.express.helpers.checkRoutingDiagram",
+                        func: "fluid.tests.express.helpers.checkRoutingDiagram",
                         args: ["{testEnvironment}.express", "{that}.options.expected.routerDiagram"]
                     }]
                 }

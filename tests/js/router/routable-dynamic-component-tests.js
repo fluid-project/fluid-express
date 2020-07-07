@@ -1,6 +1,6 @@
 /*
 
-    Testing express itself and gpii.express.router with dynamic components.
+    Testing express itself and fluid.express.router with dynamic components.
 
 */
 "use strict";
@@ -8,8 +8,8 @@ var fluid = require("infusion");
 
 require("../includes");
 
-fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.routable.dynamic.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [
         {
             name: "Testing router wiring for dynamic grades...",
@@ -22,7 +22,7 @@ fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
                             func: "{topLevelDynamicRouterRequestA}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event: "{topLevelDynamicRouterRequestA}.events.onComplete",
                             args: ["{topLevelDynamicRouterRequestA}.nativeResponse", "{arguments}.0", "Alligator"]
                         }
@@ -36,7 +36,7 @@ fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
                             func: "{topLevelDynamicRouterRequestB}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event: "{topLevelDynamicRouterRequestB}.events.onComplete",
                             args: ["{topLevelDynamicRouterRequestB}.nativeResponse", "{arguments}.0", "Bear"]
                         }
@@ -50,7 +50,7 @@ fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
                             func: "{nestedDynamicRouterRequestA}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event: "{nestedDynamicRouterRequestA}.events.onComplete",
                             args: ["{nestedDynamicRouterRequestA}.nativeResponse", "{arguments}.0", "Alligator"]
                         }
@@ -64,7 +64,7 @@ fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
                             func: "{nestedDynamicRouterRequestB}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event: "{nestedDynamicRouterRequestB}.events.onComplete",
                             args: ["{nestedDynamicRouterRequestB}.nativeResponse", "{arguments}.0", "Bear"]
                         }
@@ -75,25 +75,25 @@ fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
     ],
     components: {
         topLevelDynamicRouterRequestA: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "a"
             }
         },
         topLevelDynamicRouterRequestB: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "b"
             }
         },
         nestedDynamicRouterRequestA: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "nested/a"
             }
         },
         nestedDynamicRouterRequestB: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "nested/b"
             }
@@ -101,8 +101,8 @@ fluid.defaults("gpii.tests.express.routable.dynamic.caseHolder", {
     }
 });
 
-fluid.defaults("gpii.tests.express.routable.dynamic.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.routable.dynamic.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     dynamicSourceDefs: [
         { path: "/a", message: "Alligator" },
         { path: "/b", message: "Bear" }
@@ -113,7 +113,7 @@ fluid.defaults("gpii.tests.express.routable.dynamic.testEnvironment", {
                 dynamicComponents: {
                     topLevelDynamicRouter: {
                         sources: "{testEnvironment}.options.dynamicSourceDefs",
-                        type:    "gpii.test.express.middleware.hello",
+                        type:    "fluid.test.express.middleware.hello",
                         options: {
                             path:    "{source}.path",
                             message: "{source}.message"
@@ -122,13 +122,13 @@ fluid.defaults("gpii.tests.express.routable.dynamic.testEnvironment", {
                 },
                 components: {
                     nested: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/nested",
                             dynamicComponents: {
                                 nestedDynamicRouter: {
                                     sources: "{testEnvironment}.options.dynamicSourceDefs",
-                                    type:    "gpii.test.express.middleware.hello",
+                                    type:    "fluid.test.express.middleware.hello",
                                     options: {
                                         path:    "{source}.path",
                                         message: "{source}.message"
@@ -141,9 +141,9 @@ fluid.defaults("gpii.tests.express.routable.dynamic.testEnvironment", {
             }
         },
         caseHolder: {
-            type: "gpii.tests.express.routable.dynamic.caseHolder"
+            type: "fluid.tests.express.routable.dynamic.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.routable.dynamic.testEnvironment");
+fluid.test.runTests("fluid.tests.express.routable.dynamic.testEnvironment");

@@ -1,13 +1,12 @@
 // Tests for our query decoding integrated with Express
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 // TODO: Reviewing with Antranig, uncommenting this line results in lots of "assertion outside test context" errors when requiring this from another file.
 // fluid.loadTestingSupport();
 
 require("../../../");
-gpii.express.loadTestingSupport();
+fluid.express.loadTestingSupport();
 
 var kettle = require("kettle");
 kettle.loadTestingSupport();
@@ -15,9 +14,9 @@ kettle.loadTestingSupport();
 require("./caseHolder");
 require("./payloadTests");
 
-fluid.registerNamespace("gpii.tests.express.querystring.withJsonQueryParser.caseHolder");
+fluid.registerNamespace("fluid.tests.express.querystring.withJsonQueryParser.caseHolder");
 
-fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.request", {
+fluid.defaults("fluid.tests.express.querystring.withJsonQueryParser.request", {
     gradeNames: ["kettle.test.request.http"],
     path: {
         expander: {
@@ -27,7 +26,7 @@ fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.request", {
                 {
                     baseUrl: "{that}.options.baseUrl",
                     endpoint: "{that}.options.endpoint",
-                    queryString: "@expand:gpii.express.querystring.encodeObject({that}.options.qs)"
+                    queryString: "@expand:fluid.express.querystring.encodeObject({that}.options.qs)"
                 }
             ]
         }
@@ -37,9 +36,9 @@ fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.request", {
     method: "GET"
 });
 
-gpii.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload = function (that, payload) {
+fluid.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload = function (that, payload) {
     that.currentExpected = payload;
-    gpii.tests.express.querystring.withJsonQueryParser.request({
+    fluid.tests.express.querystring.withJsonQueryParser.request({
         qs: payload,
         baseUrl: that.options.baseUrl,
         port: that.options.port,
@@ -52,9 +51,9 @@ gpii.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload = func
     });
 };
 
-fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.caseHolder", {
-    gradeNames: ["gpii.tests.express.querystring.caseHolder", "gpii.test.express.caseHolder"],
-    rawModules: [gpii.tests.express.payloadTests],
+fluid.defaults("fluid.tests.express.querystring.withJsonQueryParser.caseHolder", {
+    gradeNames: ["fluid.tests.express.querystring.caseHolder", "fluid.test.express.caseHolder"],
+    rawModules: [fluid.tests.express.payloadTests],
     port: "{testEnvironment}.options.port",
     baseUrl: "{testEnvironment}.options.baseUrl",
     // The choice was either to make another caseHolder with its own module resolver that duplicated bits of the standard express caseHolder wiring, or to do this.
@@ -66,21 +65,21 @@ fluid.defaults("gpii.tests.express.querystring.withJsonQueryParser.caseHolder", 
     }],
     invokers: {
         testPayload: {
-            funcName: "gpii.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload",
+            funcName: "fluid.tests.express.querystring.withJsonQueryParser.caseHolder.testPayload",
             args:    ["{that}", "{arguments}.0"] // payload
         }
     }
 });
 
-fluid.defaults("gpii.tests.express.withJsonQueryParser.environment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.withJsonQueryParser.environment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     components: {
         express: {
-            type: "gpii.express.withJsonQueryParser",
+            type: "fluid.express.withJsonQueryParser",
             options: {
                 components: {
                     loopback: {
-                        type: "gpii.test.express.loopbackMiddleware",
+                        type: "fluid.test.express.loopbackMiddleware",
                         options: {
                             priority: "after:jsonQueryParser"
                         }
@@ -89,9 +88,9 @@ fluid.defaults("gpii.tests.express.withJsonQueryParser.environment", {
             }
         },
         caseHolder: {
-            type: "gpii.tests.express.querystring.withJsonQueryParser.caseHolder"
+            type: "fluid.tests.express.querystring.withJsonQueryParser.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.withJsonQueryParser.environment");
+fluid.test.runTests("fluid.tests.express.withJsonQueryParser.environment");

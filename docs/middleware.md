@@ -5,8 +5,8 @@ two signatures:  `function (request, response, next)`, or `function (error, requ
 the first, and most basic signature first.
 
 The `request` object provides all the details about the user's request, including any data they've provided.  As an
-example of what middleware typically does, the `gpii.express.middleware.bodyparser.json` and
-`gpii.express.middleware.bodyparser.urlencoded` grades included with this package inspect the original request, break
+example of what middleware typically does, the `fluid.express.middleware.bodyparser.json` and
+`fluid.express.middleware.bodyparser.urlencoded` grades included with this package inspect the original request, break
 down information found there, and add variables that present the same data in a more usable form.  See below for details.
 
 The `response` object gives you a way to send information (headers, content) back to the user.  A lot of what we refer to
@@ -41,18 +41,18 @@ is called.
 
 Unless you are only working with a single router or piece of middleware, it is strongly recommended that you use this
 mechanism to ensure that your middleware is called at the right time.  Take a look at this example, which might be found
-inside a `gpii.express` or `gpii.express.router` instance:
+inside a `fluid.express` or `fluid.express.router` instance:
 
 ```snippet
 components: {
     cookie: {
-        type: "gpii.express.middleware.cookieparser",
+        type: "fluid.express.middleware.cookieparser",
         options: {
             priority: "first"
         }
     },
     session: {
-        type: "gpii.express.middleware.session",
+        type: "fluid.express.middleware.session",
         options: {
             priority: "after:cookie"
         }
@@ -77,9 +77,9 @@ a distinct namespace option in your grade definition.
 
 ## Middleware Components Included in This Package
 
-### `gpii.express.middleware`
+### `fluid.express.middleware`
 
-The base grade you will extend to define your own middleware.  An instance of `gpii.express` or `gpii.express.router`
+The base grade you will extend to define your own middleware.  An instance of `fluid.express` or `fluid.express.router`
 will automatically attempt to wire a component with this grade name into itself.  To use this grade, you must implement
 the `middleware` invoker (see below).
 
@@ -94,7 +94,7 @@ the `middleware` invoker (see below).
 
 Please note that although middleware may also be limited to a particular `method` or `path`, it does not do any routing
 at all to child components.  Only the middleware itself will be given the chance to work with an appropriate response.
-Routing is only handled by [`gpii.express`](express.md) and [`gpii.express.router`](router.md) components.
+Routing is only handled by [`fluid.express`](express.md) and [`fluid.express.router`](router.md) components.
 
 #### Component Invokers
 
@@ -131,10 +131,10 @@ invokers: {
 
 For a reference example of an error handler, see the ["error handler" middleware docs](errorMiddleware.md).
 
-### `gpii.express.middleware.wrappedMiddleware`
+### `fluid.express.middleware.wrappedMiddleware`
 
-The base grade for all "wrapped" third-party middleware, such as `gpii.express.middleware.cookieparser`,
-`gpii.express.middleware.urlencoded` and `gpii.express.middleware.json` (see below).
+The base grade for all "wrapped" third-party middleware, such as `fluid.express.middleware.cookieparser`,
+`fluid.express.middleware.urlencoded` and `fluid.express.middleware.json` (see below).
 
 #### Component Options
 
@@ -158,12 +158,12 @@ demonstrated in the following example:
 
 ```javascript
 var fluid = require("infusion");
-fluid.require("%gpii-express");
+fluid.require("%fluid-express");
 
 fluid.require("third-party-middleware", require, "my.middleware.npm.thirdPartyMiddleware");
 
 fluid.defaults("my.middleware.wrapper", {
-    gradeNames: ["gpii.express.middleware.wrappedMiddleware"],
+    gradeNames: ["fluid.express.middleware.wrappedMiddleware"],
     middlewareImpl: "@expand:my.middleware.npm.thirdPartyMiddleware({that}.middlewareOptions)"
 });
 ```
@@ -172,7 +172,7 @@ This example assumes that the `third-party-middleware` package exports its const
 configuration options as its only argument.  The expander will take care of creating the `middlewareImpl` option,
 and the `middleware` invoker will use this middleware to handle incoming requests.
 
-### `gpii.express.middleware.cookieparser`
+### `fluid.express.middleware.cookieparser`
 
 Parses client cookie headers and makes them available via `request.cookies`.  Wraps the standard
 [cookie parser middleware](https://github.com/expressjs/cookie-parser) previously bundled with Express.
@@ -184,7 +184,7 @@ Parses client cookie headers and makes them available via `request.cookies`.  Wr
 | `middlewareOptions`        | `{Object}` | The configuration options to pass on to [cookie parser middleware](https://github.com/expressjs/cookie-parser). See [the cookie-parser docs](https://github.com/expressjs/cookie-parser#cookieparsersecret-options) for more details. |
 | `middlewareOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
 
-### `gpii.express.middleware.json`
+### `fluid.express.middleware.json`
 
 Parses JSON data passed by the client and makes it available via `request.body`.  Wraps part of the [body parser
 middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
@@ -195,7 +195,7 @@ middleware](https://github.com/expressjs/body-parser) previously bundled with Ex
 | ------------------- | ---------- | ----------- |
 | `middlewareOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserjsonoptions). |
 
-### `gpii.express.middleware.session`
+### `fluid.express.middleware.session`
 
 Parses client session cookies makes server-side session data associated with the cookie available via
 `request.sesssion`.  Wraps the standard [session middleware](https://github.com/expressjs/session) previously bundled
@@ -208,7 +208,7 @@ with Express.  Requires the `cookieparser` middleware above to be in the middlew
 | `middlewareOptions`        | `{Object}` | The configuration options to pass on to [the underlying `express-session` instance](https://github.com/expressjs/session). |
 | `middlewareOptions.secret` | `{Object}` | The only required configuration option within the above.  Defines a secret key that will be used to sign the session cookie. |
 
-### `gpii.express.middleware.urlencoded`
+### `fluid.express.middleware.urlencoded`
 
 Parses URL encoded data passed by the client and makes it available via `request.query`.  Wraps part of the
 [body parser middleware](https://github.com/expressjs/body-parser) previously bundled with Express.
@@ -219,22 +219,22 @@ Parses URL encoded data passed by the client and makes it available via `request
 | ------------------- | ---------- | ----------- |
 | `middlewareOptions` | `{Object}` | The configuration options to pass on to [the underlying JSON body parser instance](https://github.com/expressjs/body-parser#bodyparserurlencodedoptions). |
 
-### `gpii.express.middleware.error`
+### `fluid.express.middleware.error`
 
 See the ["error handler" middleware documentation](errorMiddleware.md).
 
-### `gpii.express.middleware.headerSetter`
+### `fluid.express.middleware.headerSetter`
 
 See the ["header setter" middleware documentation](headerMiddleware.md).
 
-### `gpii.express.middleware.contentAware`
+### `fluid.express.middleware.contentAware`
 
 See the [`contentAwareMiddleware` documentation](contentAwareMiddleware.md).
 
-### `gpii.express.middleware.requestAware`
+### `fluid.express.middleware.requestAware`
 
 See the [`requestAwareMiddleware` documentation](requestAwareMiddleware.md).
 
-### `gpii.express.middleware.redirect`
+### `fluid.express.middleware.redirect`
 
 See the ["redirect" middleware documentation](redirectMiddleware.md).

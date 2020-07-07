@@ -2,20 +2,20 @@
 
     The base grade for express middleware modules represented as Fluid components. See the documentation for details:
 
-    https://github.com/GPII/gpii-express/blob/master/docs/middleware.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/middleware.md
 
 */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.middleware");
+
+fluid.registerNamespace("fluid.express.middleware");
 
 
 // We must use this construct so that we always expose a function with the right signature, as Express determines
 // that we are a standard piece of middleware based on the method signature.
 //
 // It incorporates the previous mechanism for gating requests by method (get, post, put, use, etc.).
-gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
+fluid.express.middleware.getWrappedMiddlewareFunction = function (that) {
     var wrappedFunction = function wrappedStandardMiddleware(request, response, next) {
         if (that.middleware) {
             that.middleware(request, response, next);
@@ -26,11 +26,11 @@ gpii.express.middleware.getWrappedMiddlewareFunction = function (that) {
     };
 
     wrappedFunction.that = that;
-    wrappedFunction.path = gpii.express.pathForComponent(that);
+    wrappedFunction.path = fluid.express.pathForComponent(that);
     return wrappedFunction;
 };
 
-fluid.defaults("gpii.express.middleware", {
+fluid.defaults("fluid.express.middleware", {
     gradeNames: ["fluid.component"],
     path:       "/",
     method:     "use",
@@ -47,7 +47,7 @@ fluid.defaults("gpii.express.middleware", {
     },
     invokers: {
         "getMiddlewareFn": {
-            funcName: "gpii.express.middleware.getWrappedMiddlewareFunction",
+            funcName: "fluid.express.middleware.getWrappedMiddlewareFunction",
             args: ["{that}"]
         }
     }

@@ -1,10 +1,9 @@
 // Common "payload" tests cases, in which the caseHolder's testPayload invoker is called to verify that a payload is roundtripped correctly (encoded and then decoded, transmitted to the server, etc.)
 "use strict";
 var fluid = require("infusion");
-var gpii = fluid.registerNamespace("gpii");
 
-fluid.registerNamespace("gpii.tests.express.payloadTests");
-gpii.tests.express.payloadTests = {
+fluid.registerNamespace("fluid.tests.express.payloadTests");
+fluid.tests.express.payloadTests = {
     name: "Standard decoding/encoding payload tests..",
     tests: [
         {
