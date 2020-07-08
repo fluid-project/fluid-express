@@ -1,24 +1,24 @@
-# gpii.express.middleware.headerSetter
+# fluid.express.middleware.headerSetter
 
 This component sets one or more [HTTP response headers](https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.2)
 based on the contents of `options.headers` (see below).
 
 ## Using this grade
 
-This grade can only do its job when it is added as a child component of either a `gpii.express` or `gpii.express.router`
-instance.  Here's an example of adding a single header to all responses send from a `gpii.express` instance:
+This grade can only do its job when it is added as a child component of either a `fluid.express` or `fluid.express.router`
+instance.  Here's an example of adding a single header to all responses send from a `fluid.express` instance:
 
     fluid.defaults("my.express.grade", {
-        gradeNames: ["gpii.express"],
+        gradeNames: ["fluid.express"],
         path: 8080,
         components: {
             headerSetter: {
-                type: "gpii.express.middleware.headerSetter",
+                type: "fluid.express.middleware.headerSetter",
                 options: {
                     headers: {
                         server: {
                             fieldName: "Server",
-                            template:  "Custom gpii-express Server/1.0.0"
+                            template:  "Custom fluid-express Server/1.0.0"
                         }
                     }
                 }
@@ -28,24 +28,24 @@ instance.  Here's an example of adding a single header to all responses send fro
     }
     my.express.grade();
 
-Note that as with any other `gpii.express.middleware`, this component will only add headers for conversations it's
-involved in.  When you add an instance of this component as a component of `gpii.express`, it will be allowed to modify
+Note that as with any other `fluid.express.middleware`, this component will only add headers for conversations it's
+involved in.  When you add an instance of this component as a component of `fluid.express`, it will be allowed to modify
 every response for the whole instance, unless other middleware steps in and interrupts the conversation before it gets
 the chance.
 
-Here's an example of how this component can be used with a `gpii.express.router` instance:
+Here's an example of how this component can be used with a `fluid.express.router` instance:
 
 ```javascript
     fluid.defaults("my.other.express.grade", {
-        gradeNames: ["gpii.express"],
+        gradeNames: ["fluid.express"],
         path: 8081,
         components: {
             staticRouter: {
-                type: "gpii.express.router",
+                type: "fluid.express.router",
                 options: {
                     components: {
                         headerSetter: {
-                            type: "gpii.express.middleware.headerSetter",
+                            type: "fluid.express.middleware.headerSetter",
                             options: {
                                 headers: {
                                     cors: {
@@ -56,7 +56,7 @@ Here's an example of how this component can be used with a `gpii.express.router`
                             }
                         },
                         staticMiddleware: {
-                            type: "gpii.express.router.static",
+                            type: "fluid.express.router.static",
                             options: {
                                 priority: "last",
                                 content: "%my-package/src"
@@ -182,5 +182,5 @@ can also set static values in the `template` value itself, as illustrated in the
 * `next`: The next Express middleware or router function in the chain.
 * Returns: Nothing.
 
-This invoker fulfills the standard contract for a `gpii.express.middleware` component.  It uses `fluid.model.transformWithRules`
+This invoker fulfills the standard contract for a `fluid.express.middleware` component.  It uses `fluid.model.transformWithRules`
 to generate data that is combined with `template` using `fluid.stringTemplate` (see above).

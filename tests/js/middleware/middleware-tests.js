@@ -8,44 +8,44 @@ require("../lib");
 
 require("./middleware-caseholder");
 
-fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.middleware.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
             options: {
                 components: {
                     counter: {
-                        type: "gpii.test.express.middleware.counter"
+                        type: "fluid.test.express.middleware.counter"
                     },
                     cookieSetter: {
-                        type: "gpii.test.express.middleware.cookie",
+                        type: "fluid.test.express.middleware.cookie",
                         options: {
                             priority:  "after:counter"
                         }
                     },
                     hello: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path:      "/hello",
                             priority:  "after:cookieSetter",
                             components: {
                                 nestedReqView: {
-                                    type: "gpii.express.router",
+                                    type: "fluid.express.router",
                                     options: {
                                         priority: "before:world",
                                         path: "/rv",
                                         components: {
                                             reqviewChild: {
-                                                type: "gpii.express.router",
+                                                type: "fluid.express.router",
                                                 options: {
                                                     path:    "/jailed",
                                                     components: {
                                                         cookieparser: {
-                                                            type: "gpii.express.middleware.cookieparser"
+                                                            type: "fluid.express.middleware.cookieparser"
                                                         },
                                                         hello: {
-                                                            type: "gpii.test.express.middleware.hello",
+                                                            type: "fluid.test.express.middleware.hello",
                                                             options: {
                                                                 message: "This is provided by a module nested four levels deep.",
                                                                 priority: "after:cookieparser"
@@ -55,7 +55,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                                 }
                                             },
                                             reqView: {
-                                                type: "gpii.test.express.middleware.reqview",
+                                                type: "fluid.test.express.middleware.reqview",
                                                 options: {
                                                     priority: "after:reqviewChild"
                                                 }
@@ -64,15 +64,15 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     }
                                 },
                                 hello: {
-                                    type:     "gpii.test.express.middleware.hello"
+                                    type:     "fluid.test.express.middleware.hello"
                                 },
                                 world: {
-                                    type: "gpii.express.router",
+                                    type: "fluid.express.router",
                                     options: {
                                         path: "/world",
                                         components: {
                                             session: {
-                                                type: "gpii.express.middleware.session",
+                                                type: "fluid.express.middleware.session",
                                                 options: {
                                                     priority: "before:world",
                                                     sessionOptions: {
@@ -81,7 +81,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                                 }
                                             },
                                             world: {
-                                                type: "gpii.test.express.middleware.hello",
+                                                type: "fluid.test.express.middleware.hello",
                                                 options: {
                                                     message: "Hello, yourself"
                                                 }
@@ -93,27 +93,27 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                         }
                     },
                     reqViewRouter: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/reqview",
                             components: {
                                 json: {
-                                    type: "gpii.express.middleware.bodyparser.json"
+                                    type: "fluid.express.middleware.bodyparser.json"
                                 },
                                 urlencoded: {
-                                    type: "gpii.express.middleware.bodyparser.urlencoded",
+                                    type: "fluid.express.middleware.bodyparser.urlencoded",
                                     options: {
                                         priority: "after:json"
                                     }
                                 },
                                 cookieparser: {
-                                    type: "gpii.express.middleware.cookieparser",
+                                    type: "fluid.express.middleware.cookieparser",
                                     options: {
                                         priority: "after:urlencoded"
                                     }
                                 },
                                 session: {
-                                    type: "gpii.express.middleware.session",
+                                    type: "fluid.express.middleware.session",
                                     options: {
                                         priority: "after:cookieparser",
                                         sessionOptions: {
@@ -122,7 +122,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     }
                                 },
                                 reqView: {
-                                    type: "gpii.test.express.middleware.reqview",
+                                    type: "fluid.test.express.middleware.reqview",
                                     options: {
                                         priority: "after:session"
                                     }
@@ -131,12 +131,12 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                         }
                     },
                     needle: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/needle",
                             components: {
                                 json: {
-                                    type: "gpii.express.middleware.bodyparser.json",
+                                    type: "fluid.express.middleware.bodyparser.json",
                                     options: {
                                         priority: "first",
                                         middlewareOptions: {
@@ -145,7 +145,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     }
                                 },
                                 urlencoded: {
-                                    type: "gpii.express.middleware.bodyparser.urlencoded",
+                                    type: "fluid.express.middleware.bodyparser.urlencoded",
                                     options: {
                                         priority: "after:json",
                                         middlewareOptions: {
@@ -154,7 +154,7 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                                     }
                                 },
                                 world: {
-                                    type: "gpii.test.express.middleware.hello",
+                                    type: "fluid.test.express.middleware.hello",
                                     options: {
                                         priority: "last",
                                         path:     "/",
@@ -166,18 +166,18 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
                         }
                     },
                     badlyWrapped: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/badlyWrapped",
                             components: {
                                 json: {
-                                    type: "gpii.express.middleware.wrappedMiddleware",
+                                    type: "fluid.express.middleware.wrappedMiddleware",
                                     options: {
                                         priority: "first"
                                     }
                                 },
                                 world: {
-                                    type: "gpii.test.express.middleware.hello",
+                                    type: "fluid.test.express.middleware.hello",
                                     options: {
                                         priority: "last",
                                         path:     "/",
@@ -191,9 +191,9 @@ fluid.defaults("gpii.tests.express.middleware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.middleware.caseHolder"
+            type: "fluid.tests.express.middleware.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.middleware.testEnvironment");
+fluid.test.runTests("fluid.tests.express.middleware.testEnvironment");

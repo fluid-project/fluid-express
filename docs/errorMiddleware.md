@@ -1,4 +1,4 @@
-# `gpii.express.middleware.error`
+# `fluid.express.middleware.error`
 
 As mentioned in the [middleware docs](middleware.md), error handling middleware is simply middleware whose
 method signature indicates that it can handle errors.  This grade provides a base error handler that passes along the
@@ -43,7 +43,7 @@ components: {
 * `next`: The next piece of middleware in the error reporting chain.
 * Returns: Nothing.
 
-This invoker fulfills the standard contract for a `gpii.express.middleware` component, with the signature expected for
+This invoker fulfills the standard contract for a `fluid.express.middleware` component, with the signature expected for
 an error handler.   The invoker makes use of
 [`fluid.model.transformWithRules`](http://docs.fluidproject.org/infusion/development/ModelTransformationAPI.html),
 meaning that you can modify the upstream error format using `options.errorOutputRules` (see above).  The rules can make

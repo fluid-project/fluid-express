@@ -1,14 +1,14 @@
 "use strict";
 var fluid  = require("infusion");
 
-fluid.defaults("gpii.tests.express.contentAware.request", {
-    gradeNames: ["gpii.test.express.request"],
+fluid.defaults("fluid.tests.express.contentAware.request", {
+    gradeNames: ["fluid.test.express.request"],
     endpoint:   ""
 });
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.contentAware.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     expected: {
         "default": "This is the default response.",
         text:      "This is the text response.",
@@ -27,7 +27,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{defaultRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event:    "{defaultRequest}.events.onComplete",
                             args:     ["{defaultRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.default"]
                         }
@@ -41,7 +41,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{jsonRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event:    "{jsonRequest}.events.onComplete",
                             args:     ["{jsonRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
                         }
@@ -55,7 +55,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{textRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event:    "{textRequest}.events.onComplete",
                             args:     ["{textRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.text"]
                         }
@@ -69,7 +69,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{noHandlerRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyJSONContent",
+                            listener: "fluid.test.express.helpers.verifyJSONContent",
                             event:    "{noHandlerRequest}.events.onComplete",
                             args:     ["{noHandlerRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
                         }
@@ -83,7 +83,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{pickyRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyJSONContent",
+                            listener: "fluid.test.express.helpers.verifyJSONContent",
                             event:    "{pickyRequest}.events.onComplete",
                             args:     ["{pickyRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.unhandled"]
                         }
@@ -97,7 +97,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
                             func: "{secondaryContentTypeRequest}.send"
                         },
                         {
-                            listener: "gpii.test.express.helpers.verifyStringContent",
+                            listener: "fluid.test.express.helpers.verifyStringContent",
                             event:    "{secondaryContentTypeRequest}.events.onComplete",
                             args:     ["{secondaryContentTypeRequest}.nativeResponse", "{arguments}.0", "{caseHolder}.options.expected.json"]
                         }
@@ -111,10 +111,10 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
             type: "kettle.test.cookieJar"
         },
         defaultRequest: {
-            type: "gpii.tests.express.contentAware.request"
+            type: "fluid.tests.express.contentAware.request"
         },
         jsonRequest: {
-            type: "gpii.tests.express.contentAware.request",
+            type: "fluid.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "application/json"
@@ -122,7 +122,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
             }
         },
         textRequest: {
-            type: "gpii.tests.express.contentAware.request",
+            type: "fluid.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "text/html"
@@ -130,13 +130,13 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
             }
         },
         noHandlerRequest: {
-            type: "gpii.tests.express.contentAware.request",
+            type: "fluid.tests.express.contentAware.request",
             options: {
                 endpoint: "hcf"
             }
         },
         pickyRequest: {
-            type: "gpii.tests.express.contentAware.request",
+            type: "fluid.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "candy/floss"
@@ -144,7 +144,7 @@ fluid.defaults("gpii.tests.express.contentAware.caseHolder", {
             }
         },
         secondaryContentTypeRequest: {
-            type: "gpii.tests.express.contentAware.request",
+            type: "fluid.tests.express.contentAware.request",
             options: {
                 headers: {
                     accept: "application/secondary"

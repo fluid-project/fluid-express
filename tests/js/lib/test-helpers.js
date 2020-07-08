@@ -1,6 +1,6 @@
 /*
 
-    Helpers for use in testing gpii.express and services built on top of it.  These support client-side usage because
+    Helpers for use in testing fluid.express and services built on top of it.  These support client-side usage because
     of the `addRequiredSequences` method, which likely needs to be moved to a micro module or into Fluid itself.
 
     TODO:  Discuss with Antranig.
@@ -9,8 +9,8 @@
 
 "use strict";
 var fluid = fluid || require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.test.express.helpers");
+
+fluid.registerNamespace("fluid.test.express.helpers");
 
 var jqUnit = jqUnit || require("node-jqunit");
 
@@ -22,29 +22,29 @@ var jqUnit = jqUnit || require("node-jqunit");
  * @param {Object} body - The response body.
  * @param {Number} status - The expected status code (defaults to `200`).
  */
-gpii.test.express.helpers.isSaneResponse = function (response, body, status) {
+fluid.test.express.helpers.isSaneResponse = function (response, body, status) {
     status = status ? status : 200;
 
     jqUnit.assertEquals("The response should have a reasonable status code", status, response.statusCode);
     if (response.statusCode !== status) {
-        console.log(JSON.stringify(body, null, 2));
+        fluid.log(JSON.stringify(body, null, 2));
     }
 
     jqUnit.assertNotNull("There should be a body.", body);
 };
 
 // Confirm that a response body contains the expected string content.
-gpii.test.express.helpers.verifyStringContent = function (response, body, expectedString) {
+fluid.test.express.helpers.verifyStringContent = function (response, body, expectedString) {
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString) !== -1);
 };
 
 // Confirm that a JSON payload is as expected.
-gpii.test.express.helpers.verifyJSONContent = function (response, body, expected) {
+fluid.test.express.helpers.verifyJSONContent = function (response, body, expected) {
     var payload = JSON.parse(body);
     jqUnit.assertDeepEq("The payload should be as expected...", expected, payload);
 };
 
-gpii.test.express.helpers.assembleUrl = function () {
+fluid.test.express.helpers.assembleUrl = function () {
     fluid.fail("This function has been removed.  You will need to migrate to using fluid.stringTemplate instead.");
 };
 
@@ -57,7 +57,7 @@ gpii.test.express.helpers.assembleUrl = function () {
  * @param {String} header - The header to inspect.
  * @param {String} expected - The expected value.
  */
-gpii.test.express.checkHeader = function (message, response, header, expected) {
+fluid.test.express.checkHeader = function (message, response, header, expected) {
     var headerContent = response.headers[header.toLowerCase()];
     jqUnit.assertEquals(message, expected, headerContent);
 };
@@ -79,12 +79,12 @@ gpii.test.express.checkHeader = function (message, response, header, expected) {
  *
  * Diagram all routes within an express instance.
  *
- * @param {Object} expressComponent - A `gpii.express` component.
- * @return {Object} A JSON Object representing all routes within a `gpii.express` instance.
+ * @param {Object} expressComponent - A `fluid.express` component.
+ * @return {Object} A JSON Object representing all routes within a `fluid.express` instance.
  *
  */
-gpii.test.express.diagramAllRoutes = function (expressComponent) {
-    return gpii.test.express.diagramOneLevel(expressComponent, expressComponent.router._router);
+fluid.test.express.diagramAllRoutes = function (expressComponent) {
+    return fluid.test.express.diagramOneLevel(expressComponent, expressComponent.router._router);
 };
 
 /**
@@ -92,25 +92,25 @@ gpii.test.express.diagramAllRoutes = function (expressComponent) {
  * Diagram the routes for a single component.  To preserve the routing order of the stack, each level's children
  * are represented in a `children` Array.
  *
- * @param {Object} component - A `gpii.express.middleware` component.
+ * @param {Object} component - A `fluid.express.middleware` component.
  * @param {Object} router - The router instance within the component (if there is one).
  * @return {Object} A JSON Object representing the routes from this level down as well as the method and path for this level.
  */
-gpii.test.express.diagramOneLevel = function (component, router) {
+fluid.test.express.diagramOneLevel = function (component, router) {
     var thisLevel = fluid.filterKeys(component.options, ["method", "path"]);
     thisLevel.typeName = component.typeName;
 
     if (router) {
         thisLevel.children = fluid.transform(router.stack, function (layer) {
-            // This is a `gpii.express.router` instance
+            // This is a `fluid.express.router` instance
             if (layer.handle && layer.handle.that) {
-                return gpii.test.express.diagramOneLevel(layer.handle.that, layer.handle.that.router);
+                return fluid.test.express.diagramOneLevel(layer.handle.that, layer.handle.that.router);
             }
-            // This is a `gpii.express.middleware` instance
+            // This is a `fluid.express.middleware` instance
             else if (layer.route) {
                 var wrapper = fluid.filterKeys(layer.route, ["path", "methods"]);
                 wrapper.children = fluid.transform(layer.route.stack, function (middlewareLayer) {
-                    return gpii.test.express.diagramOneLevel(middlewareLayer.handle.that, middlewareLayer.handle.that.router);
+                    return fluid.test.express.diagramOneLevel(middlewareLayer.handle.that, middlewareLayer.handle.that.router);
                 });
                 return wrapper;
             }
@@ -135,7 +135,7 @@ gpii.test.express.diagramOneLevel = function (component, router) {
  * @return {Object} - The tests with the required start and end steps wired into all test sequences.
  *
  */
-gpii.test.express.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
+fluid.test.express.helpers.addRequiredSequences = function (rawTests, sequenceStart, sequenceEnd) {
     var completeTests = fluid.copy(rawTests);
 
     for (var a = 0; a < completeTests.length; a++) {
@@ -157,9 +157,9 @@ gpii.test.express.helpers.addRequiredSequences = function (rawTests, sequenceSta
 };
 
 // A `caseHolder` that uses `options.rawModules` and the above function to create its modules.  If you want to avoid
-// the default `sequenceStart`, extend this grade rather than `gpii.test.express.caseHolder`.
+// the default `sequenceStart`, extend this grade rather than `fluid.test.express.caseHolder`.
 //
-fluid.defaults("gpii.test.express.caseHolder.base", {
+fluid.defaults("fluid.test.express.caseHolder.base", {
     gradeNames: ["fluid.test.testCaseHolder"],
     mergePolicy: {
         rawModules:    "noexpand",
@@ -167,13 +167,13 @@ fluid.defaults("gpii.test.express.caseHolder.base", {
         sequenceEnd:   "noexpand"
     },
     moduleSource: {
-        funcName: "gpii.test.express.helpers.addRequiredSequences",
+        funcName: "fluid.test.express.helpers.addRequiredSequences",
         args:     ["{that}.options.rawModules", "{that}.options.sequenceStart", "{that}.options.sequenceEnd"]
     }
 });
 
 // Standard initial test sequence steps.
-gpii.test.express.standardSequenceStart = [
+fluid.test.express.standardSequenceStart = [
     { // This sequence point is required because of a QUnit bug - it defers the start of sequence by 13ms "to avoid any current callbacks" in its words
         func: "{testEnvironment}.events.constructFixtures.fire"
     },
@@ -183,28 +183,28 @@ gpii.test.express.standardSequenceStart = [
     }
 ];
 
-// A caseholder for use in testing `gpii-express` or its child components.  Your test environment should:
+// A caseholder for use in testing `fluid-express` or its child components.  Your test environment should:
 //
 //   1. Have a `constructFixtures` event and wait to construct its test components until `constructFixtures` is fired.
 //   2. Have an `onFixturesConstructed` event which waits for all of the startup events for its child components.
 //
 // A reference `testEnvironment` is included below.
 //
-fluid.defaults("gpii.test.express.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder.base"],
-    sequenceStart: gpii.test.express.standardSequenceStart
+fluid.defaults("fluid.test.express.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder.base"],
+    sequenceStart: fluid.test.express.standardSequenceStart
 });
 
 
-// A test environment with events that match those used in `gpii.test.express.caseHolder`.
+// A test environment with events that match those used in `fluid.test.express.caseHolder`.
 //
-fluid.defaults("gpii.test.express.testEnvironment", {
+fluid.defaults("fluid.test.express.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     port:   7777,
     baseUrl: {
         expander: {
             funcName: "fluid.stringTemplate",
-            args: ["http://localhost:%port/", { port: "{gpii.test.express.testEnvironment}.options.port"}]
+            args: ["http://localhost:%port/", { port: "{fluid.test.express.testEnvironment}.options.port"}]
         }
     },
     events: {
@@ -219,7 +219,7 @@ fluid.defaults("gpii.test.express.testEnvironment", {
     components: {
         express: {
             createOnEvent: "constructFixtures",
-            type: "gpii.express",
+            type: "fluid.express",
             options: {
                 port: "{testEnvironment}.options.port",
                 baseUrl: "{testEnvironment}.options.baseUrl",

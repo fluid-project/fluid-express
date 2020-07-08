@@ -11,22 +11,22 @@ require("../includes.js");
 
 require("./redirectMiddleware-caseholder");
 
-fluid.defaults("gpii.tests.express.redirectMiddleware.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.redirectMiddleware.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7531,
     components: {
         express: {
             options: {
                 components: {
                     topLevelMiddleware: {
-                        type: "gpii.express.middleware.redirect",
+                        type: "fluid.express.middleware.redirect",
                         options: {
                             path:        "/redirectFrom",
                             redirectUrl: "/redirectTo"
                         }
                     },
                     helloPathRouter: {
-                        type: "gpii.test.express.middleware.hello",
+                        type: "fluid.test.express.middleware.hello",
                         options: {
                             path: "/redirectTo"
                         }
@@ -35,9 +35,9 @@ fluid.defaults("gpii.tests.express.redirectMiddleware.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.redirectMiddleware.caseHolder"
+            type: "fluid.tests.express.redirectMiddleware.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.redirectMiddleware.testEnvironment");
+fluid.test.runTests("fluid.tests.express.redirectMiddleware.testEnvironment");

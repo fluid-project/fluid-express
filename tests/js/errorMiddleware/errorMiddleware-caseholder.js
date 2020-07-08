@@ -1,20 +1,19 @@
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
 
 var jqUnit = require("node-jqunit");
 
-fluid.registerNamespace("gpii.tests.express.errorMiddleware.caseHolder");
+fluid.registerNamespace("fluid.tests.express.errorMiddleware.caseHolder");
 
 // kettle.requestUncaughtExceptionHandler = function (err) {
-gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError = function (err) {
+fluid.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError = function (err) {
     if (err) {
         jqUnit.assert("There was an error, as expected...");
     }
 };
 
-fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.errorMiddleware.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     expected: {
         string: "The root error handler responded.",
         simple: {
@@ -98,7 +97,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                     sequence: [
                         {
                             funcName: "fluid.failureEvent.addListener",
-                            args:     [gpii.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError, "jqUnit", "before:fail"]
+                            args:     [fluid.tests.express.errorMiddleware.caseHolder.handleErrorHandlerError, "jqUnit", "before:fail"]
                         },
                         {
                             func: "{overlyOptimisticRequest}.send"
@@ -127,7 +126,7 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
                             args:    ["The root error handler should have responded...", "{that}.options.expected.string", "{arguments}.0"]
                         },
                         {
-                            func: "gpii.test.express.checkHeader",
+                            func: "fluid.test.express.checkHeader",
                             args: ["A custom request header should have been set for the error...", "{rootRequest}.nativeResponse", "My-Request-Went-To-Hell", "and all I got was this lousy header..."] // message, response, header, expected
                         }
                     ]
@@ -137,43 +136,43 @@ fluid.defaults("gpii.tests.express.errorMiddleware.caseHolder", {
     ],
     components: {
         stringRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "string"
             }
         },
         simpleRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "simple"
             }
         },
         complexRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "complex"
             }
         },
         nestedRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "nested"
             }
         },
         overlyOptimisticRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "overlyOptimistic"
             }
         },
         rootHeaderRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: ""
             }
         },
         rootRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: ""
             }

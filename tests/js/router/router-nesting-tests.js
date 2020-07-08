@@ -10,31 +10,31 @@ var fluid = require("infusion");
 require("../includes.js");
 require("./router-nesting-caseholder");
 
-fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.router.nesting.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7532,
     components: {
         express: {
             options: {
                 components: {
                     helloPathRouter: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path: "/hello",
                             components: {
                                 helloMiddleware: {
-                                    type: "gpii.test.express.middleware.hello",
+                                    type: "fluid.test.express.middleware.hello",
                                     options: {
                                         priority: "last"
                                     }
                                 },
                                 worldPathRouter: {
-                                    type: "gpii.express.router",
+                                    type: "fluid.express.router",
                                     options: {
                                         path:    "/world",
                                         components: {
                                             worldMiddleware: {
-                                                type: "gpii.test.express.middleware.hello",
+                                                type: "fluid.test.express.middleware.hello",
                                                 options: {
                                                     message: "Hello, yourself"
                                                 }
@@ -49,9 +49,9 @@ fluid.defaults("gpii.tests.express.router.nesting.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.router.nesting.caseHolder"
+            type: "fluid.tests.express.router.nesting.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.router.nesting.testEnvironment");
+fluid.test.runTests("fluid.tests.express.router.nesting.testEnvironment");

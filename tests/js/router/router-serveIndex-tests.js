@@ -5,15 +5,13 @@
  */
 "use strict";
 var fluid = require("infusion");
-var gpii = fluid.registerNamespace("gpii");
-
 var jqUnit = require("node-jqunit");
 
 require("../includes");
 
-fluid.registerNamespace("gpii.tests.express.router.serveIndex");
+fluid.registerNamespace("fluid.tests.express.router.serveIndex");
 
-gpii.tests.express.router.serveIndex.testDirectoryIndex = function (response, body, expectedContent, unexpectedContent, expectedStatusCode) {
+fluid.tests.express.router.serveIndex.testDirectoryIndex = function (response, body, expectedContent, unexpectedContent, expectedStatusCode) {
     expectedStatusCode = expectedStatusCode || 200;
     jqUnit.assertEquals("The status code should have been as expected.", expectedStatusCode, response.statusCode);
 
@@ -30,8 +28,8 @@ gpii.tests.express.router.serveIndex.testDirectoryIndex = function (response, bo
 };
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.tests.express.router.serveIndex.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.router.serveIndex.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [
         {
             name: "Testing 'serveIndex' middleware...",
@@ -44,7 +42,7 @@ fluid.defaults("gpii.tests.express.router.serveIndex.caseHolder", {
                             func: "{serveIndexRootIndexRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.router.serveIndex.testDirectoryIndex",
+                            listener: "fluid.tests.express.router.serveIndex.testDirectoryIndex",
                             event:    "{serveIndexRootIndexRequest}.events.onComplete",
                             // response, body, expectedContent, unexpectedContent, expectedStatusCode
                             args:     [
@@ -64,7 +62,7 @@ fluid.defaults("gpii.tests.express.router.serveIndex.caseHolder", {
                             func: "{serveIndexRootContentRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.router.serveIndex.testDirectoryIndex",
+                            listener: "fluid.tests.express.router.serveIndex.testDirectoryIndex",
                             event:    "{serveIndexRootContentRequest}.events.onComplete",
                             // response, body, expectedContent, unexpectedContent, expectedStatusCode
                             args:     [
@@ -84,7 +82,7 @@ fluid.defaults("gpii.tests.express.router.serveIndex.caseHolder", {
                             func: "{serveIndexMultipleDirectoryIndexRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.router.serveIndex.testDirectoryIndex",
+                            listener: "fluid.tests.express.router.serveIndex.testDirectoryIndex",
                             event:    "{serveIndexMultipleDirectoryIndexRequest}.events.onComplete",
                             // response, body, expectedContent, unexpectedContent, expectedStatusCode
                             args:     [
@@ -104,19 +102,19 @@ fluid.defaults("gpii.tests.express.router.serveIndex.caseHolder", {
     ],
     components: {
         serveIndexRootIndexRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: ""
             }
         },
         serveIndexRootContentRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "index.html"
             }
         },
         serveIndexMultipleDirectoryIndexRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "multiple/"
             }
@@ -124,36 +122,36 @@ fluid.defaults("gpii.tests.express.router.serveIndex.caseHolder", {
     }
 });
 
-fluid.defaults("gpii.tests.express.router.serveIndex.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.router.serveIndex.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7432,
     components: {
         express: {
             options: {
                 components: {
                     serveIndexMultiplePaths: {
-                        type: "gpii.express.router.serveContentAndIndex",
+                        type: "fluid.express.router.serveContentAndIndex",
                         options: {
                             priority: "before:serveIndexSinglePath",
                             path:    "/multiple",
-                            content: ["%gpii-express/tests/data/secondary", "%gpii-express/tests/data/primary"]
+                            content: ["%fluid-express/tests/data/secondary", "%fluid-express/tests/data/primary"]
                         }
                     },
                     serveIndexSinglePath: {
-                        type: "gpii.express.router.serveContentAndIndex",
+                        type: "fluid.express.router.serveContentAndIndex",
                         options: {
                             path:    "/",
                             staticMiddlewareOptions: { index: false },
-                            content: "%gpii-express/tests/html"
+                            content: "%fluid-express/tests/html"
                         }
                     }
                 }
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.router.serveIndex.caseHolder"
+            type: "fluid.tests.express.router.serveIndex.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.router.serveIndex.testEnvironment");
+fluid.test.runTests("fluid.tests.express.router.serveIndex.testEnvironment");

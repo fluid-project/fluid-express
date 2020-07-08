@@ -1,4 +1,4 @@
-# `gpii.express.middleware.contentAware`
+# `fluid.express.middleware.contentAware`
 
 Middleware which passes a request to different handlers based on the content type.  The most basic use case is to allow a
 single API endpoint to:
@@ -29,7 +29,7 @@ The `Accept` headers supplied by the user will be tested using `request.accepts(
 will match, and hence the first handler will be used (see below for details on controlling the ordering).
 
 When the decision has been made and a match has been found, a dynamic component will be constructed using the matching
-'handlerGrades'.  This component is a `gpii.express.handler`, and is expected to perform the required functions (see
+'handlerGrades'.  This component is a `fluid.express.handler`, and is expected to perform the required functions (see
 [handler.md](the handler docs) for details).
 
 ## Ordering handlers by priority
@@ -69,7 +69,7 @@ above example:
 
 ### `{that}.middleware(request, response, next)`
 
-This invoker fulfills the standard contract for a `gpii.express.middleware` component.  It locates an appropriate handler
+This invoker fulfills the standard contract for a `fluid.express.middleware` component.  It locates an appropriate handler
 if possible, and allows that to handle the original request.  If no handler can be found, `next(err)` is called and
 downstream [error handling middleware](middleware.md) is expected to handle things from there.
 

@@ -1,6 +1,5 @@
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
 
 require("./diagramAllRoutes");
 require("./request");
@@ -12,8 +11,8 @@ require("./test-middleware-loopback");
 require("./test-middleware-params");
 require("./test-middleware-reqview");
 
-fluid.registerNamespace("gpii.express.test");
+fluid.registerNamespace("fluid.express.test");
 
-gpii.express.loadGlobalFailureHandler = function () {
+fluid.express.loadGlobalFailureHandler = function () {
     require("./globalFailureHandler");
 };

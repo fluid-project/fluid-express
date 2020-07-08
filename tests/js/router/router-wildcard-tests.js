@@ -6,20 +6,20 @@ var fluid = require("infusion");
 require("../includes.js");
 require("./router-wildcard-caseholder");
 
-fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.router.wildcard.testEnvironment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port:   7522,
     components: {
         express: {
             options: {
                 components: {
                     wildcardPathRouter: {
-                        type: "gpii.express.router",
+                        type: "fluid.express.router",
                         options: {
                             path:    "/wildcard/*",
                             components: {
                                 wildcardMiddleware: {
-                                    type: "gpii.test.express.middleware.hello",
+                                    type: "fluid.test.express.middleware.hello",
                                     options: {
                                         message: "Hello, wild world."
                                     }
@@ -32,9 +32,9 @@ fluid.defaults("gpii.tests.express.router.wildcard.testEnvironment", {
             }
         },
         testCaseHolder: {
-            type: "gpii.tests.express.router.wildcard.caseHolder"
+            type: "fluid.tests.express.router.wildcard.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.router.wildcard.testEnvironment");
+fluid.test.runTests("fluid.tests.express.router.wildcard.testEnvironment");

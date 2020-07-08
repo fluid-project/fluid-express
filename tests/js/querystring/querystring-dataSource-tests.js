@@ -1,18 +1,17 @@
 // Tests for the `urlEncodedJson` dataSource grade.
 "use strict";
 var fluid = require("infusion");
-var gpii = fluid.registerNamespace("gpii");
 
 require("../../../");
-gpii.express.loadTestingSupport();
-gpii.express.loadGlobalFailureHandler();
+fluid.express.loadTestingSupport();
+fluid.express.loadGlobalFailureHandler();
 
 var kettle = require("kettle");
 kettle.loadTestingSupport();
 
 // Our local test dataSource grade that is aware of our starting URL (loopback)
-fluid.defaults("gpii.tests.express.querystring.dataSource.dataSource", {
-    gradeNames: ["gpii.express.dataSource.urlEncodedJson"],
+fluid.defaults("fluid.tests.express.querystring.dataSource.dataSource", {
+    gradeNames: ["fluid.express.dataSource.urlEncodedJson"],
     endpoint: "loopback",
     url: {
         expander: {
@@ -26,8 +25,8 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.dataSource", {
 });
 
 
-fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.querystring.dataSource.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [{
         name: "Tests for the `urlEncodedJsonReader` dataSource grade...",
         tests: [
@@ -97,7 +96,7 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                 sequence: [
                     {
                         funcName: "kettle.test.pushInstrumentedErrors",
-                        args: ["gpii.test.notifyGlobalFailure"]
+                        args: ["fluid.test.notifyGlobalFailure"]
                     },
                     {
                         func: "{existingQueryDataDatasource}.get",
@@ -105,7 +104,7 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
                     },
                     {
                         event: "{globalFailureHandler}.events.onError",
-                        listener: "gpii.test.awaitGlobalFailure"
+                        listener: "fluid.test.awaitGlobalFailure"
                     },
                     {
                         funcName: "kettle.test.popInstrumentedErrors"
@@ -116,17 +115,17 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
     }],
     components: {
         normalDatasource: {
-            type: "gpii.tests.express.querystring.dataSource.dataSource"
+            type: "fluid.tests.express.querystring.dataSource.dataSource"
         },
         avoidStringifying: {
-            type: "gpii.tests.express.querystring.dataSource.dataSource",
+            type: "fluid.tests.express.querystring.dataSource.dataSource",
             options: {
                 avoidStringifying: true,
                 endpoint: "rawLoopback"
             }
         },
         existingQueryDataDatasource: {
-            type: "gpii.tests.express.querystring.dataSource.dataSource",
+            type: "fluid.tests.express.querystring.dataSource.dataSource",
             options: {
                 endpoint: "loopback?hasData=true"
             }
@@ -134,8 +133,8 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.caseHolder", {
     }
 });
 
-fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
-    gradeNames: ["gpii.test.express.testEnvironment"],
+fluid.defaults("fluid.tests.express.querystring.dataSource.environment", {
+    gradeNames: ["fluid.test.express.testEnvironment"],
     port: "9595",
     input: {
         empty: {},
@@ -184,17 +183,17 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
             options: {
                 components: {
                     rawLoopback: {
-                        type: "gpii.test.express.loopbackMiddleware",
+                        type: "fluid.test.express.loopbackMiddleware",
                         options: {
                             path: "/rawLoopback",
                             priority: "before:jsonQueryParser"
                         }
                     },
                     jsonQueryParser: {
-                        type: "gpii.express.middleware.withJsonQueryParser"
+                        type: "fluid.express.middleware.withJsonQueryParser"
                     },
                     loopback: {
-                        type: "gpii.test.express.loopbackMiddleware",
+                        type: "fluid.test.express.loopbackMiddleware",
                         options: {
                             priority: "after:jsonQueryParser"
                         }
@@ -204,9 +203,9 @@ fluid.defaults("gpii.tests.express.querystring.dataSource.environment", {
             }
         },
         caseHolder: {
-            type: "gpii.tests.express.querystring.dataSource.caseHolder"
+            type: "fluid.tests.express.querystring.dataSource.caseHolder"
         }
     }
 });
 
-fluid.test.runTests("gpii.tests.express.querystring.dataSource.environment");
+fluid.test.runTests("fluid.tests.express.querystring.dataSource.environment");

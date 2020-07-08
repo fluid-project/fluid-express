@@ -4,14 +4,14 @@ Some middleware (such as the "static" middleware included in this package) do no
 can be exposed between requests.  For many use cases, you may want to isolate part of the conversation (such as query
 variables) for each request while using common variables and options between requests.
 
-## `gpii.express.middleware.requestAware`
+## `fluid.express.middleware.requestAware`
 
-Middleware that creates a [`gpii.express.handler`](handler.md) instance for each request and allows that to process the
+Middleware that creates a [`fluid.express.handler`](handler.md) instance for each request and allows that to process the
 request.
 
 ### Component Options
 
-In addition to the options allowed for every [`gpii.express.middleware`](middleware.md) instance, this component has the
+In addition to the options allowed for every [`fluid.express.middleware`](middleware.md) instance, this component has the
 following unique options:
 
 | Option          | Type      | Description |
@@ -20,7 +20,7 @@ following unique options:
 
 ### Passing Options to the Dynamic Handler Component
 
-If you would like to pass in additional options to the `gpii.express.handler` grade, add an option like the following:
+If you would like to pass in additional options to the `fluid.express.handler` grade, add an option like the following:
 
 ```snippet
 dynamicComponents: {
@@ -39,7 +39,7 @@ For dynamic values, you will need to use an IoC reference from within your `hand
 
 ```javascript
 fluid.defaults("my.handler", {
-    gradeNames: ["gpii.express.handler"],
-    foo: "{gpii.express.middleware.requestAware}.foo"
+    gradeNames: ["fluid.express.handler"],
+    foo: "{fluid.express.middleware.requestAware}.foo"
 });
 ```

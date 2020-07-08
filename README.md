@@ -1,4 +1,4 @@
-# gpii-express
+# fluid-express
 
 ## What is this?
 
@@ -21,39 +21,39 @@ cases can be implemented purely by configuring the components provided here.
 In the long term, the two modules will likely evolve closer to each other, but in the short term, there are few key
 differences.
 
-[Kettle](https://github.com/GPII/kettle) is a server side framework written entirely as a series of Fluid components,
-and used extensively within the GPII.  Kettle better serves use cases that don't involve a markup-based UI, and provides
-deeper options for replacing the internals of the server.  It also provides support for WebSockets.
+[Kettle](https://github.com/fluid-project/kettle) is a server side framework written entirely as a series of Fluid components,
+and used extensively within the Fluid Community.  Kettle better serves use cases that don't involve a markup-based UI,
+and provides deeper options for replacing the internals of the server.  It also provides support for WebSockets.
 
-The `gpii.express` module is a wrapper for Express, and only for Express.  It does not do anything that Express cannot,
+The `fluid.express` module is a wrapper for Express, and only for Express.  It does not do anything that Express cannot,
 such as communicating using WebSockets.  However, as it is based on the idiom of a newer version of express, it provides
 the [router](router.md) concept introduced in Express 4.x, which Kettle does not have.  It is better suited for use
 cases where support for complex routing and rendering of complex markup-based interfaces (as provided via
-[gpii-handlebars](https://github.com/GPII/gpii-handlebars)) is required.
+[fluid-handlebars](https://github.com/fluid-project/fluid-handlebars)) is required.
 
 ## How do I use it?
 
-To use this module, you will need to instantiate an instance of `gpii.express` itself (or something that extends it),
-and wire in at least one `gpii.express.middleware` module.  The most basic example (serving static content) should look
+To use this module, you will need to instantiate an instance of `fluid.express` itself (or something that extends it),
+and wire in at least one `fluid.express.middleware` module.  The most basic example (serving static content) should look
 something like:
 
 ```javascript
 fluid.defaults("my.namespaced.grade", {
-    gradeNames: ["gpii.express"],
+    gradeNames: ["fluid.express"],
     port:    8080,
     components: {
         staticRouter: {
-            type: "gpii.express.router.static",
+            type: "fluid.express.router.static",
             options: {
                 path:    "/",
-                content: "%gpii-express/tests/html"
+                content: "%fluid-express/tests/html"
             }
         }
     }
 });
 ```
 
-See the [documentation for the `gpii.express` grade](./docs/express.md) for a full list of configuration options.  This
+See the [documentation for the `fluid.express` grade](./docs/express.md) for a full list of configuration options.  This
 example configures a "static" router that is designed to serve up filesystem content (see [the middleware
 documentation](./docs/middleware.md) for more details).
 

@@ -1,7 +1,7 @@
 "use strict";
 var fluid = require("infusion");
 
-fluid.defaults("gpii.tests.express.querystring.caseHolder", {
+fluid.defaults("fluid.tests.express.querystring.caseHolder", {
     gradeNames: ["fluid.test.testCaseHolder"],
     invokers: {
         testPayload: {

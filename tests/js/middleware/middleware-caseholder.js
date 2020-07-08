@@ -1,22 +1,21 @@
 "use strict";
 var fluid  = require("infusion");
-var gpii   = fluid.registerNamespace("gpii");
 var jqUnit = require("node-jqunit");
 
 require("../lib/test-helpers");
 
-fluid.registerNamespace("gpii.tests.express.middleware.caseHolder");
+fluid.registerNamespace("fluid.tests.express.middleware.caseHolder");
 
-gpii.tests.express.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
+fluid.tests.express.middleware.caseHolder.verifyContent = function (response, body, expectedString) {
 
-    gpii.test.express.helpers.isSaneResponse(response, body);
+    fluid.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertTrue("The body should match the custom content...", body.indexOf(expectedString !== -1));
 };
 
-gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
+fluid.tests.express.middleware.caseHolder.verifyMiddlewareIsolation = function (response, body) {
 
-    gpii.test.express.helpers.isSaneResponse(response, body);
+    fluid.test.express.helpers.isSaneResponse(response, body);
 
     var data = JSON.parse(body);
 
@@ -25,13 +24,13 @@ gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation = function (r
 };
 
 // This test does not need to see the request per se, only the test environment after at least one request has gone through.
-gpii.tests.express.middleware.caseHolder.testCounterMiddleware = function (that) {
+fluid.tests.express.middleware.caseHolder.testCounterMiddleware = function (that) {
     jqUnit.assertTrue("The counter should be greater than one...", that.express.counter.model.count > 1);
 };
 
-gpii.tests.express.middleware.caseHolder.testCookieMiddleware = function (response, body) {
+fluid.tests.express.middleware.caseHolder.testCookieMiddleware = function (response, body) {
 
-    gpii.test.express.helpers.isSaneResponse(response, body);
+    fluid.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be cookie data...", body.cookies);
     if (body.cookies) {
@@ -39,9 +38,9 @@ gpii.tests.express.middleware.caseHolder.testCookieMiddleware = function (respon
     }
 };
 
-gpii.tests.express.middleware.caseHolder.testSessionMiddleware = function (response, body) {
+fluid.tests.express.middleware.caseHolder.testSessionMiddleware = function (response, body) {
 
-    gpii.test.express.helpers.isSaneResponse(response, body);
+    fluid.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be session data...", body.session);
     if (body.session) {
@@ -49,9 +48,9 @@ gpii.tests.express.middleware.caseHolder.testSessionMiddleware = function (respo
     }
 };
 
-gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
+fluid.tests.express.middleware.caseHolder.testBodyParserMiddleware = function (response, body) {
 
-    gpii.test.express.helpers.isSaneResponse(response, body);
+    fluid.test.express.helpers.isSaneResponse(response, body);
 
     jqUnit.assertNotNull("There should be body data...", body.body);
     if (body.body) {
@@ -60,11 +59,11 @@ gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware = function (re
 };
 
 // Wire in an instance of kettle.requests.request.http for each test and wire the check to its onError or onSuccess event
-fluid.defaults("gpii.tests.express.middleware.caseHolder", {
-    gradeNames: ["gpii.test.express.caseHolder"],
+fluid.defaults("fluid.tests.express.middleware.caseHolder", {
+    gradeNames: ["fluid.test.express.caseHolder"],
     rawModules: [
         {
-            name: "Testing `gpii.express.middleware`...",
+            name: "Testing `fluid.express.middleware`...",
             tests: [
                 {
                     name: "Testing middleware isolation...",
@@ -74,7 +73,7 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
                             func: "{middlewareIsolationRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.middleware.caseHolder.verifyMiddlewareIsolation",
+                            listener: "fluid.tests.express.middleware.caseHolder.verifyMiddlewareIsolation",
                             event: "{middlewareIsolationRequest}.events.onComplete",
                             args: ["{middlewareIsolationRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -92,7 +91,7 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
                             event: "{counterRequest}.events.onComplete"
                         },
                         {
-                            listener: "gpii.tests.express.middleware.caseHolder.testCounterMiddleware",
+                            listener: "fluid.tests.express.middleware.caseHolder.testCounterMiddleware",
                             event: "{counterSecondRequest}.events.onComplete",
                             args: ["{testEnvironment}"]
                         }
@@ -106,7 +105,7 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
                             func: "{sessionRequest}.send"
                         },
                         {
-                            listener: "gpii.tests.express.middleware.caseHolder.testSessionMiddleware",
+                            listener: "fluid.tests.express.middleware.caseHolder.testSessionMiddleware",
                             event: "{sessionRequest}.events.onComplete",
                             args: ["{sessionRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -121,7 +120,7 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
                             args: [{ foo: "bar" }]
                         },
                         {
-                            listener: "gpii.tests.express.middleware.caseHolder.testBodyParserMiddleware",
+                            listener: "fluid.tests.express.middleware.caseHolder.testBodyParserMiddleware",
                             event: "{bodyParserRequest}.events.onComplete",
                             args: ["{bodyParserRequest}.nativeResponse", "{arguments}.0"]
                         }
@@ -139,14 +138,14 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
                             event: "{cookieSetRequest}.events.onComplete"
                         },
                         {
-                            listener: "gpii.tests.express.middleware.caseHolder.testCookieMiddleware",
+                            listener: "fluid.tests.express.middleware.caseHolder.testCookieMiddleware",
                             event: "{cookieReadRequest}.events.onComplete",
                             args: ["{cookieReadRequest}.nativeResponse", "{arguments}.0"]
                         }
                     ]
                 },
                 {
-                    name: "Testing a gpii.express.middleware.bodyparser.json instance with custom options...",
+                    name: "Testing a fluid.express.middleware.bodyparser.json instance with custom options...",
                     type: "test",
                     sequence: [
                         {
@@ -207,51 +206,51 @@ fluid.defaults("gpii.tests.express.middleware.caseHolder", {
             }
         },
         middlewareIsolationRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "hello/rv"
             }
         },
         cookieSetRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "cookie"
             }
         },
         cookieReadRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         sessionRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         bodyParserRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "reqview"
             }
         },
         bodyParserOptionsTooLargeRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "needle",
                 method:   "POST"
             }
         },
         bodyParserOptionsSmallEnoughRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "needle",
                 method:   "POST"
             }
         },
         badlyWrappedMiddlewareRequest: {
-            type: "gpii.test.express.request",
+            type: "fluid.test.express.request",
             options: {
                 endpoint: "badlyWrapped"
             }

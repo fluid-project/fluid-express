@@ -3,13 +3,13 @@
     An abstract grade for "request handler" modules, which respond to individual requests sent to `requestAware` or
     `contentAware` middleware.  See the documentation for more details:
 
-    https://github.com/GPII/gpii-express/blob/master/docs/handler.md
+    https://github.com/fluid-project/fluid-express/blob/master/docs/handler.md
 
  */
 "use strict";
 var fluid = require("infusion");
-var gpii  = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.express.handler");
+
+fluid.registerNamespace("fluid.express.handler");
 
 /**
  *
@@ -18,7 +18,7 @@ fluid.registerNamespace("gpii.express.handler");
  * @param {Object} that - the handler component itself.
  *
  */
-gpii.express.handler.checkRequirements = function (that) {
+fluid.express.handler.checkRequirements = function (that) {
     fluid.each(["request", "response", "next"], function (requiredField) {
         if (!that.options[requiredField]) {
             fluid.fail("Cannot instantiate a 'handler' component without a '" + requiredField + "' object...");
@@ -33,7 +33,7 @@ gpii.express.handler.checkRequirements = function (that) {
  * @param {Object} that - the handler component itself.
  *
  */
-gpii.express.handler.setTimeout = function (that) {
+fluid.express.handler.setTimeout = function (that) {
     that.timeout = setTimeout(that.sendTimeoutResponse, that.options.timeout);
 };
 
@@ -44,7 +44,7 @@ gpii.express.handler.setTimeout = function (that) {
  * @param {Object} that - the handler component itself.
  *
  */
-gpii.express.handler.clearTimeout = function (that) {
+fluid.express.handler.clearTimeout = function (that) {
     if (that.timeout) {
         clearTimeout(that.timeout);
     }
@@ -57,7 +57,7 @@ gpii.express.handler.clearTimeout = function (that) {
  * @param {Object} that - the handler component itself.
  *
  */
-gpii.express.handler.sendTimeoutResponse = function (that) {
+fluid.express.handler.sendTimeoutResponse = function (that) {
     that.sendError(500, { message: that.options.messages.timedOut });
 };
 
@@ -70,7 +70,7 @@ gpii.express.handler.sendTimeoutResponse = function (that) {
  * @param {Number} statusCode - The status code for the response.
  * @param {Object} body - The payload to send.
  */
-gpii.express.handler.sendResponse = function (that, response, statusCode, body) {
+fluid.express.handler.sendResponse = function (that, response, statusCode, body) {
     if (!response) {
         fluid.fail("Cannot send response, I have no response object to work with...");
     }
@@ -88,7 +88,7 @@ gpii.express.handler.sendResponse = function (that, response, statusCode, body) 
  * @param {Number} statusCode - The status code for the response.
  * @param {Object} body - The payload to send.
  */
-gpii.express.handler.sendError = function (that, statusCode, body) {
+fluid.express.handler.sendError = function (that, statusCode, body) {
     var transformedError = fluid.model.transformWithRules({ statusCode: statusCode, body: body}, that.options.rules.sendError);
     that.options.next(transformedError);
 };
@@ -100,11 +100,11 @@ gpii.express.handler.sendError = function (that, statusCode, body) {
  * @param {Object} that - the handler component itself.
  *
  */
-gpii.express.handler.addResponseListener = function (that) {
+fluid.express.handler.addResponseListener = function (that) {
     that.options.response.once("finish", that.events.afterResponseSent.fire);
 };
 
-fluid.defaults("gpii.express.handler", {
+fluid.defaults("fluid.express.handler", {
     gradeNames: ["fluid.component"],
     timeout:    5000, // All operations must be completed in `options.timeout` milliseconds, or we will send a timeout response and destroy ourselves.
     events: {
@@ -132,15 +132,15 @@ fluid.defaults("gpii.express.handler", {
     },
     listeners: {
         "onCreate.checkRequirements": {
-            funcName: "gpii.express.handler.checkRequirements",
+            funcName: "fluid.express.handler.checkRequirements",
             args:     ["{that}"]
         },
         "onCreate.addResponseListener": {
-            funcName: "gpii.express.handler.addResponseListener",
+            funcName: "fluid.express.handler.addResponseListener",
             args:     ["{that}"]
         },
         "onCreate.setTimeout": {
-            funcName: "gpii.express.handler.setTimeout",
+            funcName: "fluid.express.handler.setTimeout",
             args:     ["{that}"]
         },
         "onCreate.handleRequest": {
@@ -150,21 +150,21 @@ fluid.defaults("gpii.express.handler", {
             func: "{that}.destroy"
         },
         "onDestroy.clearTimeout": {
-            funcName: "gpii.express.handler.clearTimeout",
+            funcName: "fluid.express.handler.clearTimeout",
             args:     ["{that}"]
         }
     },
     invokers: {
         sendResponse: {
-            funcName: "gpii.express.handler.sendResponse",
+            funcName: "fluid.express.handler.sendResponse",
             args:     ["{that}", "{that}.options.response", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendError: {
-            funcName: "gpii.express.handler.sendError",
+            funcName: "fluid.express.handler.sendError",
             args:     ["{that}", "{arguments}.0", "{arguments}.1"] // statusCode, body
         },
         sendTimeoutResponse: {
-            funcName: "gpii.express.handler.sendTimeoutResponse",
+            funcName: "fluid.express.handler.sendTimeoutResponse",
             args:     ["{that}"]
         },
         handleRequest: {
@@ -174,8 +174,8 @@ fluid.defaults("gpii.express.handler", {
 });
 
 // The base grade for things like the "request aware" and "content aware" grades that dispatch individual requests to
-// a `gpii.express.handler`.
-fluid.defaults("gpii.express.handlerDispatcher", {
+// a `fluid.express.handler`.
+fluid.defaults("fluid.express.handlerDispatcher", {
     gradeNames: ["fluid.component"],
     timeout: 5000, // The default timeout we will pass to whatever grade we instantiate.
     events: {
@@ -183,12 +183,12 @@ fluid.defaults("gpii.express.handlerDispatcher", {
     },
     distributeOptions: [{
         source: "{that}.options.timeout",
-        target: "{that > gpii.express.handler}.options.timeout"
+        target: "{that > fluid.express.handler}.options.timeout"
     }],
     dynamicComponents: {
         requestHandler: {
             createOnEvent: "onRequest",
-            type:          "gpii.express.handler",
+            type:          "fluid.express.handler",
             options:       "{arguments}.0"
         }
     }
