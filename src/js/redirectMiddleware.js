@@ -2,7 +2,7 @@
 
     Middleware that redirects all incoming requests to `that.options.redirectUrl`.  See the docs for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/redirectMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/redirectMiddleware.md
 
  */
 "use strict";

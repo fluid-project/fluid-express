@@ -2,7 +2,7 @@
 
     A base grade for things like a router and express itself, which contain other middleware components.
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/routable.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/routable.md
 
 */
 "use strict";

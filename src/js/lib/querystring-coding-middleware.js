@@ -3,7 +3,7 @@
     Functions to consistently encode and decode JSON objects that are part of a query string, and components
     that use these functions.  See the documentation for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/querystring-coding.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/querystring-coding.md
 
  */
 "use strict";

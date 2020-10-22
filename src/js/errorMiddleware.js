@@ -2,7 +2,7 @@
 
     A default error handler that relays an upstream error to the user. See the documentation for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/errorMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/errorMiddleware.md
 
  */
 "use strict";
