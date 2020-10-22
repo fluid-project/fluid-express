@@ -4,7 +4,7 @@
 
     See the documentation for more details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/headerMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/headerMiddleware.md
 
  */
 "use strict";

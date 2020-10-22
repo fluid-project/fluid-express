@@ -3,7 +3,7 @@
     An abstract grade for "request handler" modules, which respond to individual requests sent to `requestAware` or
     `contentAware` middleware.  See the documentation for more details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/handler.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/handler.md
 
  */
 "use strict";

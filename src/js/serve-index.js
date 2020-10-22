@@ -3,7 +3,7 @@
     Module to serve up directory listings, typically for content hosted with the "static" router.  See the
     documentation for more details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/router.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/router.md
 
  */
 "use strict";

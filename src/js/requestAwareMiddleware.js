@@ -3,7 +3,7 @@
     Middleware that creates a `fluid.express.handler` component and uses that to process each request.  See the
     documentation for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/requestAwareMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/requestAwareMiddleware.md
 
  */
 "use strict";

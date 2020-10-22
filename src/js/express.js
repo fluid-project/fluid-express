@@ -2,7 +2,7 @@
 
     An [Express.js](http://expressjs.com/) instance represented as a Fluid component.  See the documentation for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/express.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/express.md
 
 */
 "use strict";

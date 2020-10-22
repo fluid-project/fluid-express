@@ -3,7 +3,7 @@
     A router which passes a request to different handlers based on what the request accepts.  See the documentation for
     details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/contentAwareMiddleware.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/contentAwareMiddleware.md
 
  */
 "use strict";

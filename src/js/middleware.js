@@ -2,7 +2,7 @@
 
     The base grade for express middleware modules represented as Fluid components. See the documentation for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/middleware.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/middleware.md
 
 */
 "use strict";

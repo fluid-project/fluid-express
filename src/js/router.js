@@ -2,7 +2,7 @@
 
     The base grade for express router modules.  See the documentation for details:
 
-    https://github.com/fluid-project/fluid-express/blob/master/docs/router.md
+    https://github.com/fluid-project/fluid-express/blob/main/docs/router.md
 
  */
 "use strict";
