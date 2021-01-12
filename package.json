@@ -4,8 +4,9 @@
     "description": "Fluid components to model an express server and associated router modules.",
     "main": "index.js",
     "scripts": {
-        "pretest": "node node_modules/rimraf/bin.js coverage/* reports/*",
-        "test": "node node_modules/nyc/bin/nyc.js node tests/all-tests.js"
+        "lint": "fluid-lint-all",
+        "pretest": "npx rimraf coverage/* reports/*",
+        "test": "nyc node tests/all-tests.js"
     },
     "author": "Tony Atkins <tony@raisingthefloor.org>",
     "license": "BSD-3-Clause",
@@ -15,18 +16,15 @@
         "cookie-parser": "1.4.5",
         "express": "4.17.1",
         "express-session": "1.17.1",
-        "infusion": "3.0.0-dev.20200604T195400Z.dddc6a2.FLUID-6145",
+        "infusion": "3.0.0-dev.20201113T153152Z.32176dcbe.FLUID-6145",
         "serve-index": "1.9.1"
     },
     "devDependencies": {
-        "eslint": "7.4.0",
-        "eslint-config-fluid": "1.4.0",
-        "fluid-grunt-eslint": "18.1.2",
-        "fluid-grunt-lint-all": "1.0.8",
-        "grunt": "1.2.0",
-        "kettle": "1.12.0",
-        "node-jqunit": "1.1.8",
-        "nyc": "12.0.1",
-        "rimraf": "3.0.2"
+        "eslint": "7.17.0",
+        "eslint-config-fluid": "2.0.0",
+        "fluid-lint-all": "1.0.0-dev.20210111T144240Z.ee70ce3.GH-1",
+        "kettle": "2.0.0",
+        "nyc": "12.0.2",
+        "node-jqunit": "1.1.8"
     }
 }

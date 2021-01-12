@@ -3,5 +3,5 @@
   "temp-directory": "coverage",
   "report-dir": "reports",
   "include": ["./src/**/*.js", "./*.js"],
-  "exclude": ["Gruntfile.js", "./tests"]
+  "exclude": ["./tests"]
 }
