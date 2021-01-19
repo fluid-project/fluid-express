@@ -8,25 +8,27 @@ based on the contents of `options.headers` (see below).
 This grade can only do its job when it is added as a child component of either a `fluid.express` or `fluid.express.router`
 instance.  Here's an example of adding a single header to all responses send from a `fluid.express` instance:
 
-    fluid.defaults("my.express.grade", {
-        gradeNames: ["fluid.express"],
-        path: 8080,
-        components: {
-            headerSetter: {
-                type: "fluid.express.middleware.headerSetter",
-                options: {
-                    headers: {
-                        server: {
-                            fieldName: "Server",
-                            template:  "Custom fluid-express Server/1.0.0"
-                        }
+```javascript
+fluid.defaults("my.express.grade", {
+    gradeNames: ["fluid.express"],
+    path: 8080,
+    components: {
+        headerSetter: {
+            type: "fluid.express.middleware.headerSetter",
+            options: {
+                headers: {
+                    server: {
+                        fieldName: "Server",
+                        template:  "Custom fluid-express Server/1.0.0"
                     }
                 }
             }
-            // TODO:  You, the reader, should add at least one middleware component here that will respond to the user.
         }
+        // TODO:  You, the reader, should add at least one middleware component here that will respond to the user.
     }
-    my.express.grade();
+});
+my.express.grade();
+```
 
 Note that as with any other `fluid.express.middleware`, this component will only add headers for conversations it's
 involved in.  When you add an instance of this component as a component of `fluid.express`, it will be allowed to modify
@@ -36,38 +38,38 @@ the chance.
 Here's an example of how this component can be used with a `fluid.express.router` instance:
 
 ```javascript
-    fluid.defaults("my.other.express.grade", {
-        gradeNames: ["fluid.express"],
-        path: 8081,
-        components: {
-            staticRouter: {
-                type: "fluid.express.router",
-                options: {
-                    components: {
-                        headerSetter: {
-                            type: "fluid.express.middleware.headerSetter",
-                            options: {
-                                headers: {
-                                    cors: {
-                                        fieldName: "Access-Control-Allow-Origin",
-                                        template:  "*"
-                                    }
+fluid.defaults("my.other.express.grade", {
+    gradeNames: ["fluid.express"],
+    path: 8081,
+    components: {
+        staticRouter: {
+            type: "fluid.express.router",
+            options: {
+                components: {
+                    headerSetter: {
+                        type: "fluid.express.middleware.headerSetter",
+                        options: {
+                            headers: {
+                                cors: {
+                                    fieldName: "Access-Control-Allow-Origin",
+                                    template:  "*"
                                 }
                             }
-                        },
-                        staticMiddleware: {
-                            type: "fluid.express.router.static",
-                            options: {
-                                priority: "last",
-                                content: "%my-package/src"
-                            }
+                        }
+                    },
+                    staticMiddleware: {
+                        type: "fluid.express.router.static",
+                        options: {
+                            priority: "last",
+                            content: "%my-package/src"
                         }
                     }
                 }
             }
         }
-    });
-    my.other.express.grade();
+    }
+});
+my.other.express.grade();
 ```
 
 ## Component Options
@@ -81,19 +83,19 @@ The following component configuration options are supported:
 Individual headers are defined as in the following example:
 
 ```snippet
-    headers: {
-        static: {
-            fieldName: "Access-Control-Allow-Origin",
-            template:   "*"
-        },
-        dynamic: {
-            fieldName: "Content-Type",
-            template: "%var",
-            dataRules: {
-                var: "request.query.var"
-            }
+headers: {
+    static: {
+        fieldName: "Access-Control-Allow-Origin",
+        template:   "*"
+    },
+    dynamic: {
+        fieldName: "Content-Type",
+        template: "%var",
+        dataRules: {
+            var: "request.query.var"
         }
     }
+}
 ```
 
 The supported fields are as follows:
@@ -107,12 +109,12 @@ The supported fields are as follows:
 The simplest header definition looks something like the following
 
 ```snippet
-    headers: {
-        static: {
-            fieldName: "Access-Control-Allow-Origin",
-            template:   "*"
-        }
+headers: {
+    static: {
+        fieldName: "Access-Control-Allow-Origin",
+        template:   "*"
     }
+}
 ```
 
 Note that the template has no variables (which would look something like `%var`).  As a result, the literal value `*` is
@@ -121,15 +123,15 @@ set.  In this case, no data is interpolated, so `dataRules` is ignored and can b
 A full definition looks something like the following:
 
 ```snippet
-    headers: {
-        dynamic: {
-            fieldName: "Content-Type",
-            template: "%var",
-            dataRules: {
-                var: "request.query.var"
-            }
+headers: {
+    dynamic: {
+        fieldName: "Content-Type",
+        template: "%var",
+        dataRules: {
+            var: "request.query.var"
         }
     }
+}
 ```
 
 If we were accessing a URL like `http://my.site.com/path/to/router?var=application%2Fjson`, this component would set
@@ -141,28 +143,28 @@ The rules defined in `dataRules` have access to `that`, the component itself, an
 component.  Here is an example illustrating a few possibilities:
 
 ```snippet
-    headers: {
-        deleteCookie: {
-            fieldName: "Set-Cookie",
-            template:  "existingCookie=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT"
-        },
-        setModelCookie: {
-            fieldName: "Set-Cookie",
-            template:  "%cookieName=%cookieValue",
-            dataRules: {
-                cookieName:  "that.model.cookie.name",
-                cookieValue: "that.model.cookie.value"
-            }
-        },
-        refresh: {
-            fieldName: "Refresh",
-            template: "%seconds; url=%url",
-            dataRules: {
-                seconds: { literalValue: 5 },
-                url:     "that.options.refreshUrl"
-            }
+headers: {
+    deleteCookie: {
+        fieldName: "Set-Cookie",
+        template:  "existingCookie=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT"
+    },
+    setModelCookie: {
+        fieldName: "Set-Cookie",
+        template:  "%cookieName=%cookieValue",
+        dataRules: {
+            cookieName:  "that.model.cookie.name",
+            cookieValue: "that.model.cookie.value"
+        }
+    },
+    refresh: {
+        fieldName: "Refresh",
+        template: "%seconds; url=%url",
+        dataRules: {
+            seconds: { literalValue: 5 },
+            url:     "that.options.refreshUrl"
         }
     }
+}
 ```
 
 With those rules, this component would:
