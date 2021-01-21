@@ -192,7 +192,7 @@ fluid.defaults("fluid.tests.express.middleware.caseHolder", {
         counterRequest: {
             type: "kettle.test.request.http",
             options: {
-                path: "{testEnvironment}.options.baseUrl",
+                url: "{testEnvironment}.options.baseUrl",
                 port: "{testEnvironment}.options.port",
                 method: "GET"
             }
@@ -200,7 +200,7 @@ fluid.defaults("fluid.tests.express.middleware.caseHolder", {
         counterSecondRequest: {
             type: "kettle.test.request.http",
             options: {
-                path: "{testEnvironment}.options.baseUrl",
+                url: "{testEnvironment}.options.baseUrl",
                 port: "{testEnvironment}.options.port",
                 method: "GET"
             }

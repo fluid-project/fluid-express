@@ -28,7 +28,7 @@ fluid.tests.express.method.caseHolder.checkMethodAndCounts = function (body, met
 
 fluid.defaults("fluid.tests.express.method.request", {
     gradeNames: ["kettle.test.request.http"],
-    path:       "{testEnvironment}.options.baseUrl",
+    url:        "{testEnvironment}.options.baseUrl",
     port:       "{testEnvironment}.options.port"
 });
 

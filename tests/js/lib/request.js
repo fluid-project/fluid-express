@@ -6,7 +6,7 @@ kettle.loadTestingSupport();
 
 fluid.defaults("fluid.test.express.request", {
     gradeNames: ["kettle.test.request.httpCookie"],
-    path: {
+    url: {
         expander: {
             funcName: "fluid.stringTemplate",
             args:     ["%baseUrl%endpoint", { baseUrl: "{testEnvironment}.options.baseUrl", endpoint: "{that}.options.endpoint"}]

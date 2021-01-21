@@ -18,7 +18,7 @@ fluid.registerNamespace("fluid.tests.express.querystring.withJsonQueryParser.cas
 
 fluid.defaults("fluid.tests.express.querystring.withJsonQueryParser.request", {
     gradeNames: ["kettle.test.request.http"],
-    path: {
+    url: {
         expander: {
             funcName: "fluid.stringTemplate",
             args: [
