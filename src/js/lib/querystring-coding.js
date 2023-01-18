@@ -24,6 +24,7 @@ fluid.defaults("fluid.express.querystring.encodeTransform", {
     gradeNames: ["fluid.standardTransformFunction"]
 });
 
+/* eslint-disable jsdoc/require-returns-check */
 /**
  *
  * Encode an object and produce a query string.
@@ -33,6 +34,7 @@ fluid.defaults("fluid.express.querystring.encodeTransform", {
  * @param {String} parentKey - If we are working with "deep" material, parentKey will represent the path to the value.
  * @return {String} A query string representing the object.
  */
+/* eslint-enable jsdoc/require-returns-check */
 fluid.express.querystring.encodeObject = function (valueToEncode, avoidStringifying, parentKey) {
     if (typeof valueToEncode === "object" && !Array.isArray(valueToEncode)) {
         var segments = [];
@@ -91,6 +93,7 @@ fluid.express.querystring.decode = function (stringToDecode) {
 
 fluid.registerNamespace("fluid.express.dataSource.urlEncodedJson");
 
+/* eslint-disable jsdoc/require-returns-check */
 /**
  *
  * A replacement for the built-in `resolveUrl` invoker included with `kettle.dataSource.URL`, that encodes
@@ -101,6 +104,7 @@ fluid.registerNamespace("fluid.express.dataSource.urlEncodedJson");
  * @param {Object} directModel - The JSON data to be encoded as the query string portion of the URL.
  * @return {String} The combined URL, including the encoded query data.
  */
+/* eslint-enable jsdoc/require-returns-check */
 fluid.express.dataSource.urlEncodedJson.resolveUrl = function (that, urlToResolve, directModel) {
     if (urlToResolve.indexOf("?") !== -1) {
         fluid.fail("Cannot work with a URL that already includes query data.");
